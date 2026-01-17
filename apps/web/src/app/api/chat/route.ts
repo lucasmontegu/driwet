@@ -1,4 +1,4 @@
-import { openai } from "@ai-sdk/openai";
+import { google } from "@ai-sdk/google";
 import { streamText } from "ai";
 import { z } from "zod";
 import { getAlertsByPoint } from "@/lib/weather";
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = streamText({
-    model: openai("gpt-4o-mini"),
+    model: google("gemini-2.5-flash-preview-05-20"),
     system: `Eres Advia, un asistente de alertas meteorológicas. Tu objetivo es mantener a los usuarios seguros informándoles sobre condiciones climáticas peligrosas.
 
 Capacidades:

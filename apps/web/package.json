@@ -10,6 +10,7 @@
   "dependencies": {
     "@advia/auth": "workspace:*",
     "@advia/env": "workspace:*",
+    "@ai-sdk/google": "^3.0.10",
     "@ai-sdk/openai": "^3.0.12",
     "@base-ui/react": "^1.0.0",
     "@polar-sh/better-auth": "catalog:",

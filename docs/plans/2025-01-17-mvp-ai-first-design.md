@@ -2,8 +2,20 @@
 
 **Fecha:** 2025-01-17
 **Autor:** Lucas
-**Estado:** Aprobado
+**Estado:** En Progreso
 **Duración estimada:** 4 semanas
+**Última actualización:** 2025-01-17
+
+---
+
+## Progreso General
+
+| Semana | Descripción | Estado |
+|--------|-------------|--------|
+| Semana 1 | Fundación + Mapa | ✅ Completada |
+| Semana 2 | Chat AI + Tools | 🟡 En progreso |
+| Semana 3 | Push Notifications + LATAM | ⏳ Pendiente |
+| Semana 4 | Detección de Manejo + Polish | ⏳ Pendiente |
 
 ---
 
@@ -85,14 +97,14 @@ analyzeRoute
 │                                                              │
 │  apps/web (Next.js)                                          │
 │  ├── /api/chat (AI SDK + Tools)                              │
-│  ├── /api/weather (NOAA/SMN integration)                     │
+│  ├── /api/alerts (NOAA/SMN integration)                      │
 │  └── /api/push (Expo Push Service)                           │
 │                                                              │
 │  packages/db (Drizzle + Neon)                                │
 │  └── users, push_tokens, user_locations, alert_history       │
 │                                                              │
 │  External Services                                           │
-│  ├── OpenAI (GPT-4o for chat)                                │
+│  ├── Google AI (Gemini 2.5 Flash for chat)                   │
 │  ├── Mapbox (Maps)                                           │
 │  ├── NOAA (US weather alerts)                                │
 │  └── Tomorrow.io (LATAM weather alerts)                      │
@@ -103,7 +115,7 @@ analyzeRoute
 
 ## Database Schema (Nuevas tablas)
 
-### push_tokens
+### push_tokens ✅
 | Column | Type | Description |
 |--------|------|-------------|
 | id | text | PK |
@@ -113,7 +125,7 @@ analyzeRoute
 | created_at | timestamp | |
 | updated_at | timestamp | |
 
-### user_locations
+### user_locations ✅
 | Column | Type | Description |
 |--------|------|-------------|
 | id | text | PK |
@@ -126,7 +138,7 @@ analyzeRoute
 | created_at | timestamp | |
 | updated_at | timestamp | |
 
-### alert_history
+### alert_history ✅
 | Column | Type | Description |
 |--------|------|-------------|
 | id | text | PK |
@@ -143,7 +155,7 @@ analyzeRoute
 | expires_at | timestamp | |
 | created_at | timestamp | |
 
-### chat_sessions
+### chat_sessions ✅
 | Column | Type | Description |
 |--------|------|-------------|
 | id | text | PK |
@@ -156,45 +168,45 @@ analyzeRoute
 
 ## Roadmap de 4 Semanas
 
-### Semana 1: Fundación + Mapa
+### Semana 1: Fundación + Mapa ✅ COMPLETADA
 
 **Día 1-2: Setup Mapbox**
-- [ ] Crear cuenta Mapbox, obtener API keys
-- [ ] Instalar @rnmapbox/maps en apps/native
-- [ ] Configurar permisos de ubicación (iOS/Android)
-- [ ] Pantalla básica con mapa + ubicación usuario
+- [x] Crear cuenta Mapbox, obtener API keys
+- [x] Instalar @rnmapbox/maps en apps/native
+- [x] Configurar permisos de ubicación (iOS/Android)
+- [x] Pantalla básica con mapa + ubicación usuario
 
 **Día 3-4: Esquema DB + API base**
-- [ ] Crear tablas nuevas (push_tokens, user_locations, etc.)
-- [ ] Ejecutar migraciones con Drizzle
-- [ ] Endpoint GET /api/weather/alerts
-- [ ] Integrar NOAA API (USA)
+- [x] Crear tablas nuevas (push_tokens, user_locations, etc.)
+- [x] Ejecutar migraciones con Drizzle
+- [x] Endpoint GET /api/alerts
+- [x] Integrar NOAA API (USA)
 
 **Día 5: Mostrar alertas en mapa**
-- [ ] Fetch alertas desde API
-- [ ] Dibujar polígonos de alerta en Mapbox
-- [ ] Colores por severidad (rojo/naranja/amarillo)
+- [x] Fetch alertas desde API
+- [x] Dibujar polígonos de alerta en Mapbox
+- [x] Colores por severidad (rojo/naranja/amarillo)
 
-### Semana 2: Chat AI + Tools
+### Semana 2: Chat AI + Tools 🟡 EN PROGRESO
 
 **Día 1-2: Setup AI SDK**
-- [ ] Instalar ai, @ai-sdk/react, @ai-sdk/openai
-- [ ] Crear /api/chat endpoint con tools
-- [ ] Implementar useChat en native con expoFetch
-- [ ] UI del chat panel (input + mensajes)
+- [x] Instalar ai, @ai-sdk/react, @ai-sdk/google
+- [x] Crear /api/chat endpoint con tools
+- [x] Implementar useChat en native con expoFetch
+- [x] UI del chat panel (input + mensajes)
 
 **Día 3-4: Implementar Tools**
-- [ ] Tool: getWeatherAlerts
-- [ ] Tool: getUserLocation
-- [ ] Tool: showAlertOnMap (actualiza estado del mapa)
-- [ ] Tool: analyzeRoute (básico)
+- [x] Tool: getWeatherAlerts
+- [x] Tool: getUserLocation
+- [x] Tool: showAlertOnMap (actualiza estado del mapa)
+- [x] Tool: analyzeRoute (básico)
 
 **Día 5: Integración mapa ↔ chat**
 - [ ] Chat puede comandar el mapa
 - [ ] Respuestas del agente con contexto visual
 - [ ] Testing del flujo completo
 
-### Semana 3: Push Notifications + LATAM
+### Semana 3: Push Notifications + LATAM ⏳ PENDIENTE
 
 **Día 1-2: Push Notifications**
 - [ ] Configurar expo-notifications
@@ -213,7 +225,7 @@ analyzeRoute
 - [ ] Test alertas USA vs LATAM
 - [ ] Mejorar prompts del agente
 
-### Semana 4: Detección de Manejo + Polish
+### Semana 4: Detección de Manejo + Polish ⏳ PENDIENTE
 
 **Día 1-2: Driving Detection**
 - [ ] Background location tracking
@@ -238,36 +250,44 @@ analyzeRoute
 ## Dependencias Requeridas
 
 ### Cuentas y API Keys
-| Servicio | Propósito | Costo |
-|----------|-----------|-------|
-| Mapbox | Mapas + geocoding | Free tier |
-| OpenAI | GPT-4o para el agente | Pay per use |
-| NOAA | Alertas clima USA | Gratis |
-| Tomorrow.io | Alertas clima LATAM | Free tier |
-| Expo (EAS) | Push notifications + builds | Free tier |
+| Servicio | Propósito | Costo | Estado |
+|----------|-----------|-------|--------|
+| Mapbox | Mapas + geocoding | Free tier | ✅ Configurado |
+| Google AI | Gemini 2.5 Flash para el agente | Pay per use | ⏳ Necesita API key |
+| NOAA | Alertas clima USA | Gratis | ✅ Integrado |
+| Tomorrow.io | Alertas clima LATAM | Free tier | ⏳ Pendiente |
+| Expo (EAS) | Push notifications + builds | Free tier | ⏳ Pendiente |
 
 ### Variables de Entorno
 ```bash
-# Mapbox
-MAPBOX_ACCESS_TOKEN=pk.xxx
+# Mapbox (apps/native/.env)
+EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN=pk.xxx  # ✅ Configurado
 
-# OpenAI
-OPENAI_API_KEY=sk-xxx
+# Google AI (apps/web/.env)
+GOOGLE_GENERATIVE_AI_API_KEY=xxx  # ⏳ Necesita configurar
 
 # Weather APIs
-TOMORROW_IO_API_KEY=xxx
+TOMORROW_IO_API_KEY=xxx  # ⏳ Pendiente
 
 # Expo
-EXPO_ACCESS_TOKEN=xxx
+EXPO_ACCESS_TOKEN=xxx  # ⏳ Pendiente
 ```
 
-### Paquetes a Instalar
+### Paquetes Instalados
 ```bash
-# apps/native
-pnpm add @rnmapbox/maps expo-location expo-notifications expo-speech
+# apps/native ✅
+@rnmapbox/maps
+expo-location
+@ai-sdk/react
+ai
 
-# apps/web
-pnpm add ai @ai-sdk/openai @ai-sdk/react
+# apps/web ✅
+ai
+@ai-sdk/google
+
+# Pendientes
+expo-notifications
+expo-speech
 ```
 
 ---
@@ -278,12 +298,37 @@ pnpm add ai @ai-sdk/openai @ai-sdk/react
 |---------|----------|-------|
 | UI Pattern | Mapa + Chat fijo | AI-first experience |
 | AI Framework | Vercel AI SDK | Soporte nativo Expo, tools built-in |
-| LLM | GPT-4o | Balance costo/calidad |
+| LLM | Gemini 2.5 Flash | Balance costo/calidad, mejor para español |
 | Maps | Mapbox | Offline support futuro, customización |
 | Weather US | NOAA | Gratis, datos oficiales |
 | Weather LATAM | Tomorrow.io | Cobertura global, free tier |
 | Push | Expo Push | Integrado con Expo, simple |
 | Background | expo-location | Geofencing + speed detection |
+
+---
+
+## Archivos Creados/Modificados
+
+### Base de Datos
+- `packages/db/src/schema/push-tokens.ts` ✅
+- `packages/db/src/schema/user-locations.ts` ✅
+- `packages/db/src/schema/alert-history.ts` ✅
+- `packages/db/src/schema/chat-sessions.ts` ✅
+- `packages/db/src/migrations/0000_amazing_kate_bishop.sql` ✅
+
+### API Endpoints
+- `apps/web/src/app/api/alerts/route.ts` ✅
+- `apps/web/src/app/api/chat/route.ts` ✅
+
+### Servicios
+- `apps/web/src/lib/weather/noaa.ts` ✅
+- `apps/web/src/lib/weather/index.ts` ✅
+
+### Componentes Native
+- `apps/native/components/map-view.tsx` ✅
+- `apps/native/components/chat-panel.tsx` ✅
+- `apps/native/hooks/use-location.ts` ✅
+- `apps/native/app/(drawer)/(tabs)/index.tsx` ✅
 
 ---
 

@@ -3,11 +3,11 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    OPENAI_API_KEY: z.string().startsWith("sk-"),
+    GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1),
   },
   client: {},
   runtimeEnv: {
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    GOOGLE_GENERATIVE_AI_API_KEY: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
   },
   emptyStringAsUndefined: true,
 });
