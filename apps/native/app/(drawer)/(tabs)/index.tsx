@@ -1,52 +1,55 @@
-import { useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { fetch as expoFetch } from "expo/fetch";
+import { useState, useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { ChatPanel } from "@/components/chat-panel";
-import { MapViewComponent } from "@/components/map-view";
-
-type Message = {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-};
+import { MapViewComponent, type WeatherAlert } from "@/components/map-view";
+import { useLocation } from "@/hooks/use-location";
+import { env } from "@advia/env/native";
 
 export default function Home() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [mapAlerts, setMapAlerts] = useState<WeatherAlert[]>([]);
+  const [inputText, setInputText] = useState("");
+  const { location } = useLocation();
 
-  const handleSendMessage = async (text: string) => {
-    // Add user message
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: "user",
-      content: text,
-    };
-    setMessages((prev) => [...prev, userMessage]);
-    setIsLoading(true);
+  const { messages, sendMessage, status } = useChat({
+    transport: new DefaultChatTransport({
+      fetch: expoFetch as unknown as typeof globalThis.fetch,
+      api: `${env.EXPO_PUBLIC_SERVER_URL}/api/chat`,
+    }),
+    onError: (error) => console.error("Chat error:", error),
+  });
 
-    // TODO: Replace with actual AI SDK call
-    // Simulated response for now
-    setTimeout(() => {
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: `Entendido. Estoy analizando "${text}". Esta funcionalidad se conectará con el agente AI pronto.`,
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
-      setIsLoading(false);
-    }, 1000);
-  };
+  const isLoading = status === "streaming" || status === "submitted";
+
+  const handleSendMessage = useCallback(
+    (text: string) => {
+      sendMessage({ text });
+      setInputText("");
+    },
+    [sendMessage]
+  );
+
+  // Convert AI SDK messages to our format
+  const chatMessages = messages.map((m) => ({
+    id: m.id,
+    role: m.role as "user" | "assistant",
+    content: m.parts
+      ?.filter((part): part is { type: "text"; text: string } => part.type === "text")
+      .map((part) => part.text)
+      .join("") || "",
+  }));
 
   return (
     <View style={styles.container}>
-      {/* Map takes most of the screen */}
       <View style={styles.mapContainer}>
-        <MapViewComponent />
+        <MapViewComponent alerts={mapAlerts} />
       </View>
 
-      {/* Chat panel fixed at bottom */}
       <ChatPanel
-        messages={messages}
+        messages={chatMessages}
         onSendMessage={handleSendMessage}
         isLoading={isLoading}
       />

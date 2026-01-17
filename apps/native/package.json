@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@advia/env": "workspace:*",
+    "@ai-sdk/react": "^3.0.41",
     "@better-auth/expo": "catalog:",
     "@expo/metro-runtime": "~6.1.2",
     "@expo/vector-icons": "^15.0.3",
@@ -20,6 +21,7 @@
     "@react-navigation/drawer": "^7.3.9",
     "@react-navigation/elements": "^2.8.1",
     "@rnmapbox/maps": "^10.2.10",
+    "ai": "^6.0.39",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "expo": "^54.0.23",

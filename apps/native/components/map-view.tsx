@@ -8,15 +8,18 @@ import { useLocation } from "@/hooks/use-location";
 // Initialize Mapbox with access token
 Mapbox.setAccessToken(env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN);
 
-type AlertPolygon = {
+export type WeatherAlert = {
   id: string;
-  coordinates: number[][][];
+  type: string;
   severity: "extreme" | "severe" | "moderate" | "minor";
-  title: string;
+  polygon: {
+    type: "Polygon";
+    coordinates: number[][][];
+  } | null;
 };
 
 type MapViewProps = {
-  alerts?: AlertPolygon[];
+  alerts?: WeatherAlert[];
   onMapReady?: () => void;
 };
 
@@ -73,38 +76,37 @@ export function MapViewComponent({ alerts = [], onMapReady }: MapViewProps) {
         />
 
         {/* Alert polygons */}
-        {alerts.map((alert) => (
-          <Mapbox.ShapeSource
-            key={alert.id}
-            id={`alert-source-${alert.id}`}
-            shape={{
-              type: "Feature",
-              geometry: {
-                type: "Polygon",
-                coordinates: alert.coordinates,
-              },
-              properties: {
-                severity: alert.severity,
-                title: alert.title,
-              },
-            }}
-          >
-            <Mapbox.FillLayer
-              id={`alert-fill-${alert.id}`}
-              style={{
-                fillColor: SEVERITY_COLORS[alert.severity],
-                fillOpacity: 0.6,
+        {alerts
+          .filter((alert) => alert.polygon !== null)
+          .map((alert) => (
+            <Mapbox.ShapeSource
+              key={alert.id}
+              id={`alert-source-${alert.id}`}
+              shape={{
+                type: "Feature",
+                geometry: alert.polygon!,
+                properties: {
+                  severity: alert.severity,
+                  type: alert.type,
+                },
               }}
-            />
-            <Mapbox.LineLayer
-              id={`alert-line-${alert.id}`}
-              style={{
-                lineColor: SEVERITY_STROKE_COLORS[alert.severity],
-                lineWidth: 2,
-              }}
-            />
-          </Mapbox.ShapeSource>
-        ))}
+            >
+              <Mapbox.FillLayer
+                id={`alert-fill-${alert.id}`}
+                style={{
+                  fillColor: SEVERITY_COLORS[alert.severity],
+                  fillOpacity: 0.6,
+                }}
+              />
+              <Mapbox.LineLayer
+                id={`alert-line-${alert.id}`}
+                style={{
+                  lineColor: SEVERITY_STROKE_COLORS[alert.severity],
+                  lineWidth: 2,
+                }}
+              />
+            </Mapbox.ShapeSource>
+          ))}
       </RNMapView>
     </View>
   );
