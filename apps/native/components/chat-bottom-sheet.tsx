@@ -1,9 +1,8 @@
 // apps/native/components/chat-bottom-sheet.tsx
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { View, Text, TextInput, Pressable, FlatList } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useThemeColors } from '@/hooks/use-theme-colors';
-import { useChat } from '@ai-sdk/react';
 
 const QUICK_SUGGESTIONS = [
   'Mi ruta al trabajo',
@@ -11,18 +10,48 @@ const QUICK_SUGGESTIONS = [
   '¿Va a llover hoy?',
 ];
 
+interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 export function ChatBottomSheet() {
   const colors = useThemeColors();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['15%', '50%', '80%'], []);
 
-  const { messages, input, setInput, handleSubmit, isLoading } = useChat({
-    api: '/api/chat',
-  });
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = () => {
-    if (input.trim()) {
-      handleSubmit();
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
+
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: input.trim(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      // TODO: Integrate with actual AI chat API
+      // For now, simulate a response
+      setTimeout(() => {
+        const assistantMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: 'Esta funcionalidad estará disponible pronto. Por ahora puedes ver el mapa y las alertas.',
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+        setIsLoading(false);
+      }, 1000);
+    } catch (error) {
+      setIsLoading(false);
     }
   };
 

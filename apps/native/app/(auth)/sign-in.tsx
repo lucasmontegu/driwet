@@ -79,7 +79,7 @@ export default function SignInScreen() {
         <View className="gap-3">
           <Button
             onPress={handleGoogleSignIn}
-            variant="outline"
+            variant="secondary"
             size="lg"
             isDisabled={isLoading !== null}
           >
@@ -90,7 +90,7 @@ export default function SignInScreen() {
 
           <Button
             onPress={handleAppleSignIn}
-            variant="outline"
+            variant="secondary"
             size="lg"
             isDisabled={isLoading !== null}
           >

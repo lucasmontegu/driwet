@@ -61,7 +61,7 @@ export default function VerifyScreen() {
 
         <Button
           onPress={handleOpenEmail}
-          variant="outline"
+          variant="secondary"
           size="lg"
           className="w-full mb-4"
         >
