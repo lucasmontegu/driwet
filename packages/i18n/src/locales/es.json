@@ -1,0 +1,117 @@
+{
+  "common": {
+    "continue": "Continuar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "retry": "Reintentar",
+    "or": "o"
+  },
+  "welcome": {
+    "tagline": "Tu co-piloto climático",
+    "subtitle": "Evita tormentas. Llega seguro.",
+    "startFree": "Comenzar gratis",
+    "trialInfo": "3 días con todo incluido, sin cuenta",
+    "haveAccount": "¿Ya tienes cuenta?",
+    "signIn": "Inicia sesión"
+  },
+  "auth": {
+    "signInTitle": "Inicia sesión",
+    "signInSubtitle": "Sincroniza tus rutas y alertas en todos tus dispositivos",
+    "continueWithGoogle": "Continuar con Google",
+    "continueWithApple": "Continuar con Apple",
+    "continueWithEmail": "Continuar con email",
+    "enterEmail": "Ingresa tu email",
+    "emailPlaceholder": "tu@email.com",
+    "sendMagicLink": "Enviar magic link",
+    "sending": "Enviando...",
+    "checkEmail": "Revisa tu email",
+    "magicLinkSent": "Enviamos un link de acceso a",
+    "openEmailApp": "Abrir app de email",
+    "useAnotherEmail": "Usar otro email",
+    "connecting": "Conectando...",
+    "back": "Volver",
+    "enterEmailError": "Ingresa tu email",
+    "sendError": "Error al enviar el link. Intenta de nuevo."
+  },
+  "tabs": {
+    "map": "Mapa",
+    "routes": "Rutas",
+    "profile": "Perfil"
+  },
+  "map": {
+    "myZone": "Mi zona",
+    "chatPlaceholder": "Escribe un mensaje...",
+    "chatPrompt": "¿A dónde vas hoy?",
+    "suggestions": {
+      "workRoute": "Mi ruta al trabajo",
+      "nearbyAlerts": "Alertas cercanas",
+      "willItRain": "¿Va a llover hoy?"
+    }
+  },
+  "alerts": {
+    "extreme": "Alerta extrema",
+    "severe": "Alerta severa",
+    "moderate": "Alerta moderada",
+    "minor": "Alerta menor",
+    "distance": "a {{distance}}"
+  },
+  "routes": {
+    "title": "Mis Rutas",
+    "addNew": "Agregar nueva ruta",
+    "history": "Historial",
+    "noAlerts": "Sin alertas",
+    "clear": "Despejado",
+    "rain": "Lluvia {{time}}",
+    "avoidedStorm": "Evitaste tormenta",
+    "safeRoute": "Ruta segura",
+    "estimatedSavings": "Ahorro estimado: {{amount}}"
+  },
+  "profile": {
+    "title": "Perfil",
+    "stats": "Estadísticas",
+    "stormsAvoided": "{{count}} tormentas evitadas",
+    "moneySaved": "~${{amount}} ahorrados",
+    "kmTraveled": "{{km}} km recorridos seguro",
+    "settings": "Configuración",
+    "notifications": "Notificaciones",
+    "savedLocations": "Ubicaciones guardadas",
+    "theme": "Tema",
+    "themeAuto": "Auto",
+    "language": "Idioma",
+    "languageSpanish": "Español",
+    "languageEnglish": "English",
+    "help": "Ayuda y soporte",
+    "logout": "Cerrar sesión",
+    "trialRemaining": "Trial: {{days}} días restantes",
+    "planPremium": "Plan: Premium",
+    "upgrade": "Upgrade"
+  },
+  "premium": {
+    "title": "Advia Premium",
+    "features": {
+      "unlimitedRoutes": "Rutas ilimitadas",
+      "realTimeAlerts": "Alertas en tiempo real",
+      "noAds": "Sin anuncios",
+      "refugeLocations": "Lugares de refugio",
+      "fullHistory": "Historial completo",
+      "multipleLocations": "Múltiples ubicaciones"
+    },
+    "monthly": "$4.99/mes",
+    "yearly": "$39.99/año (ahorra 33%)",
+    "cancelAnytime": "Cancela cuando quieras",
+    "processedBy": "Pago procesado por Polar"
+  },
+  "loginIncentive": {
+    "title": "Guarda tus datos",
+    "subtitle": "Inicia sesión para sincronizar rutas y ubicaciones en todos tus dispositivos.",
+    "continueWithoutAccount": "Continuar sin cuenta",
+    "localDataOnly": "(datos solo locales)"
+  },
+  "chat": {
+    "placeholder": "Escribe un mensaje...",
+    "comingSoon": "Esta funcionalidad estará disponible pronto."
+  }
+}
