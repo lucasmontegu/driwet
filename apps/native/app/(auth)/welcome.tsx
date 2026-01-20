@@ -1,19 +1,25 @@
 // apps/native/app/(auth)/welcome.tsx
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Button } from 'heroui-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useTrialStore } from '@/stores/trial-store';
+import { useTranslation } from '@/lib/i18n';
 
 export default function WelcomeScreen() {
   const router = useRouter();
   const colors = useThemeColors();
+  const { t } = useTranslation();
   const { startTrial } = useTrialStore();
 
   const handleStart = () => {
     startTrial();
     router.replace('/(app)/(tabs)');
+  };
+
+  const handleSignIn = () => {
+    router.push('/(auth)/sign-in');
   };
 
   return (
@@ -42,7 +48,7 @@ export default function WelcomeScreen() {
             marginBottom: 8,
           }}
         >
-          Tu co-piloto climatico
+          {t('welcome.tagline')}
         </Text>
 
         <Text
@@ -54,7 +60,7 @@ export default function WelcomeScreen() {
             marginBottom: 48,
           }}
         >
-          Evita tormentas. Llega seguro.
+          {t('welcome.subtitle')}
         </Text>
 
         {/* CTA */}
@@ -63,7 +69,7 @@ export default function WelcomeScreen() {
           className="w-full"
           size="lg"
         >
-          <Button.Label>Comenzar gratis</Button.Label>
+          <Button.Label>{t('welcome.startFree')}</Button.Label>
         </Button>
 
         <Text
@@ -72,10 +78,56 @@ export default function WelcomeScreen() {
             fontSize: 14,
             color: colors.mutedForeground,
             marginTop: 16,
+            textAlign: 'center',
           }}
         >
-          7 dias con todo incluido
+          {t('welcome.trialInfo')}
         </Text>
+
+        {/* Divider */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: 32,
+            marginBottom: 24,
+            width: '100%',
+          }}
+        >
+          <View style={{ flex: 1, height: 1, backgroundColor: colors.border }} />
+          <Text
+            style={{
+              marginHorizontal: 16,
+              color: colors.mutedForeground,
+              fontFamily: 'NunitoSans_400Regular',
+            }}
+          >
+            {t('common.or')}
+          </Text>
+          <View style={{ flex: 1, height: 1, backgroundColor: colors.border }} />
+        </View>
+
+        {/* Sign in link */}
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text
+            style={{
+              fontFamily: 'NunitoSans_400Regular',
+              color: colors.mutedForeground,
+            }}
+          >
+            {t('welcome.haveAccount')}{' '}
+          </Text>
+          <Pressable onPress={handleSignIn}>
+            <Text
+              style={{
+                fontFamily: 'NunitoSans_600SemiBold',
+                color: colors.primary,
+              }}
+            >
+              {t('welcome.signIn')}
+            </Text>
+          </Pressable>
+        </View>
       </View>
     </SafeAreaView>
   );
