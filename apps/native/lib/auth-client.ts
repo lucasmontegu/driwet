@@ -1,5 +1,6 @@
 import { env } from "@advia/env/native";
 import { expoClient } from "@better-auth/expo/client";
+import { polarClient } from "@polar-sh/better-auth";
 import { magicLinkClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import Constants from "expo-constants";
@@ -13,6 +14,7 @@ export const authClient = createAuthClient({
       storagePrefix: Constants.expoConfig?.scheme as string,
       storage: SecureStore,
     }),
+    polarClient(),
     magicLinkClient(),
   ],
 });

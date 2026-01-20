@@ -1,26 +1,56 @@
 // apps/native/app/(app)/premium.tsx
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { useState } from 'react';
+import { View, Text, Pressable, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Button } from 'heroui-native';
 import { useThemeColors } from '@/hooks/use-theme-colors';
-
-const FEATURES = [
-  'Rutas ilimitadas',
-  'Alertas en tiempo real',
-  'Sin anuncios',
-  'Lugares de refugio',
-  'Historial completo',
-  'Multiples ubicaciones',
-];
+import { useTranslation } from '@/lib/i18n';
+import { useSubscriptionCheckout, useIsPremium } from '@/hooks/use-subscription';
+import { Icon } from '@/components/icons';
 
 export default function PremiumScreen() {
   const colors = useThemeColors();
   const router = useRouter();
+  const { t } = useTranslation();
+  const { checkout, portal } = useSubscriptionCheckout();
+  const { isSubscribed, plan } = useIsPremium();
+  const [isLoading, setIsLoading] = useState<'monthly' | 'yearly' | 'portal' | null>(null);
 
-  const handleSubscribe = (plan: 'monthly' | 'yearly') => {
-    // TODO: Integrar con Polar
-    console.log('Subscribe to:', plan);
+  const features = [
+    t('premium.features.unlimitedRoutes'),
+    t('premium.features.realTimeAlerts'),
+    t('premium.features.noAds'),
+    t('premium.features.refugeLocations'),
+    t('premium.features.fullHistory'),
+    t('premium.features.multipleLocations'),
+  ];
+
+  const handleSubscribe = async (selectedPlan: 'monthly' | 'yearly') => {
+    setIsLoading(selectedPlan);
+    try {
+      await checkout(selectedPlan);
+    } catch (error) {
+      console.error('Checkout error:', error);
+      Alert.alert(
+        t('common.error'),
+        t('subscription.checkoutError'),
+        [{ text: t('common.retry'), onPress: () => handleSubscribe(selectedPlan) }]
+      );
+    } finally {
+      setIsLoading(null);
+    }
+  };
+
+  const handleManageSubscription = async () => {
+    setIsLoading('portal');
+    try {
+      await portal();
+    } catch (error) {
+      console.error('Portal error:', error);
+    } finally {
+      setIsLoading(null);
+    }
   };
 
   return (
@@ -34,7 +64,7 @@ export default function PremiumScreen() {
           onPress={() => router.back()}
           style={{ alignSelf: 'flex-end', padding: 8 }}
         >
-          <Text style={{ fontSize: 24, color: colors.mutedForeground }}>✕</Text>
+          <Icon name="close" size={24} color={colors.mutedForeground} />
         </Pressable>
 
         {/* Header */}
@@ -44,15 +74,40 @@ export default function PremiumScreen() {
             fontFamily: 'NunitoSans_700Bold',
             fontSize: 28,
             color: colors.foreground,
-            marginBottom: 24,
+            marginBottom: 8,
           }}
         >
-          Advia Premium
+          {t('premium.title')}
         </Text>
+
+        {/* Current plan badge */}
+        {isSubscribed && (
+          <View
+            style={{
+              backgroundColor: colors.primary,
+              paddingHorizontal: 16,
+              paddingVertical: 6,
+              borderRadius: 20,
+              marginBottom: 24,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: 'NunitoSans_600SemiBold',
+                fontSize: 14,
+                color: colors.primaryForeground,
+              }}
+            >
+              {plan === 'yearly' ? t('subscription.planYearly') : t('subscription.planMonthly')}
+            </Text>
+          </View>
+        )}
+
+        {!isSubscribed && <View style={{ height: 24 }} />}
 
         {/* Features */}
         <View style={{ width: '100%', marginBottom: 32 }}>
-          {FEATURES.map((feature, index) => (
+          {features.map((feature, index) => (
             <View
               key={index}
               style={{
@@ -62,7 +117,7 @@ export default function PremiumScreen() {
                 marginBottom: 12,
               }}
             >
-              <Text style={{ color: colors.safe, fontSize: 18 }}>✓</Text>
+              <Icon name="check" size={18} color={colors.safe} />
               <Text
                 style={{
                   fontFamily: 'NunitoSans_400Regular',
@@ -76,25 +131,46 @@ export default function PremiumScreen() {
           ))}
         </View>
 
-        {/* Pricing */}
-        <View style={{ width: '100%', gap: 12 }}>
-          <Button
-            onPress={() => handleSubscribe('monthly')}
-            size="lg"
-            className="w-full"
-          >
-            <Button.Label>$4.99/mes</Button.Label>
-          </Button>
+        {/* Pricing or Manage */}
+        {isSubscribed ? (
+          <View style={{ width: '100%', gap: 12 }}>
+            <Button
+              onPress={handleManageSubscription}
+              size="lg"
+              className="w-full"
+              isDisabled={isLoading !== null}
+            >
+              <Button.Label>
+                {isLoading === 'portal' ? t('common.loading') : t('subscription.manageSubscription')}
+              </Button.Label>
+            </Button>
+          </View>
+        ) : (
+          <View style={{ width: '100%', gap: 12 }}>
+            <Button
+              onPress={() => handleSubscribe('monthly')}
+              size="lg"
+              className="w-full"
+              isDisabled={isLoading !== null}
+            >
+              <Button.Label>
+                {isLoading === 'monthly' ? t('common.loading') : t('premium.monthly')}
+              </Button.Label>
+            </Button>
 
-          <Button
-            onPress={() => handleSubscribe('yearly')}
-            variant="secondary"
-            size="lg"
-            className="w-full"
-          >
-            <Button.Label>$39.99/año (ahorra 33%)</Button.Label>
-          </Button>
-        </View>
+            <Button
+              onPress={() => handleSubscribe('yearly')}
+              variant="secondary"
+              size="lg"
+              className="w-full"
+              isDisabled={isLoading !== null}
+            >
+              <Button.Label>
+                {isLoading === 'yearly' ? t('common.loading') : t('premium.yearly')}
+              </Button.Label>
+            </Button>
+          </View>
+        )}
 
         {/* Footer */}
         <Text
@@ -106,8 +182,8 @@ export default function PremiumScreen() {
             marginTop: 24,
           }}
         >
-          Cancela cuando quieras{'\n'}
-          Pago procesado por Polar
+          {t('premium.cancelAnytime')}{'\n'}
+          {t('premium.processedBy')}
         </Text>
       </ScrollView>
     </SafeAreaView>

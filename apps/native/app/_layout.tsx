@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import * as SplashScreen from 'expo-splash-screen';
 import { Inter_900Black, Inter_400Regular, Inter_300Light, Inter_600SemiBold, useFonts } from '@expo-google-fonts/inter';
+import { NunitoSans_400Regular, NunitoSans_600SemiBold, NunitoSans_700Bold } from '@expo-google-fonts/nunito-sans';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 
 import { AppThemeProvider } from '@/contexts/app-theme-context';
@@ -29,6 +30,7 @@ function StackLayout() {
       <Stack.Screen name="(auth)" />
       <Stack.Screen name="(app)" />
       <Stack.Screen name="auth" />
+      <Stack.Screen name="subscription" />
       <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
     </Stack>
   );
@@ -40,6 +42,9 @@ const [loaded, error] = useFonts({
     Inter_400Regular,
     Inter_300Light,
     Inter_600SemiBold,
+    NunitoSans_400Regular,
+    NunitoSans_600SemiBold,
+    NunitoSans_700Bold,
   });
 
   useEffect(() => {

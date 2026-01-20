@@ -81,6 +81,7 @@ export default function EmailInputScreen() {
 
         {/* Email input */}
         <TextField className="mb-4">
+          <TextField.Label>{t('web.auth.email')}</TextField.Label>
           <TextField.Input
             value={email}
             onChangeText={setEmail}

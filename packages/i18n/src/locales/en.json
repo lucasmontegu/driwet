@@ -159,5 +159,17 @@
     "home": "Home",
     "work": "Work",
     "custom": "Custom"
+  },
+  "subscription": {
+    "verifying": "Verifying subscription",
+    "pleaseWait": "Please wait while we confirm your payment",
+    "welcomePremium": "Welcome to Premium!",
+    "enjoyFeatures": "Enjoy all premium features",
+    "verifyError": "Verification error",
+    "contactSupport": "If the problem persists, contact support",
+    "checkoutError": "Could not start checkout. Please try again.",
+    "manageSubscription": "Manage subscription",
+    "planMonthly": "Monthly plan",
+    "planYearly": "Yearly plan"
   }
 }

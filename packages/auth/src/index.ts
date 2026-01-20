@@ -56,17 +56,21 @@ export const auth = betterAuth({
     }),
     polar({
       client: polarClient,
-      createCustomerOnSignUp: true,
+      createCustomerOnSignUp: false,
       enableCustomerPortal: true,
       use: [
         checkout({
           products: [
             {
-              productId: env.POLAR_PRODUCT_ID,
-              slug: "premium",
+              productId: env.POLAR_MONTHLY_PRODUCT_ID,
+              slug: "monthly",
+            },
+            {
+              productId: env.POLAR_YEARLY_PRODUCT_ID,
+              slug: "yearly",
             },
           ],
-          successUrl: env.POLAR_SUCCESS_URL,
+          successUrl: "advia://subscription/success",
           authenticatedUsersOnly: true,
         }),
         portal(),

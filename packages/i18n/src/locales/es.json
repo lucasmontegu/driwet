@@ -159,5 +159,17 @@
     "home": "Casa",
     "work": "Trabajo",
     "custom": "Personalizado"
+  },
+  "subscription": {
+    "verifying": "Verificando suscripción",
+    "pleaseWait": "Por favor espera mientras confirmamos tu pago",
+    "welcomePremium": "¡Bienvenido a Premium!",
+    "enjoyFeatures": "Disfruta todas las funciones premium",
+    "verifyError": "Error de verificación",
+    "contactSupport": "Si el problema persiste, contacta soporte",
+    "checkoutError": "No se pudo iniciar el checkout. Intenta de nuevo.",
+    "manageSubscription": "Gestionar suscripción",
+    "planMonthly": "Plan mensual",
+    "planYearly": "Plan anual"
   }
 }

@@ -20,7 +20,13 @@
           "isAndroidForegroundServiceEnabled": true
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-web-browser",
+        {
+          "experimentalLauncherActivity": true
+        }
+      ]
     ],
     "ios": {
       "infoPlist": {
