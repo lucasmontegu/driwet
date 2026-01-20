@@ -1,0 +1,21 @@
+{
+  "name": "@advia/i18n",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./locales/*": {
+      "default": "./src/locales/*.json"
+    }
+  },
+  "dependencies": {
+    "i18next": "^24.2.2",
+    "react-i18next": "^15.4.1"
+  },
+  "devDependencies": {
+    "@advia/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
