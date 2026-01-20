@@ -14,6 +14,10 @@ import {
 } from '@expo-google-fonts/nunito-sans';
 
 import { AppThemeProvider } from '@/contexts/app-theme-context';
+import { setupI18n } from '@/lib/i18n';
+
+// Initialize i18n before app renders
+setupI18n();
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
