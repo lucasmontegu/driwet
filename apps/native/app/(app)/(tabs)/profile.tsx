@@ -5,26 +5,43 @@ import { useRouter } from 'expo-router';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useTrialStore } from '@/stores/trial-store';
 import { authClient } from '@/lib/auth-client';
+import { Icon, type IconName } from '@/components/icons';
+import { useTranslation } from '@/lib/i18n';
 
-const STATS = [
-  { icon: '🌩️', label: '12 tormentas evitadas' },
-  { icon: '💰', label: '~$2,400 ahorrados' },
-  { icon: '🛣️', label: '847 km recorridos seguro' },
-];
+type StatItem = {
+  icon: IconName;
+  labelKey: string;
+  value: string | number;
+};
 
-const SETTINGS = [
-  { icon: '🔔', label: 'Notificaciones', route: '/notifications' },
-  { icon: '📍', label: 'Ubicaciones guardadas', route: '/locations' },
-  { icon: '🎨', label: 'Tema', route: null, value: 'Auto' },
-  { icon: '🌐', label: 'Idioma', route: null, value: 'Español' },
-  { icon: '❓', label: 'Ayuda y soporte', route: '/help' },
-];
+type SettingItem = {
+  icon: IconName;
+  labelKey: string;
+  route: string | null;
+  valueKey?: string;
+};
 
 export default function ProfileScreen() {
   const colors = useThemeColors();
   const router = useRouter();
+  const { t } = useTranslation();
   const { isPremium, getRemainingDays } = useTrialStore();
   const remainingDays = getRemainingDays();
+
+  // TODO: Replace with real data from API
+  const stats: StatItem[] = [
+    { icon: 'storm', labelKey: 'profile.stormsAvoided', value: 12 },
+    { icon: 'money', labelKey: 'profile.moneySaved', value: '2,400' },
+    { icon: 'road', labelKey: 'profile.kmTraveled', value: 847 },
+  ];
+
+  const settings: SettingItem[] = [
+    { icon: 'notification', labelKey: 'profile.notifications', route: '/notifications' },
+    { icon: 'location', labelKey: 'profile.savedLocations', route: '/locations' },
+    { icon: 'theme', labelKey: 'profile.theme', route: null, valueKey: 'profile.themeAuto' },
+    { icon: 'language', labelKey: 'profile.language', route: null, valueKey: 'profile.languageSpanish' },
+    { icon: 'help', labelKey: 'profile.help', route: '/help' },
+  ];
 
   const handleLogout = async () => {
     await authClient.signOut();
@@ -47,7 +64,7 @@ export default function ProfileScreen() {
             marginBottom: 24,
           }}
         >
-          Perfil
+          {t('profile.title')}
         </Text>
 
         {/* User Card */}
@@ -72,7 +89,7 @@ export default function ProfileScreen() {
                 alignItems: 'center',
               }}
             >
-              <Text style={{ fontSize: 20 }}>👤</Text>
+              <Icon name="user" size={24} color={colors.primaryForeground} />
             </View>
             <View style={{ flex: 1 }}>
               <Text
@@ -84,22 +101,22 @@ export default function ProfileScreen() {
               >
                 usuario@email.com
               </Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                <Text
-                  style={{
-                    fontFamily: 'NunitoSans_400Regular',
-                    color: isPremium ? colors.primary : colors.mutedForeground,
-                    fontSize: 14,
-                  }}
-                >
-                  {isPremium ? 'Plan: Premium' : `Trial: ${remainingDays} días restantes`}
-                </Text>
-              </View>
+              <Text
+                style={{
+                  fontFamily: 'NunitoSans_400Regular',
+                  color: isPremium ? colors.primary : colors.mutedForeground,
+                  fontSize: 14,
+                }}
+              >
+                {isPremium
+                  ? t('profile.planPremium')
+                  : t('profile.trialRemaining', { days: remainingDays })}
+              </Text>
             </View>
             {!isPremium && (
               <Pressable onPress={handleUpgrade}>
                 <Text style={{ color: colors.primary, fontFamily: 'NunitoSans_600SemiBold' }}>
-                  Upgrade
+                  {t('profile.upgrade')}
                 </Text>
               </Pressable>
             )}
@@ -107,16 +124,18 @@ export default function ProfileScreen() {
         </Pressable>
 
         {/* Stats */}
-        <Text
-          style={{
-            fontFamily: 'NunitoSans_600SemiBold',
-            fontSize: 16,
-            color: colors.mutedForeground,
-            marginBottom: 12,
-          }}
-        >
-          📊 Estadisticas
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+          <Icon name="stats" size={18} color={colors.mutedForeground} />
+          <Text
+            style={{
+              fontFamily: 'NunitoSans_600SemiBold',
+              fontSize: 16,
+              color: colors.mutedForeground,
+            }}
+          >
+            {t('profile.stats')}
+          </Text>
+        </View>
         <View
           style={{
             backgroundColor: colors.card,
@@ -128,32 +147,34 @@ export default function ProfileScreen() {
             gap: 12,
           }}
         >
-          {STATS.map((stat, index) => (
+          {stats.map((stat, index) => (
             <View key={index} style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-              <Text style={{ fontSize: 20 }}>{stat.icon}</Text>
+              <Icon name={stat.icon} size={20} color={colors.primary} />
               <Text
                 style={{
                   fontFamily: 'NunitoSans_400Regular',
                   color: colors.foreground,
                 }}
               >
-                {stat.label}
+                {t(stat.labelKey, { count: stat.value, amount: stat.value, km: stat.value })}
               </Text>
             </View>
           ))}
         </View>
 
         {/* Settings */}
-        <Text
-          style={{
-            fontFamily: 'NunitoSans_600SemiBold',
-            fontSize: 16,
-            color: colors.mutedForeground,
-            marginBottom: 12,
-          }}
-        >
-          ⚙️ Configuracion
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+          <Icon name="settings" size={18} color={colors.mutedForeground} />
+          <Text
+            style={{
+              fontFamily: 'NunitoSans_600SemiBold',
+              fontSize: 16,
+              color: colors.mutedForeground,
+            }}
+          >
+            {t('profile.settings')}
+          </Text>
+        </View>
         <View
           style={{
             backgroundColor: colors.card,
@@ -163,28 +184,29 @@ export default function ProfileScreen() {
             marginBottom: 24,
           }}
         >
-          {SETTINGS.map((setting, index) => (
+          {settings.map((setting, index) => (
             <Pressable
               key={index}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 padding: 16,
-                borderBottomWidth: index < SETTINGS.length - 1 ? 1 : 0,
+                borderBottomWidth: index < settings.length - 1 ? 1 : 0,
                 borderBottomColor: colors.border,
               }}
             >
-              <Text style={{ fontSize: 18, marginRight: 12 }}>{setting.icon}</Text>
+              <Icon name={setting.icon} size={20} color={colors.foreground} />
               <Text
                 style={{
                   flex: 1,
+                  marginLeft: 12,
                   fontFamily: 'NunitoSans_400Regular',
                   color: colors.foreground,
                 }}
               >
-                {setting.label}
+                {t(setting.labelKey)}
               </Text>
-              {setting.value && (
+              {setting.valueKey && (
                 <Text
                   style={{
                     fontFamily: 'NunitoSans_400Regular',
@@ -192,10 +214,10 @@ export default function ProfileScreen() {
                     marginRight: 8,
                   }}
                 >
-                  {setting.value}
+                  {t(setting.valueKey)}
                 </Text>
               )}
-              <Text style={{ color: colors.mutedForeground }}>→</Text>
+              <Icon name="arrowRight" size={16} color={colors.mutedForeground} />
             </Pressable>
           ))}
         </View>
@@ -210,14 +232,14 @@ export default function ProfileScreen() {
             padding: 16,
           }}
         >
-          <Text style={{ fontSize: 18 }}>🚪</Text>
+          <Icon name="logout" size={20} color={colors.destructive} />
           <Text
             style={{
               fontFamily: 'NunitoSans_400Regular',
               color: colors.destructive,
             }}
           >
-            Cerrar sesion
+            {t('profile.logout')}
           </Text>
         </Pressable>
       </ScrollView>
