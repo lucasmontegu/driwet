@@ -5,10 +5,14 @@ import { useThemeColors } from '@/hooks/use-theme-colors';
 import { MapViewComponent } from '@/components/map-view';
 import { ChatBottomSheet } from '@/components/chat-bottom-sheet';
 import { AlertBanner } from '@/components/alert-banner';
+import { AdBanner } from '@/components/ad-banner';
+import { Icon } from '@/components/icons';
 import { useState } from 'react';
+import { useTranslation } from '@/lib/i18n';
 
 export default function MapScreen() {
   const colors = useThemeColors();
+  const { t } = useTranslation();
   const [alerts, setAlerts] = useState([]);
 
   return (
@@ -34,7 +38,7 @@ export default function MapScreen() {
             Advia
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-            <Text style={{ fontSize: 16 }}>📍</Text>
+            <Icon name="location" size={16} color={colors.mutedForeground} />
             <Text
               style={{
                 fontFamily: 'NunitoSans_400Regular',
@@ -42,11 +46,14 @@ export default function MapScreen() {
                 color: colors.mutedForeground,
               }}
             >
-              Mi zona
+              {t('map.myZone')}
             </Text>
           </View>
         </View>
       </SafeAreaView>
+
+      {/* Ad Banner - now below header */}
+      <AdBanner />
 
       {/* Alert Banner (si hay alertas activas) */}
       <AlertBanner />
