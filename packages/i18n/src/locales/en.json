@@ -113,5 +113,21 @@
   "chat": {
     "placeholder": "Type a message...",
     "comingSoon": "This feature will be available soon."
+  },
+  "locations": {
+    "title": "Saved locations",
+    "empty": "No saved locations",
+    "emptySubtitle": "Add locations to receive weather alerts for those areas",
+    "addNew": "Add location",
+    "primary": "Primary",
+    "setPrimary": "Set as primary",
+    "alerts": "Alerts enabled",
+    "noAlerts": "Alerts disabled",
+    "deleteConfirm": "Delete this location?",
+    "deleteDescription": "This action cannot be undone",
+    "namePlaceholder": "Location name",
+    "home": "Home",
+    "work": "Work",
+    "custom": "Custom"
   }
 }

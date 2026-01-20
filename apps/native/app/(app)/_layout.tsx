@@ -52,6 +52,12 @@ export default function AppLayout() {
           animation: 'slide_from_bottom',
         }}
       />
+      <Stack.Screen
+        name="locations"
+        options={{
+          presentation: 'card',
+        }}
+      />
     </Stack>
   );
 }

@@ -113,5 +113,21 @@
   "chat": {
     "placeholder": "Escribe un mensaje...",
     "comingSoon": "Esta funcionalidad estará disponible pronto."
+  },
+  "locations": {
+    "title": "Ubicaciones guardadas",
+    "empty": "No tienes ubicaciones guardadas",
+    "emptySubtitle": "Agrega ubicaciones para recibir alertas de clima en esas zonas",
+    "addNew": "Agregar ubicación",
+    "primary": "Principal",
+    "setPrimary": "Establecer como principal",
+    "alerts": "Alertas activadas",
+    "noAlerts": "Alertas desactivadas",
+    "deleteConfirm": "¿Eliminar esta ubicación?",
+    "deleteDescription": "Esta acción no se puede deshacer",
+    "namePlaceholder": "Nombre de la ubicación",
+    "home": "Casa",
+    "work": "Trabajo",
+    "custom": "Personalizado"
   }
 }
