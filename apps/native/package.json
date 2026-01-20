@@ -23,6 +23,7 @@
     "@orpc/client": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/tanstack-query": "^1.13.4",
+    "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-navigation/drawer": "^7.3.9",
     "@react-navigation/elements": "^2.8.1",
     "@rnmapbox/maps": "^10.2.10",
@@ -58,7 +59,8 @@
     "tailwind-variants": "^3.2.2",
     "tailwindcss": "^4.1.18",
     "uniwind": "^1.2.2",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "zustand": "^5.0.10"
   },
   "devDependencies": {
     "@advia/config": "workspace:*",
