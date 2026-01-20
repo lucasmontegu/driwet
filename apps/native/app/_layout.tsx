@@ -6,19 +6,14 @@ import { HeroUINativeProvider } from 'heroui-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import * as SplashScreen from 'expo-splash-screen';
-import {
-  useFonts,
-  NunitoSans_400Regular,
-  NunitoSans_600SemiBold,
-  NunitoSans_700Bold,
-} from '@expo-google-fonts/nunito-sans';
+import { Inter_900Black, Inter_400Regular, Inter_300Light, Inter_600SemiBold, useFonts } from '@expo-google-fonts/inter';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 
 import { AppThemeProvider } from '@/contexts/app-theme-context';
-import { setupI18n } from '@/lib/i18n';
+import { setupI18n, I18nextProvider, getI18nInstance } from '@/lib/i18n';
 import { queryClient, asyncStoragePersister } from '@/lib/query-client';
 
-// Initialize i18n before app renders
+// Initialize i18n before app renders (synchronous with initImmediate: false)
 setupI18n();
 
 // Prevent splash screen from auto-hiding
@@ -39,36 +34,41 @@ function StackLayout() {
 }
 
 export default function Layout() {
-  const [fontsLoaded, fontError] = useFonts({
-    NunitoSans_400Regular,
-    NunitoSans_600SemiBold,
-    NunitoSans_700Bold,
+const [loaded, error] = useFonts({
+    Inter_900Black,
+    Inter_400Regular,
+    Inter_300Light,
+    Inter_600SemiBold,
   });
 
   useEffect(() => {
-    if (fontsLoaded || fontError) {
+    if (loaded || error) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, fontError]);
+  }, [loaded, error]);
 
-  if (!fontsLoaded && !fontError) {
+  if (!loaded && !error) {
     return null;
   }
 
+
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{ persister: asyncStoragePersister }}
-      >
-        <KeyboardProvider>
-          <AppThemeProvider>
-            <HeroUINativeProvider>
-              <StackLayout />
-            </HeroUINativeProvider>
-          </AppThemeProvider>
-        </KeyboardProvider>
-      </PersistQueryClientProvider>
+      <I18nextProvider i18n={getI18nInstance()}>
+        <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={{ persister: asyncStoragePersister }}
+        >
+          <KeyboardProvider>
+            <AppThemeProvider>
+              <HeroUINativeProvider>
+                <StackLayout />
+              </HeroUINativeProvider>
+            </AppThemeProvider>
+          </KeyboardProvider>
+        </PersistQueryClientProvider>
+      </I18nextProvider>
     </GestureHandlerRootView>
   );
 }

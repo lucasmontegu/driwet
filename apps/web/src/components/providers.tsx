@@ -2,6 +2,12 @@
 
 import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "./ui/sonner";
+import { setupI18n } from "@/lib/i18n";
+
+// Initialize i18n on client side
+if (typeof window !== "undefined") {
+  setupI18n();
+}
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (

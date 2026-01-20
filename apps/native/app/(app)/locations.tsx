@@ -20,7 +20,7 @@ export default function LocationsScreen() {
 
   const handleAddLocation = () => {
     requireAuth(() => {
-      router.push("/(app)/add-location");
+      return router.push("/(app)/add-location");
     });
   };
 

@@ -1,5 +1,6 @@
 // apps/native/lib/i18n.ts
-import { initI18n, type SupportedLanguage } from '@advia/i18n';
+import { initI18n, getI18n, i18n, type SupportedLanguage } from '@advia/i18n';
+import { I18nextProvider } from 'react-i18next';
 import * as Localization from 'expo-localization';
 
 export function setupI18n() {
@@ -8,4 +9,9 @@ export function setupI18n() {
   return initI18n(lng);
 }
 
-export { useTranslation, i18n } from '@advia/i18n';
+export function getI18nInstance() {
+  return i18n;
+}
+
+export { I18nextProvider };
+export { useTranslation } from 'react-i18next';
