@@ -1,6 +1,8 @@
 // apps/native/components/alert-banner.tsx
 import { View, Text, Pressable } from 'react-native';
 import { useThemeColors } from '@/hooks/use-theme-colors';
+import { useTranslation } from '@/lib/i18n';
+import { Icon } from '@/components/icons';
 
 interface AlertBannerProps {
   alert?: {
@@ -8,12 +10,13 @@ interface AlertBannerProps {
     severity: 'extreme' | 'severe' | 'moderate' | 'minor';
     distance?: string;
   };
+  onPress?: () => void;
 }
 
-export function AlertBanner({ alert }: AlertBannerProps) {
+export function AlertBanner({ alert, onPress }: AlertBannerProps) {
   const colors = useThemeColors();
+  const { t } = useTranslation();
 
-  // Por ahora mostrar un alert de ejemplo si no hay ninguno
   if (!alert) {
     return null;
   }
@@ -25,15 +28,16 @@ export function AlertBanner({ alert }: AlertBannerProps) {
     minor: colors.alert.minor,
   };
 
-  const severityLabels = {
-    extreme: 'Alerta extrema',
-    severe: 'Alerta severa',
-    moderate: 'Alerta moderada',
-    minor: 'Alerta menor',
-  };
+  const severityKeys = {
+    extreme: 'alerts.extreme',
+    severe: 'alerts.severe',
+    moderate: 'alerts.moderate',
+    minor: 'alerts.minor',
+  } as const;
 
   return (
     <Pressable
+      onPress={onPress}
       style={{
         backgroundColor: severityColors[alert.severity],
         paddingHorizontal: 16,
@@ -43,7 +47,7 @@ export function AlertBanner({ alert }: AlertBannerProps) {
         alignItems: 'center',
       }}
     >
-      <View>
+      <View style={{ flex: 1 }}>
         <Text
           style={{
             fontFamily: 'NunitoSans_600SemiBold',
@@ -51,7 +55,7 @@ export function AlertBanner({ alert }: AlertBannerProps) {
             color: '#FFFFFF',
           }}
         >
-          {severityLabels[alert.severity]}
+          {t(severityKeys[alert.severity])}
         </Text>
         <Text
           style={{
@@ -59,11 +63,13 @@ export function AlertBanner({ alert }: AlertBannerProps) {
             fontSize: 12,
             color: 'rgba(255,255,255,0.9)',
           }}
+          numberOfLines={1}
         >
-          {alert.type} {alert.distance && `a ${alert.distance}`}
+          {alert.type}
+          {alert.distance && ` ${t('alerts.distance', { distance: alert.distance })}`}
         </Text>
       </View>
-      <Text style={{ color: '#FFFFFF', fontSize: 16 }}>→</Text>
+      <Icon name="arrowRight" size={16} color="#FFFFFF" />
     </Pressable>
   );
 }

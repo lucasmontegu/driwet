@@ -2,18 +2,45 @@
 import { View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useThemeColors } from '@/hooks/use-theme-colors';
-import { MapViewComponent } from '@/components/map-view';
+import { useLocation } from '@/hooks/use-location';
+import { useActiveAlerts } from '@/hooks/use-api';
+import { MapViewComponent, type WeatherAlert } from '@/components/map-view';
 import { ChatBottomSheet } from '@/components/chat-bottom-sheet';
 import { AlertBanner } from '@/components/alert-banner';
 import { AdBanner } from '@/components/ad-banner';
 import { Icon } from '@/components/icons';
-import { useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
 
 export default function MapScreen() {
   const colors = useThemeColors();
   const { t } = useTranslation();
-  const [alerts] = useState([]);
+  const { location, isLoading: locationLoading } = useLocation();
+
+  // Fetch alerts for current location
+  const { data: alertsData } = useActiveAlerts(
+    location?.latitude ?? 0,
+    location?.longitude ?? 0,
+    !locationLoading && location !== null
+  );
+
+  // Transform API alerts to map format
+  const alerts: WeatherAlert[] = (alertsData?.alerts ?? []).map((alert) => ({
+    id: alert.id,
+    type: alert.type,
+    severity: alert.severity,
+    headline: alert.headline,
+    polygon: alert.polygon,
+  }));
+
+  // Get the most severe alert for the banner
+  const severityOrder = ['extreme', 'severe', 'moderate', 'minor'] as const;
+  const mostSevereAlert = alerts.length > 0
+    ? alerts.reduce((prev, curr) => {
+        const prevIndex = severityOrder.indexOf(prev.severity);
+        const currIndex = severityOrder.indexOf(curr.severity);
+        return currIndex < prevIndex ? curr : prev;
+      })
+    : null;
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -55,8 +82,15 @@ export default function MapScreen() {
       {/* Ad Banner - now below header */}
       <AdBanner />
 
-      {/* Alert Banner (si hay alertas activas) */}
-      <AlertBanner />
+      {/* Alert Banner (if there are active alerts) */}
+      {mostSevereAlert && (
+        <AlertBanner
+          alert={{
+            type: mostSevereAlert.type,
+            severity: mostSevereAlert.severity,
+          }}
+        />
+      )}
 
       {/* Map */}
       <View style={{ flex: 1 }}>

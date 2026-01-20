@@ -12,6 +12,7 @@ export type WeatherAlert = {
   id: string;
   type: string;
   severity: "extreme" | "severe" | "moderate" | "minor";
+  headline?: string;
   polygon: {
     type: "Polygon";
     coordinates: number[][][];
