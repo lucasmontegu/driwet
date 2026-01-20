@@ -102,6 +102,90 @@ type ChatLocation = {
   longitude: number;
 };
 
+// ============ Routes Hooks ============
+
+export function useSavedRoutes() {
+  return useQuery(api.routes.listSaved.queryOptions());
+}
+
+export function useCreateRoute() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: {
+      name: string;
+      originName: string;
+      originLatitude: number;
+      originLongitude: number;
+      destinationName: string;
+      destinationLatitude: number;
+      destinationLongitude: number;
+      isFavorite?: boolean;
+    }) => api.routes.createSaved.call(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['routes'] });
+    },
+  });
+}
+
+export function useDeleteRoute() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => api.routes.deleteSaved.call({ id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['routes'] });
+    },
+  });
+}
+
+export function useToggleRouteFavorite() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => api.routes.toggleFavorite.call({ id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['routes'] });
+    },
+  });
+}
+
+export function useTripHistory(limit = 20, offset = 0) {
+  return useQuery(api.routes.listHistory.queryOptions({ limit, offset }));
+}
+
+export function useRecordTrip() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: {
+      savedRouteId?: string;
+      originName: string;
+      originLatitude: number;
+      originLongitude: number;
+      destinationName: string;
+      destinationLatitude: number;
+      destinationLongitude: number;
+      distanceKm?: number;
+      durationMinutes?: number;
+      weatherCondition?: 'clear' | 'rain' | 'storm' | 'snow' | 'fog';
+      outcome?: 'completed' | 'avoided_storm' | 'encountered_weather' | 'cancelled';
+      alertsAvoidedCount?: number;
+      estimatedSavings?: number;
+    }) => api.routes.recordTrip.call(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['routes'] });
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+  });
+}
+
+export function useRouteStats() {
+  return useQuery(api.routes.getStats.queryOptions());
+}
+
+// ============ Chat Hooks ============
+
 export function useSendChatMessage() {
   return useMutation({
     mutationFn: async (params: {

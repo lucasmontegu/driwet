@@ -2,7 +2,8 @@ import { z } from 'zod';
 import { protectedProcedure } from '../index';
 import { db } from '@advia/db';
 import { user } from '@advia/db/schema/auth';
-import { eq } from 'drizzle-orm';
+import { tripHistory } from '@advia/db/schema/routes';
+import { eq, sql } from 'drizzle-orm';
 
 export const userRouter = {
   getProfile: protectedProcedure.handler(async ({ context }) => {
@@ -25,12 +26,23 @@ export const userRouter = {
       return { success: true };
     }),
 
-  getStats: protectedProcedure.handler(async () => {
-    // TODO: Calculate real stats from alert-history and routes
+  getStats: protectedProcedure.handler(async ({ context }) => {
+    // Calculate real stats from trip history
+    const stats = await db
+      .select({
+        stormsAvoided: sql<number>`coalesce(sum(${tripHistory.alertsAvoidedCount}), 0)`.as('storms_avoided'),
+        moneySaved: sql<number>`coalesce(sum(cast(${tripHistory.estimatedSavings} as numeric)), 0)`.as('money_saved'),
+        kmTraveled: sql<number>`coalesce(sum(cast(${tripHistory.distanceKm} as numeric)), 0)`.as('km_traveled'),
+      })
+      .from(tripHistory)
+      .where(eq(tripHistory.userId, context.session.user.id));
+
+    const result = stats[0];
+
     return {
-      stormsAvoided: 12,
-      moneySaved: 2400,
-      kmTraveled: 847,
+      stormsAvoided: Number(result?.stormsAvoided) || 0,
+      moneySaved: Number(result?.moneySaved) || 0,
+      kmTraveled: Number(result?.kmTraveled) || 0,
     };
   }),
 };
