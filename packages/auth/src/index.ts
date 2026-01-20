@@ -9,6 +9,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 
 import { polarClient } from "./lib/payments";
+import { sendMagicLinkEmail } from "./lib/email";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -31,9 +32,26 @@ export const auth = betterAuth({
   },
   plugins: [
     magicLink({
-      sendMagicLink: async ({ email, url }) => {
-        // TODO: Implement email sending with Resend or similar
-        console.log(`Magic link for ${email}: ${url}`);
+      sendMagicLink: async ({ email, url, token }) => {
+        // Check if the callback URL indicates a native app request
+        const parsedUrl = new URL(url);
+        const callbackURL = parsedUrl.searchParams.get("callbackURL") || "";
+        const isNativeApp = callbackURL.startsWith("/(app)") || callbackURL.includes("advia://");
+
+        // For native apps, create a deep link URL
+        let finalUrl = url;
+        if (isNativeApp) {
+          // Replace the web callback with the native deep link
+          // The native app will handle advia://auth/magic-link?token=...
+          const nativeDeepLink = `advia://auth/magic-link?token=${token}`;
+          finalUrl = nativeDeepLink;
+        }
+
+        await sendMagicLinkEmail({
+          email,
+          url: finalUrl,
+          isNativeApp,
+        });
       },
     }),
     polar({

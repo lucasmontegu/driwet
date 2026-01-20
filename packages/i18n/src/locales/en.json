@@ -34,7 +34,16 @@
     "connecting": "Connecting...",
     "back": "Back",
     "enterEmailError": "Please enter your email",
-    "sendError": "Error sending the link. Please try again."
+    "sendError": "Error sending the link. Please try again.",
+    "verifying": "Verifying...",
+    "pleaseWait": "Please wait while we validate your access",
+    "loginSuccess": "Welcome!",
+    "redirecting": "Redirecting to the app...",
+    "loginFailed": "Access error",
+    "tryAgain": "The link expired or is invalid. Request a new one.",
+    "backToSignIn": "Back to sign in",
+    "invalidLink": "Invalid link",
+    "verifyError": "Error verifying the link"
   },
   "tabs": {
     "map": "Map",

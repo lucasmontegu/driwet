@@ -34,7 +34,16 @@
     "connecting": "Conectando...",
     "back": "Volver",
     "enterEmailError": "Ingresa tu email",
-    "sendError": "Error al enviar el link. Intenta de nuevo."
+    "sendError": "Error al enviar el link. Intenta de nuevo.",
+    "verifying": "Verificando...",
+    "pleaseWait": "Por favor espera mientras validamos tu acceso",
+    "loginSuccess": "¡Bienvenido!",
+    "redirecting": "Redirigiendo a la app...",
+    "loginFailed": "Error de acceso",
+    "tryAgain": "El enlace expiró o es inválido. Solicita uno nuevo.",
+    "backToSignIn": "Volver a iniciar sesión",
+    "invalidLink": "Enlace inválido",
+    "verifyError": "Error al verificar el enlace"
   },
   "tabs": {
     "map": "Mapa",

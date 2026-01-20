@@ -17,6 +17,9 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: z.string().min(1),
     APPLE_CLIENT_ID: z.string().min(1),
     APPLE_CLIENT_SECRET: z.string().min(1),
+    // Email
+    RESEND_API_KEY: z.string().min(1),
+    EMAIL_FROM: z.string().email().default("Advia <noreply@advia.app>"),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,
