@@ -398,6 +398,9 @@ importers:
       '@advia/env':
         specifier: workspace:*
         version: link:../env
+      '@ai-sdk/google':
+        specifier: ^3.0.10
+        version: 3.0.10(zod@4.3.5)
       '@orpc/client':
         specifier: 'catalog:'
         version: 1.13.4(@opentelemetry/api@1.9.0)
@@ -413,6 +416,12 @@ importers:
       '@orpc/zod':
         specifier: 'catalog:'
         version: 1.13.4(@opentelemetry/api@1.9.0)(@orpc/contract@1.13.4(@opentelemetry/api@1.9.0))(@orpc/server@1.13.4(@opentelemetry/api@1.9.0)(ws@8.19.0))(ws@8.19.0)(zod@4.3.5)
+      ai:
+        specifier: ^6.0.39
+        version: 6.0.39(zod@4.3.5)
+      ai-sdk-tools:
+        specifier: ^1.2.0
+        version: 1.2.0(@ai-sdk/react@3.0.41(react@19.2.3)(zod@4.3.5))(ai@6.0.39(zod@4.3.5))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(zod@4.3.5)(zustand@5.0.10(@types/react@19.2.8)(immer@11.1.3)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3)))
       dotenv:
         specifier: 'catalog:'
         version: 17.2.3
@@ -3335,6 +3344,31 @@ packages:
   agent-base@7.1.4:
     resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
     engines: {node: '>= 14'}
+
+  ai-sdk-tools@1.2.0:
+    resolution: {integrity: sha512-36fhneJBdgn5ueBeWItwuD3noKxmDn4lPLBsxdLBaGp2B5KJnzfb14ayIcEHYhPTF9X+02hdDPu5URW7vuyFVg==}
+    peerDependencies:
+      '@ai-sdk/react': '>=2.0.0'
+      '@upstash/redis': '*'
+      ai: '>=5.0.0'
+      drizzle-orm: '*'
+      react: '>=18.0.0'
+      react-dom: '>=16.8.0'
+      zod: ^3.25.76 || ^4.1.8
+      zustand: '>=5.0.0'
+    peerDependenciesMeta:
+      '@ai-sdk/react':
+        optional: true
+      '@upstash/redis':
+        optional: true
+      drizzle-orm:
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      zustand:
+        optional: true
 
   ai@6.0.39:
     resolution: {integrity: sha512-hF05gF4H+IxuilA8kNANVVHQXduTJsJaH74jmlmy8mcQt3NZgPYe2zZNyGBV4DPDYTUDt1h31hbLgQqJTn5LGA==}
@@ -6865,6 +6899,17 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
+  '@ai-sdk/react@3.0.41(react@19.2.3)(zod@4.3.5)':
+    dependencies:
+      '@ai-sdk/provider-utils': 4.0.8(zod@4.3.5)
+      ai: 6.0.39(zod@4.3.5)
+      react: 19.2.3
+      swr: 2.3.8(react@19.2.3)
+      throttleit: 2.1.0
+    transitivePeerDependencies:
+      - zod
+    optional: true
+
   '@alloc/quick-lru@5.2.0': {}
 
   '@antfu/ni@25.0.0':
@@ -10336,6 +10381,16 @@ snapshots:
   acorn@8.15.0: {}
 
   agent-base@7.1.4: {}
+
+  ai-sdk-tools@1.2.0(@ai-sdk/react@3.0.41(react@19.2.3)(zod@4.3.5))(ai@6.0.39(zod@4.3.5))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(zod@4.3.5)(zustand@5.0.10(@types/react@19.2.8)(immer@11.1.3)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))):
+    dependencies:
+      ai: 6.0.39(zod@4.3.5)
+      zod: 4.3.5
+    optionalDependencies:
+      '@ai-sdk/react': 3.0.41(react@19.2.3)(zod@4.3.5)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+      zustand: 5.0.10(@types/react@19.2.8)(immer@11.1.3)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
 
   ai@6.0.39(zod@4.3.5):
     dependencies:
@@ -13834,6 +13889,13 @@ snapshots:
       react: 19.1.0
       use-sync-external-store: 1.6.0(react@19.1.0)
 
+  swr@2.3.8(react@19.2.3):
+    dependencies:
+      dequal: 2.0.3
+      react: 19.2.3
+      use-sync-external-store: 1.6.0(react@19.2.3)
+    optional: true
+
   tabbable@6.4.0: {}
 
   tagged-tag@1.0.0: {}
@@ -14260,3 +14322,11 @@ snapshots:
       immer: 11.1.3
       react: 19.1.0
       use-sync-external-store: 1.6.0(react@19.1.0)
+
+  zustand@5.0.10(@types/react@19.2.8)(immer@11.1.3)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3)):
+    optionalDependencies:
+      '@types/react': 19.2.8
+      immer: 11.1.3
+      react: 19.2.3
+      use-sync-external-store: 1.6.0(react@19.2.3)
+    optional: true
