@@ -5,6 +5,10 @@ import { Geist, Geist_Mono, Nunito_Sans } from "next/font/google";
 import "../index.css";
 import Header from "@/components/header";
 import Providers from "@/components/providers";
+import { setupI18n } from '@/lib/i18n';
+
+// Initialize i18n
+setupI18n();
 
 const nunitoSans = Nunito_Sans({variable:'--font-sans'});
 
