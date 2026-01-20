@@ -12,9 +12,11 @@ import {
   NunitoSans_600SemiBold,
   NunitoSans_700Bold,
 } from '@expo-google-fonts/nunito-sans';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 
 import { AppThemeProvider } from '@/contexts/app-theme-context';
 import { setupI18n } from '@/lib/i18n';
+import { queryClient, asyncStoragePersister } from '@/lib/query-client';
 
 // Initialize i18n before app renders
 setupI18n();
@@ -55,13 +57,18 @@ export default function Layout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <KeyboardProvider>
-        <AppThemeProvider>
-          <HeroUINativeProvider>
-            <StackLayout />
-          </HeroUINativeProvider>
-        </AppThemeProvider>
-      </KeyboardProvider>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{ persister: asyncStoragePersister }}
+      >
+        <KeyboardProvider>
+          <AppThemeProvider>
+            <HeroUINativeProvider>
+              <StackLayout />
+            </HeroUINativeProvider>
+          </AppThemeProvider>
+        </KeyboardProvider>
+      </PersistQueryClientProvider>
     </GestureHandlerRootView>
   );
 }
