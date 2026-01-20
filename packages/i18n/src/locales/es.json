@@ -114,6 +114,27 @@
     "placeholder": "Escribe un mensaje...",
     "comingSoon": "Esta funcionalidad estará disponible pronto."
   },
+  "web": {
+    "nav": {
+      "home": "Inicio",
+      "dashboard": "Panel"
+    },
+    "auth": {
+      "welcomeBack": "Bienvenido de nuevo",
+      "email": "Email",
+      "password": "Contraseña",
+      "signIn": "Iniciar sesión",
+      "signingIn": "Iniciando...",
+      "needAccount": "¿Necesitas una cuenta? Regístrate",
+      "signInSuccess": "Sesión iniciada correctamente",
+      "createAccount": "Crea tu cuenta",
+      "name": "Nombre",
+      "signUp": "Registrarse",
+      "signingUp": "Registrando...",
+      "haveAccount": "¿Ya tienes cuenta? Inicia sesión",
+      "signUpSuccess": "Cuenta creada correctamente"
+    }
+  },
   "locations": {
     "title": "Ubicaciones guardadas",
     "empty": "No tienes ubicaciones guardadas",

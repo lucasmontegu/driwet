@@ -114,6 +114,27 @@
     "placeholder": "Type a message...",
     "comingSoon": "This feature will be available soon."
   },
+  "web": {
+    "nav": {
+      "home": "Home",
+      "dashboard": "Dashboard"
+    },
+    "auth": {
+      "welcomeBack": "Welcome Back",
+      "email": "Email",
+      "password": "Password",
+      "signIn": "Sign In",
+      "signingIn": "Signing in...",
+      "needAccount": "Need an account? Sign Up",
+      "signInSuccess": "Sign in successful",
+      "createAccount": "Create your account",
+      "name": "Name",
+      "signUp": "Sign Up",
+      "signingUp": "Signing up...",
+      "haveAccount": "Already have an account? Sign In",
+      "signUpSuccess": "Account created successfully"
+    }
+  },
   "locations": {
     "title": "Saved locations",
     "empty": "No saved locations",

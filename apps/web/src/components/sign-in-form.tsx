@@ -1,9 +1,11 @@
+"use client";
 import { useForm } from "@tanstack/react-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
+import { useTranslation } from '@/lib/i18n';
 
 import Loader from "./loader";
 import { Button } from "./ui/button";
@@ -12,6 +14,7 @@ import { Label } from "./ui/label";
 
 export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () => void }) {
   const router = useRouter();
+  const { t } = useTranslation();
   const { isPending } = authClient.useSession();
 
   const form = useForm({
@@ -28,7 +31,7 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () 
         {
           onSuccess: () => {
             router.push("/dashboard");
-            toast.success("Sign in successful");
+            toast.success(t('web.auth.signInSuccess'));
           },
           onError: (error) => {
             toast.error(error.error.message || error.error.statusText);
@@ -50,7 +53,7 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () 
 
   return (
     <div className="mx-auto w-full mt-10 max-w-md p-6">
-      <h1 className="mb-6 text-center text-3xl font-bold">Welcome Back</h1>
+      <h1 className="mb-6 text-center text-3xl font-bold">{t('web.auth.welcomeBack')}</h1>
 
       <form
         onSubmit={(e) => {
@@ -64,7 +67,7 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () 
           <form.Field name="email">
             {(field) => (
               <div className="space-y-2">
-                <Label htmlFor={field.name}>Email</Label>
+                <Label htmlFor={field.name}>{t('web.auth.email')}</Label>
                 <Input
                   id={field.name}
                   name={field.name}
@@ -87,7 +90,7 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () 
           <form.Field name="password">
             {(field) => (
               <div className="space-y-2">
-                <Label htmlFor={field.name}>Password</Label>
+                <Label htmlFor={field.name}>{t('web.auth.password')}</Label>
                 <Input
                   id={field.name}
                   name={field.name}
@@ -113,7 +116,7 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () 
               className="w-full"
               disabled={!state.canSubmit || state.isSubmitting}
             >
-              {state.isSubmitting ? "Submitting..." : "Sign In"}
+              {state.isSubmitting ? t('web.auth.signingIn') : t('web.auth.signIn')}
             </Button>
           )}
         </form.Subscribe>
@@ -125,7 +128,7 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () 
           onClick={onSwitchToSignUp}
           className="text-indigo-600 hover:text-indigo-800"
         >
-          Need an account? Sign Up
+          {t('web.auth.needAccount')}
         </Button>
       </div>
     </div>
