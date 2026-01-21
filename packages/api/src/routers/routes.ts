@@ -1,8 +1,8 @@
 // packages/api/src/routers/routes.ts
 import { z } from 'zod';
 import { protectedProcedure } from '../index';
-import { db } from '@gowai/db';
-import { savedRoute, tripHistory } from '@gowai/db/schema/routes';
+import { db } from '@driwet/db';
+import { savedRoute, tripHistory } from '@driwet/db/schema/routes';
 import { eq, and, desc, sql } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 

@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { db } from "@gowai/db";
-import { safePlacesCache, apiUsage, type SafePlace, type PlaceType } from "@gowai/db/schema/index";
+import { db } from "@driwet/db";
+import { safePlacesCache, apiUsage, type SafePlace, type PlaceType } from "@driwet/db/schema/index";
 import { eq, and, gt, sql } from "drizzle-orm";
 import { protectedProcedure } from "../index";
-import { env } from "@gowai/env/server";
+import { env } from "@driwet/env/server";
 
 const MAPBOX_API_BASE = "https://api.mapbox.com/search/searchbox/v1";
 

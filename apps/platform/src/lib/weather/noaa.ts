@@ -114,7 +114,7 @@ export async function getAlertsByPoint(
   const response = await fetch(url, {
     headers: {
       Accept: "application/geo+json",
-      "User-Agent": "(gowai.app, contact@gowai.app)",
+      "User-Agent": "(driwet.app, contact@driwet.app)",
     },
     next: { revalidate: 300 }, // Cache for 5 minutes
   });
@@ -159,7 +159,7 @@ export async function getAlertsByZone(zoneId: string): Promise<NOAAAlert[]> {
   const response = await fetch(url, {
     headers: {
       Accept: "application/geo+json",
-      "User-Agent": "(gowai.app, contact@gowai.app)",
+      "User-Agent": "(driwet.app, contact@driwet.app)",
     },
     next: { revalidate: 300 },
   });
@@ -203,7 +203,7 @@ export async function getAllActiveAlerts(): Promise<NOAAAlert[]> {
   const response = await fetch(url, {
     headers: {
       Accept: "application/geo+json",
-      "User-Agent": "(gowai.app, contact@gowai.app)",
+      "User-Agent": "(driwet.app, contact@driwet.app)",
     },
     next: { revalidate: 300 },
   });

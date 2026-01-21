@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { db } from "@gowai/db";
+import { db } from "@driwet/db";
 import {
   weatherCache,
   routeWeatherAnalysis,
   alertHistory,
   type WeatherData,
   type AlertType,
-} from "@gowai/db/schema/index";
+} from "@driwet/db/schema/index";
 import { eq, and, gt } from "drizzle-orm";
 import { protectedProcedure } from "../index";
 import {

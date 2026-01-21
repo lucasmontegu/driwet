@@ -1,4 +1,4 @@
-package com.anonymous.advia
+package com.driwet.app
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

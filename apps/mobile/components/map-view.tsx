@@ -2,7 +2,7 @@ import Mapbox, { Camera, LocationPuck, MapView as RNMapView } from "@rnmapbox/ma
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { env } from "@gowai/env/native";
+import { env } from "@driwet/env/mobile";
 import { useLocation } from "@/hooks/use-location";
 
 // Initialize Mapbox with access token

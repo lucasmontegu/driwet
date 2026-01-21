@@ -1,6 +1,6 @@
-import { env } from "@gowai/env/server";
-import { db } from "@gowai/db";
-import { apiUsage, type WeatherData, type RoadRisk } from "@gowai/db/schema/index";
+import { env } from "@driwet/env/server";
+import { db } from "@driwet/db";
+import { apiUsage, type WeatherData, type RoadRisk } from "@driwet/db/schema/index";
 import { eq, and, sql } from "drizzle-orm";
 
 const TOMORROW_API_BASE = "https://api.tomorrow.io/v4";

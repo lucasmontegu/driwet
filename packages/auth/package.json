@@ -1,5 +1,5 @@
 {
-  "name": "@gowai/auth",
+  "name": "@driwet/auth",
   "type": "module",
   "exports": {
     ".": {
@@ -11,8 +11,8 @@
   },
   "scripts": {},
   "dependencies": {
-    "@gowai/db": "workspace:*",
-    "@gowai/env": "workspace:*",
+    "@driwet/db": "workspace:*",
+    "@driwet/env": "workspace:*",
     "@better-auth/expo": "catalog:",
     "@polar-sh/better-auth": "catalog:",
     "@polar-sh/sdk": "^0.42.2",
@@ -22,7 +22,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@gowai/config": "workspace:*",
+    "@driwet/config": "workspace:*",
     "typescript": "catalog:"
   }
 }

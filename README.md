@@ -1,4 +1,4 @@
-# advia
+# driwet
 
 This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines Next.js, Self, and more.
 
@@ -29,7 +29,7 @@ pnpm install
 This project uses PostgreSQL with Drizzle ORM.
 
 1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/web/.env` file with your PostgreSQL connection details.
+2. Update your `apps/platform/.env` file with your PostgreSQL connection details.
 
 3. Apply the schema to your database:
 
@@ -53,14 +53,18 @@ Use the Expo Go app to run the mobile application.
 ## Project Structure
 
 ```
-advia/
+driwet/
 ├── apps/
-│   └── web/         # Fullstack application (Next.js)
-│   ├── native/      # Mobile application (React Native, Expo)
+│   └── platform/    # Fullstack application (Next.js)
+│   ├── mobile/      # Mobile application (React Native, Expo)
+│   ├── landing/     # Landing page
 ├── packages/
 │   ├── api/         # API layer / business logic
 │   ├── auth/        # Authentication configuration & logic
-│   └── db/          # Database schema & queries
+│   ├── db/          # Database schema & queries
+│   ├── env/         # Environment configuration
+│   ├── i18n/        # Internationalization
+│   └── config/      # Shared configuration
 ```
 
 ## Available Scripts

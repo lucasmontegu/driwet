@@ -95,7 +95,7 @@ analyzeRoute
 │  ├── DriveDetect (Background location)                       │
 │  └── expo-notifications (Push)                               │
 │                                                              │
-│  apps/web (Next.js)                                          │
+│  apps/platform (Next.js)                                          │
 │  ├── /api/chat (AI SDK + Tools)                              │
 │  ├── /api/alerts (NOAA/SMN integration)                      │
 │  └── /api/push (Expo Push Service)                           │
@@ -263,7 +263,7 @@ analyzeRoute
 # Mapbox (apps/native/.env)
 EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN=pk.xxx  # ✅ Configurado
 
-# Google AI (apps/web/.env)
+# Google AI (apps/platform/.env)
 GOOGLE_GENERATIVE_AI_API_KEY=xxx  # ⏳ Necesita configurar
 
 # Weather APIs
@@ -281,7 +281,7 @@ expo-location
 @ai-sdk/react
 ai
 
-# apps/web ✅
+# apps/platform ✅
 ai
 @ai-sdk/google
 
@@ -317,12 +317,12 @@ expo-speech
 - `packages/db/src/migrations/0000_amazing_kate_bishop.sql` ✅
 
 ### API Endpoints
-- `apps/web/src/app/api/alerts/route.ts` ✅
-- `apps/web/src/app/api/chat/route.ts` ✅
+- `apps/platform/src/app/api/alerts/route.ts` ✅
+- `apps/platform/src/app/api/chat/route.ts` ✅
 
 ### Servicios
-- `apps/web/src/lib/weather/noaa.ts` ✅
-- `apps/web/src/lib/weather/index.ts` ✅
+- `apps/platform/src/lib/weather/noaa.ts` ✅
+- `apps/platform/src/lib/weather/index.ts` ✅
 
 ### Componentes Native
 - `apps/native/components/map-view.tsx` ✅

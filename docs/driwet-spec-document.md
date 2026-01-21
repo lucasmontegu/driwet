@@ -1,4 +1,4 @@
-# GOWAI - Spec Driven Development Document
+# DRIWET - Spec Driven Development Document
 ## AI-Powered Storm Alert & Shelter Finder App
 
 ---
@@ -7,7 +7,7 @@
 
 | Field | Value |
 |-------|-------|
-| **Product Name** | Gowai |
+| **Product Name** | Driwet |
 | **Tagline** | "Your AI Storm Advisor" |
 | **Version** | 1.0 |
 | **Last Updated** | January 2025 |
@@ -20,7 +20,7 @@
 
 ## Vision Statement
 
-> "Gowai es la primera app que no solo te alerta del clima peligroso, sino que te dice DÓNDE refugiarte y te guía hasta ahí."
+> "Driwet es la primera app que no solo te alerta del clima peligroso, sino que te dice DÓNDE refugiarte y te guía hasta ahí."
 
 ## Problem Statement
 
@@ -63,14 +63,14 @@ Una app móvil que:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                        GOWAI ARCHITECTURE                            │
+│                        DRIWET ARCHITECTURE                            │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                      │
 │  ┌────────────────────────────────────────────────────────────────┐ │
 │  │                    TURBOREPO MONOREPO                          │ │
 │  │                                                                │ │
 │  │  ┌─────────────────┐  ┌─────────────────┐  ┌───────────────┐  │ │
-│  │  │  apps/mobile    │  │   apps/web      │  │ apps/dashboard│  │ │
+│  │  │  apps/mobile    │  │   apps/platform      │  │ apps/dashboard│  │ │
 │  │  │  (Expo)         │  │   (Next.js)     │  │ (Next.js)     │  │ │
 │  │  │                 │  │   Landing +     │  │ B2B Fleet     │  │ │
 │  │  │  - iOS          │  │   Marketing     │  │ Management    │  │ │
@@ -118,7 +118,7 @@ Una app móvil que:
 ## Monorepo Structure
 
 ```
-gowai/
+driwet/
 ├── apps/
 │   ├── mobile/                 # Expo app
 │   │   ├── app/               # Expo Router pages
@@ -531,7 +531,7 @@ app/
 ┌─────────────────────────────┐    ┌─────────────────────────────┐
 │  HOME (MAP)                 │    │  ALERTS LIST                │
 ├─────────────────────────────┤    ├─────────────────────────────┤
-│  ≡  GOWAI           📍 ⚙️  │    │  ← Alertas                  │
+│  ≡  DRIWET           📍 ⚙️  │    │  ← Alertas                  │
 │                             │    │                             │
 │   ┌───────────────────┐     │    │  Activas (2)                │
 │   │                   │     │    │  ┌─────────────────────┐    │
@@ -574,7 +574,7 @@ app/
 │  Busque refugio bajo techo  │    │  ├─ 🏢 Trabajo             │
 │  cubierto. Evite ventanas.  │    │  └─ [+ Agregar]            │
 │                             │    │                             │
-│  [  🛡️ Buscar Refugio  ]    │    │  Sobre Gowai               │
+│  [  🛡️ Buscar Refugio  ]    │    │  Sobre Driwet               │
 │                             │    │  Cerrar Sesión              │
 └─────────────────────────────┘    └─────────────────────────────┘
 ```
@@ -755,7 +755,7 @@ app/
 ┌─────────────────────────────┐    ┌─────────────────────────────┐
 │  MAP + SHELTERS             │    │  SHELTER DETAIL             │
 ├─────────────────────────────┤    ├─────────────────────────────┤
-│  ≡  GOWAI           🔍 ⚙️  │    │  ←                     ❤️   │
+│  ≡  DRIWET           🔍 ⚙️  │    │  ←                     ❤️   │
 │                             │    │                             │
 │   ┌───────────────────┐     │    │  ⛽ Shell Av. Colón         │
 │   │    ⛽        🅿️   │     │    │  Estación de Servicio      │
@@ -1241,8 +1241,8 @@ app/
 - iOS: StoreKit 2
 - Android: Google Play Billing
 - Product IDs:
-  - `gowai_premium_monthly`
-  - `gowai_premium_yearly`
+  - `driwet_premium_monthly`
+  - `driwet_premium_yearly`
 - Receipt validation on backend
 
 **Pricing Strategy:**
@@ -1288,7 +1288,7 @@ app/
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `POST /api/subscriptions/checkout` | POST | Create Stripe checkout session |
-| `POST /api/subscriptions/webhook` | POST | Handle Stripe webhooks |
+| `POST /api/subscriptions/platformhook` | POST | Handle Stripe webhooks |
 | `GET /api/subscriptions/status` | GET | Get current subscription status |
 | `POST /api/subscriptions/verify-receipt` | POST | Verify IAP receipt |
 | `POST /api/subscriptions/restore` | POST | Restore purchases |
@@ -1303,7 +1303,7 @@ app/
 │                             │    │                             │
 │  🛡️ Desbloquea Todo         │    │  Plan Actual                │
 │                             │    │  ┌─────────────────────┐    │
-│  Funcionalidad bloqueada:   │    │  │ ⭐ GOWAI PREMIUM    │    │
+│  Funcionalidad bloqueada:   │    │  │ ⭐ DRIWET PREMIUM    │    │
 │  "Mapas Offline"            │    │  │ $2.99/mes           │    │
 │                             │    │  │ Renueva: 15 Feb     │    │
 │  Con Premium obtienes:      │    │  └─────────────────────┘    │
@@ -1615,7 +1615,7 @@ app/
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│  GOWAI FLEET DASHBOARD                                                   │
+│  DRIWET FLEET DASHBOARD                                                   │
 ├─────────────────────────────────────────────────────────────────────────┤
 │  🚛 ACME Transport        Dashboard | Vehículos | Alertas | Reportes    │
 ├─────────────────────────────────────────────────────────────────────────┤
@@ -1695,7 +1695,7 @@ app/
 | `packages/auth` | Integration | Vitest |
 | `packages/electric` | Integration | Vitest |
 | `apps/mobile` | Unit + E2E | Jest + Detox |
-| `apps/web` | Unit + E2E | Vitest + Playwright |
+| `apps/platform` | Unit + E2E | Vitest + Playwright |
 | `apps/dashboard` | Unit + E2E | Vitest + Playwright |
 
 ## Critical Test Scenarios
@@ -1782,7 +1782,7 @@ app/
 
 ```bash
 # Database
-DATABASE_URL=postgresql://...@neon.tech/gowai
+DATABASE_URL=postgresql://...@neon.tech/driwet
 
 # ElectricSQL
 ELECTRIC_URL=https://...

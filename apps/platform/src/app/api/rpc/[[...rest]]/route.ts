@@ -1,5 +1,5 @@
-import { createContext } from "@gowai/api/context";
-import { appRouter } from "@gowai/api/routers/index";
+import { createContext } from "@driwet/api/context";
+import { appRouter } from "@driwet/api/routers/index";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { onError } from "@orpc/server";

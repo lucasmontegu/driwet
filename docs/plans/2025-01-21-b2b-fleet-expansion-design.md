@@ -231,7 +231,7 @@ fleetNotifications.notifyManager
 
 ### Hacer AHORA (preparación)
 
-1. Renombrar `apps/web` → `apps/platform`
+1. Renombrar `apps/platform` → `apps/platform`
 2. Crear `apps/landing` para marketing B2C
 3. Agregar `organizationId` opcional al schema de usuarios
 

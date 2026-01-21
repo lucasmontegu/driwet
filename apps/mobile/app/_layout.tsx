@@ -6,8 +6,13 @@ import { HeroUINativeProvider } from 'heroui-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import * as SplashScreen from 'expo-splash-screen';
-import { Inter_900Black, Inter_400Regular, Inter_300Light, Inter_600SemiBold, useFonts } from '@expo-google-fonts/inter';
-import { NunitoSans_400Regular, NunitoSans_600SemiBold, NunitoSans_700Bold } from '@expo-google-fonts/nunito-sans';
+import { useFonts } from 'expo-font';
+import {
+  Inter_400Regular,
+  Inter_100Thin,
+  Inter_300Light,
+  Inter_600SemiBold,
+} from '@expo-google-fonts/inter';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 
 import { AppThemeProvider } from '@/contexts/app-theme-context';
@@ -38,14 +43,12 @@ function StackLayout() {
 
 export default function Layout() {
 const [loaded, error] = useFonts({
-    Inter_900Black,
+    Inter_100Thin,
     Inter_400Regular,
     Inter_300Light,
     Inter_600SemiBold,
-    NunitoSans_400Regular,
-    NunitoSans_600SemiBold,
-    NunitoSans_700Bold,
   });
+  
 
   useEffect(() => {
     if (loaded || error) {
@@ -56,7 +59,6 @@ const [loaded, error] = useFonts({
   if (!loaded && !error) {
     return null;
   }
-
 
 
   return (

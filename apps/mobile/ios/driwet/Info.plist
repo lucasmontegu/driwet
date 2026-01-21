@@ -7,7 +7,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
-    <string>advia</string>
+    <string>driwet</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -27,8 +27,8 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>advia</string>
-          <string>com.anonymous.advia</string>
+          <string>driwet</string>
+          <string>com.driwet.app</string>
         </array>
       </dict>
     </array>
@@ -46,17 +46,26 @@
       <true/>
     </dict>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Advia necesita tu ubicación para mostrarte alertas de clima cercanas y guiarte a refugios seguros.</string>
+    <string>Driwet necesita tu ubicación para mostrarte alertas de clima cercanas y guiarte a refugios seguros.</string>
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>Advia necesita tu ubicación en segundo plano para alertarte sobre clima peligroso mientras conduces.</string>
+    <string>Driwet necesita tu ubicación en segundo plano para alertarte sobre clima peligroso mientras conduces.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Advia necesita tu ubicación para mostrarte alertas de clima cercanas.</string>
+    <string>Driwet necesita tu ubicación para mostrarte alertas de clima cercanas.</string>
+    <key>NSUserActivityTypes</key>
+    <array>
+      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
+    </array>
     <key>RCTNewArchEnabled</key>
     <true/>
+    <key>UIAppFonts</key>
+    <array>
+      <string>Inter_100Thin.ttf</string>
+      <string>Inter_300Light.ttf</string>
+      <string>Inter_400Regular.ttf</string>
+      <string>Inter_600SemiBold.ttf</string>
+    </array>
     <key>UIBackgroundModes</key>
     <array>
-      <string>location</string>
-      <string>fetch</string>
       <string>location</string>
       <string>fetch</string>
     </array>
@@ -71,6 +80,13 @@
     <key>UIStatusBarStyle</key>
     <string>UIStatusBarStyleDefault</string>
     <key>UISupportedInterfaceOrientations</key>
+    <array>
+      <string>UIInterfaceOrientationPortrait</string>
+      <string>UIInterfaceOrientationPortraitUpsideDown</string>
+      <string>UIInterfaceOrientationLandscapeLeft</string>
+      <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>UISupportedInterfaceOrientations~ipad</key>
     <array>
       <string>UIInterfaceOrientationPortrait</string>
       <string>UIInterfaceOrientationPortraitUpsideDown</string>

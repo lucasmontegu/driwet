@@ -1,5 +1,5 @@
 {
-  "name": "@gowai/i18n",
+  "name": "@driwet/i18n",
   "version": "1.0.0",
   "type": "module",
   "exports": {
@@ -15,7 +15,7 @@
     "react-i18next": "^15.0.0"
   },
   "devDependencies": {
-    "@gowai/config": "workspace:*",
+    "@driwet/config": "workspace:*",
     "i18next": "^24.2.3",
     "react-i18next": "^15.7.4",
     "typescript": "catalog:"

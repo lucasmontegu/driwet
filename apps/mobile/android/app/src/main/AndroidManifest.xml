@@ -25,7 +25,7 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="advia"/>
+        <data android:scheme="driwet"/>
       </intent-filter>
     </activity>
     <activity android:name=".BrowserLauncherActivity" android:theme="@style/Theme.App.SplashScreen" android:exported="true">

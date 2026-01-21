@@ -1,6 +1,6 @@
 // apps/native/app/(app)/_layout.tsx
 import { useEffect } from 'react';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useRouter, useRootNavigationState } from 'expo-router';
 import { useTrialStore } from '@/stores/trial-store';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 
@@ -8,8 +8,12 @@ export default function AppLayout() {
   const router = useRouter();
   const colors = useThemeColors();
   const { trialStartDate, checkTrialStatus, isPremium } = useTrialStore();
+  const rootNavigationState = useRootNavigationState();
 
   useEffect(() => {
+    // Wait for navigation to be ready before attempting to navigate
+    if (!rootNavigationState?.key) return;
+
     // Si no hay trial ni premium, redirigir a welcome
     if (!trialStartDate && !isPremium) {
       router.replace('/(auth)/welcome');
@@ -22,7 +26,7 @@ export default function AppLayout() {
       // Trial expirado, mostrar paywall o sign-in
       router.replace('/(auth)/sign-in');
     }
-  }, [trialStartDate, isPremium]);
+  }, [trialStartDate, isPremium, rootNavigationState?.key]);
 
   return (
     <Stack

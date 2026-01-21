@@ -1,5 +1,5 @@
 // apps/native/lib/i18n.ts
-import { initI18n, getI18n, i18n, type SupportedLanguage } from '@gowai/i18n';
+import { initI18n, getI18n, i18n, type SupportedLanguage } from '@driwet/i18n';
 import { I18nextProvider } from 'react-i18next';
 import * as Localization from 'expo-localization';
 

@@ -3,7 +3,7 @@ export default function LandingPage() {
     <main className="flex min-h-screen flex-col items-center justify-center p-8">
       <div className="max-w-2xl text-center">
         <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
-          Gowai
+          Driwet
         </h1>
         <p className="mt-4 text-xl text-gray-600">
           Tu Asesor de Tormentas con IA
@@ -14,7 +14,7 @@ export default function LandingPage() {
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <a
-            href="https://apps.apple.com/ar/app/gowai/id678901234567890"
+            href="https://apps.apple.com/ar/app/driwet/id678901234567890"
             className="rounded-full bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-gray-800"
           >
             Descargar App

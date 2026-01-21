@@ -1,4 +1,4 @@
-import "@gowai/env/web";
+import "@driwet/env/platform";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {

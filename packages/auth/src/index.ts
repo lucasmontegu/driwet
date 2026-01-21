@@ -1,6 +1,6 @@
-import { db } from "@gowai/db";
-import * as schema from "@gowai/db/schema/auth";
-import { env } from "@gowai/env/server";
+import { db } from "@driwet/db";
+import * as schema from "@driwet/db/schema/auth";
+import { env } from "@driwet/env/server";
 import { expo } from "@better-auth/expo";
 import { magicLink } from "better-auth/plugins";
 import { polar, checkout, portal } from "@polar-sh/better-auth";
@@ -16,7 +16,7 @@ export const auth = betterAuth({
     provider: "pg",
     schema: schema,
   }),
-  trustedOrigins: [env.CORS_ORIGIN, "gowai://", "exp://"],
+  trustedOrigins: [env.CORS_ORIGIN, "driwet://", "exp://"],
   emailAndPassword: {
     enabled: false,
   },
@@ -36,14 +36,14 @@ export const auth = betterAuth({
         // Check if the callback URL indicates a native app request
         const parsedUrl = new URL(url);
         const callbackURL = parsedUrl.searchParams.get("callbackURL") || "";
-        const isNativeApp = callbackURL.startsWith("/(app)") || callbackURL.includes("gowai://");
+        const isNativeApp = callbackURL.startsWith("/(app)") || callbackURL.includes("driwet://");
 
         // For native apps, create a deep link URL
         let finalUrl = url;
         if (isNativeApp) {
           // Replace the web callback with the native deep link
-          // The native app will handle gowai://auth/magic-link?token=...
-          const nativeDeepLink = `gowai://auth/magic-link?token=${token}`;
+          // The native app will handle driwet://auth/magic-link?token=...
+          const nativeDeepLink = `driwet://auth/magic-link?token=${token}`;
           finalUrl = nativeDeepLink;
         }
 
@@ -70,7 +70,7 @@ export const auth = betterAuth({
               slug: "yearly",
             },
           ],
-          successUrl: "gowai://subscription/success",
+          successUrl: "driwet://subscription/success",
           authenticatedUsersOnly: true,
         }),
         portal(),

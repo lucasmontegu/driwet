@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { protectedProcedure } from '../index';
-import { db } from '@gowai/db';
-import { userLocation } from '@gowai/db/schema/user-locations';
+import { db } from '@driwet/db';
+import { userLocation } from '@driwet/db/schema/user-locations';
 import { eq, and } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 

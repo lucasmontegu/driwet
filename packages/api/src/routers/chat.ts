@@ -4,11 +4,11 @@ import { streamText, tool, stepCountIs } from 'ai';
 import { google } from '@ai-sdk/google';
 import { publicProcedure } from '../index';
 import { tomorrowClient } from '../lib/tomorrow-io';
-import { db } from '@gowai/db';
-import { safePlacesCache, type PlaceType } from '@gowai/db/schema/index';
+import { db } from '@driwet/db';
+import { safePlacesCache, type PlaceType } from '@driwet/db/schema/index';
 import { eq, and, gt } from 'drizzle-orm';
 
-const SYSTEM_PROMPT = `Sos Gowai, un asistente de clima y rutas para conductores en Argentina y Latinoamérica.
+const SYSTEM_PROMPT = `Sos Driwet, un asistente de clima y rutas para conductores en Argentina y Latinoamérica.
 
 Tenés acceso a herramientas para:
 - Consultar clima actual y pronóstico

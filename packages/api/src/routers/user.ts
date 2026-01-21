@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { protectedProcedure } from '../index';
-import { db } from '@gowai/db';
-import { user } from '@gowai/db/schema/auth';
-import { tripHistory } from '@gowai/db/schema/routes';
+import { db } from '@driwet/db';
+import { user } from '@driwet/db/schema/auth';
+import { tripHistory } from '@driwet/db/schema/routes';
 import { eq, sql } from 'drizzle-orm';
 
 export const userRouter = {

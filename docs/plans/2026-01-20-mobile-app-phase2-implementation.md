@@ -1,4 +1,4 @@
-# Gowai Mobile App Phase 2 - Implementation Plan
+# Driwet Mobile App Phase 2 - Implementation Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
@@ -14,7 +14,7 @@
 
 ## Phase 1: i18n Package Setup
 
-### Task 1.1: Create @gowai/i18n package structure
+### Task 1.1: Create @driwet/i18n package structure
 
 **Files:**
 - Create: `packages/i18n/package.json`
@@ -25,7 +25,7 @@
 
 ```json
 {
-  "name": "@gowai/i18n",
+  "name": "@driwet/i18n",
   "version": "1.0.0",
   "type": "module",
   "exports": {
@@ -41,7 +41,7 @@
     "react-i18next": "^15.4.1"
   },
   "devDependencies": {
-    "@gowai/config": "workspace:*",
+    "@driwet/config": "workspace:*",
     "typescript": "catalog:"
   }
 }
@@ -51,7 +51,7 @@
 
 ```json
 {
-  "extends": "@gowai/config/tsconfig.base.json",
+  "extends": "@driwet/config/tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
@@ -207,7 +207,7 @@ git commit -m "feat(i18n): create shared i18n package structure"
     "upgrade": "Upgrade"
   },
   "premium": {
-    "title": "Gowai Premium",
+    "title": "Driwet Premium",
     "features": {
       "unlimitedRoutes": "Rutas ilimitadas",
       "realTimeAlerts": "Alertas en tiempo real",
@@ -343,7 +343,7 @@ git commit -m "feat(i18n): add Spanish translations"
     "upgrade": "Upgrade"
   },
   "premium": {
-    "title": "Gowai Premium",
+    "title": "Driwet Premium",
     "features": {
       "unlimitedRoutes": "Unlimited routes",
       "realTimeAlerts": "Real-time alerts",
@@ -384,7 +384,7 @@ git commit -m "feat(i18n): add English translations"
 **Step 1: Install dependencies in root**
 
 ```bash
-cd /Users/lucasmontegu/apps/gowai && pnpm install
+cd /Users/lucasmontegu/apps/driwet && pnpm install
 ```
 
 **Step 2: Commit lock file**
@@ -406,7 +406,7 @@ git commit -m "chore: update pnpm-lock after i18n package"
 **Step 1: Add dependencies**
 
 ```bash
-cd apps/native && pnpm add @hugeicons/react-native @hugeicons/core-free-icons @tanstack/query-async-storage-persister @tanstack/react-query-persist-client expo-localization@~16.0.0 react-i18next i18next @gowai/i18n
+cd apps/native && pnpm add @hugeicons/react-native @hugeicons/core-free-icons @tanstack/query-async-storage-persister @tanstack/react-query-persist-client expo-localization@~16.0.0 react-i18next i18next @driwet/i18n
 ```
 
 **Step 2: Commit**
@@ -421,18 +421,18 @@ git commit -m "deps(native): add hugeicons, query-persist, i18n dependencies"
 ### Task 2.2: Install web app i18n dependencies
 
 **Files:**
-- Modify: `apps/web/package.json`
+- Modify: `apps/platform/package.json`
 
 **Step 1: Add dependencies**
 
 ```bash
-cd apps/web && pnpm add react-i18next i18next @gowai/i18n
+cd apps/platform && pnpm add react-i18next i18next @driwet/i18n
 ```
 
 **Step 2: Commit**
 
 ```bash
-git add apps/web/package.json pnpm-lock.yaml
+git add apps/platform/package.json pnpm-lock.yaml
 git commit -m "deps(web): add i18n dependencies"
 ```
 
@@ -470,7 +470,7 @@ git commit -m "deps(api): add ai-sdk-tools for chat memory"
 
 ```typescript
 // apps/native/lib/i18n.ts
-import { initI18n, type SupportedLanguage } from '@gowai/i18n';
+import { initI18n, type SupportedLanguage } from '@driwet/i18n';
 import * as Localization from 'expo-localization';
 
 export function setupI18n() {
@@ -479,7 +479,7 @@ export function setupI18n() {
   return initI18n(lng);
 }
 
-export { useTranslation, i18n } from '@gowai/i18n';
+export { useTranslation, i18n } from '@driwet/i18n';
 ```
 
 **Step 2: Initialize i18n in root layout**
@@ -505,14 +505,14 @@ git commit -m "feat(native): configure i18n with device locale detection"
 ### Task 3.2: Setup i18n in web app
 
 **Files:**
-- Create: `apps/web/src/lib/i18n.ts`
-- Modify: `apps/web/src/app/layout.tsx`
+- Create: `apps/platform/src/lib/i18n.ts`
+- Modify: `apps/platform/src/app/layout.tsx`
 
 **Step 1: Create i18n setup file**
 
 ```typescript
-// apps/web/src/lib/i18n.ts
-import { initI18n, type SupportedLanguage } from '@gowai/i18n';
+// apps/platform/src/lib/i18n.ts
+import { initI18n, type SupportedLanguage } from '@driwet/i18n';
 
 export function setupI18n() {
   const browserLang = typeof navigator !== 'undefined'
@@ -522,12 +522,12 @@ export function setupI18n() {
   return initI18n(lng);
 }
 
-export { useTranslation, i18n } from '@gowai/i18n';
+export { useTranslation, i18n } from '@driwet/i18n';
 ```
 
 **Step 2: Initialize in layout (create client component wrapper if needed)**
 
-Add to `apps/web/src/app/layout.tsx`:
+Add to `apps/platform/src/app/layout.tsx`:
 
 ```typescript
 import { setupI18n } from '@/lib/i18n';
@@ -539,7 +539,7 @@ setupI18n();
 **Step 3: Commit**
 
 ```bash
-git add apps/web/src/lib/i18n.ts apps/web/src/app/layout.tsx
+git add apps/platform/src/lib/i18n.ts apps/platform/src/app/layout.tsx
 git commit -m "feat(web): configure i18n with browser locale detection"
 ```
 
@@ -836,7 +836,7 @@ export default function MapScreen() {
               color: colors.foreground,
             }}
           >
-            Gowai
+            Driwet
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <Icon name="location" size={16} color={colors.mutedForeground} />
@@ -1214,7 +1214,7 @@ export default function WelcomeScreen() {
               color: colors.primary,
             }}
           >
-            Gowai
+            Driwet
           </Text>
         </View>
 
@@ -1940,7 +1940,7 @@ export const queryClient = new QueryClient({
 
 export const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,
-  key: 'gowai-query-cache',
+  key: 'driwet-query-cache',
 });
 ```
 
@@ -1983,8 +1983,8 @@ git commit -m "feat(native): configure TanStack Query with AsyncStorage persiste
 // packages/api/src/routers/user.ts
 import { z } from 'zod';
 import { protectedProcedure } from '../index';
-import { db } from '@gowai/db';
-import { user } from '@gowai/db/schema/auth';
+import { db } from '@driwet/db';
+import { user } from '@driwet/db/schema/auth';
 import { eq } from 'drizzle-orm';
 
 export const userRouter = {
@@ -2039,8 +2039,8 @@ git commit -m "feat(api): add user router with profile and stats"
 // packages/api/src/routers/locations.ts
 import { z } from 'zod';
 import { protectedProcedure } from '../index';
-import { db } from '@gowai/db';
-import { userLocation } from '@gowai/db/schema/user-locations';
+import { db } from '@driwet/db';
+import { userLocation } from '@driwet/db/schema/user-locations';
 import { eq, and } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 
@@ -2191,7 +2191,7 @@ export const alertsRouter = {
           `${NOAA_API_BASE}/alerts/active?point=${input.latitude},${input.longitude}`,
           {
             headers: {
-              'User-Agent': 'Gowai Weather App',
+              'User-Agent': 'Driwet Weather App',
               Accept: 'application/geo+json',
             },
           }
@@ -2300,7 +2300,7 @@ git commit -m "feat(api): export all routers from main appRouter"
 **Step 1: Run type check on all packages**
 
 ```bash
-cd /Users/lucasmontegu/apps/gowai && pnpm exec tsc --noEmit
+cd /Users/lucasmontegu/apps/driwet && pnpm exec tsc --noEmit
 ```
 
 **Step 2: Fix any type errors**
@@ -2343,7 +2343,7 @@ git commit -m "chore: phase 2 implementation complete"
 - `apps/native/components/ad-banner.tsx` - Ad banner component
 - `apps/native/app/(app)/login-incentive.tsx` - Login modal
 - `apps/native/hooks/use-require-auth.ts` - Auth hook
-- `apps/web/src/lib/i18n.ts` - Web i18n setup
+- `apps/platform/src/lib/i18n.ts` - Web i18n setup
 - `packages/api/src/routers/user.ts` - User API
 - `packages/api/src/routers/locations.ts` - Locations API
 - `packages/api/src/routers/alerts.ts` - Alerts API

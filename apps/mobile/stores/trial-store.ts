@@ -61,7 +61,7 @@ export const useTrialStore = create<TrialState>()(
       },
     }),
     {
-      name: 'gowai-trial',
+      name: 'driwet-trial',
       storage: createJSONStorage(() => AsyncStorage),
     }
   )

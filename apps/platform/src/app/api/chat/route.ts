@@ -42,7 +42,7 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: google("gemini-2.0-flash"),
-    system: `Eres Gowai, un asistente de alertas meteorológicas. Tu objetivo es mantener a los usuarios seguros informándoles sobre condiciones climáticas peligrosas.
+    system: `Eres Driwet, un asistente de alertas meteorológicas. Tu objetivo es mantener a los usuarios seguros informándoles sobre condiciones climáticas peligrosas.
 
 Capacidades:
 - Puedes obtener alertas meteorológicas para cualquier ubicación usando la herramienta getWeatherAlerts

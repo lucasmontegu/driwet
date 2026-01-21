@@ -1,6 +1,6 @@
 // packages/auth/src/lib/email.ts
 import { Resend } from "resend";
-import { env } from "@gowai/env/server";
+import { env } from "@driwet/env/server";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -11,8 +11,8 @@ interface MagicLinkEmailParams {
 }
 
 function getMagicLinkTemplate({ url, isNativeApp }: { url: string; isNativeApp?: boolean }) {
-  // For native app, we need to convert the URL to use the gowai:// scheme
-  const displayUrl = isNativeApp ? "la app de Gowai" : "Gowai";
+  // For native app, we need to convert the URL to use the driwet:// scheme
+  const displayUrl = isNativeApp ? "la app de Driwet" : "Driwet";
 
   return `
 <!DOCTYPE html>
@@ -20,7 +20,7 @@ function getMagicLinkTemplate({ url, isNativeApp }: { url: string; isNativeApp?:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicia sesión en Gowai</title>
+  <title>Inicia sesión en Driwet</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f5;">
   <table role="presentation" style="width: 100%; border-collapse: collapse;">
@@ -31,7 +31,7 @@ function getMagicLinkTemplate({ url, isNativeApp }: { url: string; isNativeApp?:
           <tr>
             <td style="padding: 40px 40px 20px 40px; text-align: center;">
               <div style="display: inline-block; background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%); padding: 16px 24px; border-radius: 12px;">
-                <span style="font-size: 28px; font-weight: 700; color: #ffffff; letter-spacing: -0.5px;">Gowai</span>
+                <span style="font-size: 28px; font-weight: 700; color: #ffffff; letter-spacing: -0.5px;">Driwet</span>
               </div>
             </td>
           </tr>
@@ -71,7 +71,7 @@ function getMagicLinkTemplate({ url, isNativeApp }: { url: string; isNativeApp?:
           <tr>
             <td style="padding: 20px 40px; text-align: center; border-top: 1px solid #e4e4e7;">
               <p style="margin: 0; font-size: 12px; color: #a1a1aa;">
-                © 2025 Gowai. Todos los derechos reservados.
+                © 2025 Driwet. Todos los derechos reservados.
               </p>
               <p style="margin: 8px 0 0 0; font-size: 12px; color: #d4d4d8;">
                 Este enlace solo funciona una vez y expira en 10 minutos.
@@ -107,7 +107,7 @@ export async function sendMagicLinkEmail({ email, url, isNativeApp }: MagicLinkE
   const { data, error } = await resend.emails.send({
     from: env.EMAIL_FROM,
     to: email,
-    subject: "🔐 Tu enlace de acceso a Gowai",
+    subject: "🔐 Tu enlace de acceso a Driwet",
     html,
   });
 

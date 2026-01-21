@@ -1,4 +1,4 @@
-import { auth } from "@gowai/auth";
+import { auth } from "@driwet/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 

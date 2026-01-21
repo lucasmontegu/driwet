@@ -1,5 +1,5 @@
 {
-  "extends": "@gowai/config/tsconfig.base.json",
+  "extends": "@driwet/config/tsconfig.base.json",
   "include": ["packages/**/*"],
   "exclude": ["apps/**/*", "node_modules", "dist", ".next"]
 }

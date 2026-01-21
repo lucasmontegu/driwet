@@ -1,5 +1,5 @@
 import { protectedProcedure } from '../index';
-import { polarClient } from '@gowai/auth/lib/payments';
+import { polarClient } from '@driwet/auth/lib/payments';
 
 export const subscriptionRouter = {
   getStatus: protectedProcedure.handler(async ({ context }) => {

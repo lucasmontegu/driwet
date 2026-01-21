@@ -1,12 +1,12 @@
 {
-  "name": "@gowai/env",
+  "name": "@driwet/env",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "exports": {
     "./server": "./src/server.ts",
-    "./web": "./src/web.ts",
-    "./native": "./src/native.ts"
+    "./platform": "./src/platform.ts",
+    "./mobile": "./src/mobile.ts"
   },
   "dependencies": {
     "@t3-oss/env-core": "^0.13.1",
@@ -15,7 +15,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@gowai/config": "workspace:*",
+    "@driwet/config": "workspace:*",
     "@types/node": "^22.13.14",
     "typescript": "catalog:"
   }

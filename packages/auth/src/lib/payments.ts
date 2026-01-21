@@ -1,4 +1,4 @@
-import { env } from "@gowai/env/server";
+import { env } from "@driwet/env/server";
 import { Polar } from "@polar-sh/sdk";
 
 export const polarClient = new Polar({

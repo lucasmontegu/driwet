@@ -1,6 +1,6 @@
-import { env } from "@gowai/env/native";
+// biome-ignore assist/source/organizeImports: <explanation>
+import { env } from "@driwet/env/mobile";
 import { expoClient } from "@better-auth/expo/client";
-import { polarClient } from "@polar-sh/better-auth";
 import { magicLinkClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import Constants from "expo-constants";
@@ -14,7 +14,6 @@ export const authClient = createAuthClient({
       storagePrefix: Constants.expoConfig?.scheme as string,
       storage: SecureStore,
     }),
-    polarClient(),
     magicLinkClient(),
   ],
 });

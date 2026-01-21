@@ -1,10 +1,10 @@
-# Gowai Mobile App - Phase 2: Real Data Integration
+# Driwet Mobile App - Phase 2: Real Data Integration
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:writing-plans to create the implementation plan from this design.
 
 ## Overview
 
-This phase removes mocks and implements real data flow, APIs, icons, internationalization, and UX improvements for the Gowai mobile weather app.
+This phase removes mocks and implements real data flow, APIs, icons, internationalization, and UX improvements for the Driwet mobile weather app.
 
 ## Goals
 
@@ -30,7 +30,7 @@ This phase removes mocks and implements real data flow, APIs, icons, internation
 
 ### 2. Internationalization
 
-**Decision:** Shared package `@gowai/i18n` with i18next
+**Decision:** Shared package `@driwet/i18n` with i18next
 
 ```
 packages/
@@ -133,7 +133,7 @@ chat.getSession()        // Get specific session messages
 
 ```
 ┌─────────────────────────┐
-│ Header: Gowai    📍     │
+│ Header: Driwet    📍     │
 ├─────────────────────────┤
 │ [    Ad Banner    ]     │  ← New position
 ├─────────────────────────┤
@@ -159,7 +159,7 @@ chat.getSession()        // Get specific session messages
 ┌─────────────────────────┐
 │                         │
 │        [Logo]           │
-│        Gowai            │
+│        Driwet            │
 │                         │
 │  Tu co-piloto climático │
 │  Evita tormentas.       │
@@ -331,7 +331,7 @@ Replace emojis with Hugeicons:
     "upgrade": "Upgrade"
   },
   "premium": {
-    "title": "Gowai Premium",
+    "title": "Driwet Premium",
     "features": {
       "unlimitedRoutes": "Rutas ilimitadas",
       "realTimeAlerts": "Alertas en tiempo real",
@@ -478,17 +478,17 @@ apps/
   "expo-localization": "~16.0.0",
   "react-i18next": "^14.0.0",
   "i18next": "^24.0.0",
-  "@gowai/i18n": "workspace:*"
+  "@driwet/i18n": "workspace:*"
 }
 ```
 
-### Web (`apps/web/package.json`)
+### Web (`apps/platform/package.json`)
 
 ```json
 {
   "react-i18next": "^14.0.0",
   "i18next": "^24.0.0",
-  "@gowai/i18n": "workspace:*"
+  "@driwet/i18n": "workspace:*"
 }
 ```
 
