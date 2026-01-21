@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { db } from "@advia/db";
+import { db } from "@gowai/db";
 import {
   weatherCache,
   routeWeatherAnalysis,
   alertHistory,
   type WeatherData,
   type AlertType,
-} from "@advia/db/schema/index";
+} from "@gowai/db/schema/index";
 import { eq, and, gt } from "drizzle-orm";
 import { protectedProcedure } from "../index";
 import {

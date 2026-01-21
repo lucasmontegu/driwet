@@ -62,7 +62,7 @@ export default function MapScreen() {
               color: colors.foreground,
             }}
           >
-            Advia
+            Gowai
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <Icon name="location" size={16} color={colors.mutedForeground} />

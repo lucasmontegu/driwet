@@ -61,7 +61,7 @@ export const useTrialStore = create<TrialState>()(
       },
     }),
     {
-      name: 'advia-trial',
+      name: 'gowai-trial',
       storage: createJSONStorage(() => AsyncStorage),
     }
   )

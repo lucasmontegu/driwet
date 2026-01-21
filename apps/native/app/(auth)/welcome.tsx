@@ -34,7 +34,7 @@ export default function WelcomeScreen() {
               color: colors.primary,
             }}
           >
-            Advia
+            Gowai
           </Text>
         </View>
 

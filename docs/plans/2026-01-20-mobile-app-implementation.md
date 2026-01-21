@@ -1,8 +1,8 @@
-# Advia Mobile App - Implementation Plan
+# Gowai Mobile App - Implementation Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Implementar la app móvil de Advia con flujo de autenticación, mapa con alertas, chat IA, sistema de rutas, y monetización (ads + premium).
+**Goal:** Implementar la app móvil de Gowai con flujo de autenticación, mapa con alertas, chat IA, sistema de rutas, y monetización (ads + premium).
 
 **Architecture:** Expo Router con grupos de rutas `(auth)` y `(app)`. El grupo auth es público, el grupo app requiere trial activo o cuenta. Theme unificado con web usando colores OKLch convertidos. Bottom sheet para chat integrado con mapa.
 
@@ -362,7 +362,7 @@ export default function WelcomeScreen() {
               color: colors.primary,
             }}
           >
-            Advia
+            Gowai
           </Text>
         </View>
 
@@ -500,7 +500,7 @@ export const useTrialStore = create<TrialState>()(
       },
     }),
     {
-      name: 'advia-trial',
+      name: 'gowai-trial',
       storage: createJSONStorage(() => AsyncStorage),
     }
   )
@@ -1129,7 +1129,7 @@ export default function MapScreen() {
               color: colors.foreground,
             }}
           >
-            Advia
+            Gowai
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <Text style={{ fontSize: 16 }}>📍</Text>
@@ -1952,7 +1952,7 @@ export default function PremiumScreen() {
             marginBottom: 24,
           }}
         >
-          Advia Premium
+          Gowai Premium
         </Text>
 
         {/* Features */}
@@ -2070,9 +2070,9 @@ Actualizar `packages/auth/src/index.ts` para agregar los providers:
 
 ```typescript
 // packages/auth/src/index.ts
-import { db } from "@advia/db";
-import * as schema from "@advia/db/schema/auth";
-import { env } from "@advia/env/server";
+import { db } from "@gowai/db";
+import * as schema from "@gowai/db/schema/auth";
+import { env } from "@gowai/env/server";
 import { expo } from "@better-auth/expo";
 import { magicLink } from "better-auth/plugins";
 import { polar, checkout, portal } from "@polar-sh/better-auth";
@@ -2087,7 +2087,7 @@ export const auth = betterAuth({
     provider: "pg",
     schema: schema,
   }),
-  trustedOrigins: [env.CORS_ORIGIN, "advia://", "exp://"],
+  trustedOrigins: [env.CORS_ORIGIN, "gowai://", "exp://"],
   emailAndPassword: {
     enabled: false, // Deshabilitado, usamos magic link
   },

@@ -17,7 +17,7 @@ export const alertsRouter = {
           `${NOAA_API_BASE}/alerts/active?point=${input.latitude},${input.longitude}`,
           {
             headers: {
-              'User-Agent': 'Advia Weather App',
+              'User-Agent': 'Gowai Weather App',
               Accept: 'application/geo+json',
             },
           }

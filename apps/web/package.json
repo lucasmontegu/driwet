@@ -8,10 +8,10 @@
     "start": "next start"
   },
   "dependencies": {
-    "@advia/api": "workspace:*",
-    "@advia/auth": "workspace:*",
-    "@advia/env": "workspace:*",
-    "@advia/i18n": "workspace:^",
+    "@gowai/api": "workspace:*",
+    "@gowai/auth": "workspace:*",
+    "@gowai/env": "workspace:*",
+    "@gowai/i18n": "workspace:^",
     "@ai-sdk/google": "^3.0.10",
     "@ai-sdk/openai": "^3.0.12",
     "@base-ui/react": "^1.1.0",
@@ -48,7 +48,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@advia/config": "workspace:*",
+    "@gowai/config": "workspace:*",
     "@tailwindcss/postcss": "^4.1.10",
     "@types/node": "^20",
     "@types/react": "^19.2.7",

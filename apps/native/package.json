@@ -12,9 +12,9 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@advia/api": "workspace:*",
-    "@advia/env": "workspace:*",
-    "@advia/i18n": "workspace:^",
+    "@gowai/api": "workspace:*",
+    "@gowai/env": "workspace:*",
+    "@gowai/i18n": "workspace:^",
     "@ai-sdk/react": "^3.0.41",
     "@better-auth/expo": "catalog:",
     "@expo-google-fonts/inter": "^0.4.2",
@@ -75,7 +75,7 @@
     "zustand": "^5.0.10"
   },
   "devDependencies": {
-    "@advia/config": "workspace:*",
+    "@gowai/config": "workspace:*",
     "@types/node": "^24.10.0",
     "@types/react": "~19.1.0",
     "typescript": "catalog:"

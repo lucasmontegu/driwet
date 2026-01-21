@@ -1,21 +1,21 @@
 {
   "expo": {
-    "scheme": "advia",
+    "scheme": "gowai",
     "userInterfaceStyle": "automatic",
     "orientation": "default",
     "web": {
       "bundler": "metro"
     },
-    "name": "advia",
-    "slug": "advia",
+    "name": "gowai",
+    "slug": "gowai",
     "plugins": [
       "expo-font",
       "@rnmapbox/maps",
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Advia necesita tu ubicación para mostrarte alertas de clima cercanas y guiarte a refugios seguros.",
-          "locationWhenInUsePermission": "Advia necesita tu ubicación para mostrarte alertas de clima cercanas.",
+          "locationAlwaysAndWhenInUsePermission": "Gowai necesita tu ubicación para mostrarte alertas de clima cercanas y guiarte a refugios seguros.",
+          "locationWhenInUsePermission": "Gowai necesita tu ubicación para mostrarte alertas de clima cercanas.",
           "isAndroidBackgroundLocationEnabled": true,
           "isAndroidForegroundServiceEnabled": true
         }
@@ -30,9 +30,9 @@
     ],
     "ios": {
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Advia necesita tu ubicación para mostrarte alertas de clima cercanas.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "Advia necesita tu ubicación para mostrarte alertas de clima cercanas y guiarte a refugios seguros.",
-        "NSLocationAlwaysUsageDescription": "Advia necesita tu ubicación en segundo plano para alertarte sobre clima peligroso mientras conduces.",
+        "NSLocationWhenInUseUsageDescription": "Gowai necesita tu ubicación para mostrarte alertas de clima cercanas.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Gowai necesita tu ubicación para mostrarte alertas de clima cercanas y guiarte a refugios seguros.",
+        "NSLocationAlwaysUsageDescription": "Gowai necesita tu ubicación en segundo plano para alertarte sobre clima peligroso mientras conduces.",
         "UIBackgroundModes": [
           "location",
           "fetch",
@@ -40,7 +40,7 @@
           "fetch"
         ]
       },
-      "bundleIdentifier": "com.anonymous.advia"
+      "bundleIdentifier": "com.anonymous.gowai"
     },
     "android": {
       "permissions": [
@@ -55,7 +55,7 @@
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.FOREGROUND_SERVICE_LOCATION"
       ],
-      "package": "com.anonymous.advia"
+      "package": "com.anonymous.gowai"
     },
     "experiments": {
       "typedRoutes": true,

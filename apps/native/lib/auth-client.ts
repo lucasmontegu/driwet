@@ -1,4 +1,4 @@
-import { env } from "@advia/env/native";
+import { env } from "@gowai/env/native";
 import { expoClient } from "@better-auth/expo/client";
 import { polarClient } from "@polar-sh/better-auth";
 import { magicLinkClient } from "better-auth/client/plugins";

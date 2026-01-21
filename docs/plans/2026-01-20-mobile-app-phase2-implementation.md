@@ -1,4 +1,4 @@
-# Advia Mobile App Phase 2 - Implementation Plan
+# Gowai Mobile App Phase 2 - Implementation Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
@@ -14,7 +14,7 @@
 
 ## Phase 1: i18n Package Setup
 
-### Task 1.1: Create @advia/i18n package structure
+### Task 1.1: Create @gowai/i18n package structure
 
 **Files:**
 - Create: `packages/i18n/package.json`
@@ -25,7 +25,7 @@
 
 ```json
 {
-  "name": "@advia/i18n",
+  "name": "@gowai/i18n",
   "version": "1.0.0",
   "type": "module",
   "exports": {
@@ -41,7 +41,7 @@
     "react-i18next": "^15.4.1"
   },
   "devDependencies": {
-    "@advia/config": "workspace:*",
+    "@gowai/config": "workspace:*",
     "typescript": "catalog:"
   }
 }
@@ -51,7 +51,7 @@
 
 ```json
 {
-  "extends": "@advia/config/tsconfig.base.json",
+  "extends": "@gowai/config/tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
@@ -207,7 +207,7 @@ git commit -m "feat(i18n): create shared i18n package structure"
     "upgrade": "Upgrade"
   },
   "premium": {
-    "title": "Advia Premium",
+    "title": "Gowai Premium",
     "features": {
       "unlimitedRoutes": "Rutas ilimitadas",
       "realTimeAlerts": "Alertas en tiempo real",
@@ -343,7 +343,7 @@ git commit -m "feat(i18n): add Spanish translations"
     "upgrade": "Upgrade"
   },
   "premium": {
-    "title": "Advia Premium",
+    "title": "Gowai Premium",
     "features": {
       "unlimitedRoutes": "Unlimited routes",
       "realTimeAlerts": "Real-time alerts",
@@ -384,7 +384,7 @@ git commit -m "feat(i18n): add English translations"
 **Step 1: Install dependencies in root**
 
 ```bash
-cd /Users/lucasmontegu/apps/advia && pnpm install
+cd /Users/lucasmontegu/apps/gowai && pnpm install
 ```
 
 **Step 2: Commit lock file**
@@ -406,7 +406,7 @@ git commit -m "chore: update pnpm-lock after i18n package"
 **Step 1: Add dependencies**
 
 ```bash
-cd apps/native && pnpm add @hugeicons/react-native @hugeicons/core-free-icons @tanstack/query-async-storage-persister @tanstack/react-query-persist-client expo-localization@~16.0.0 react-i18next i18next @advia/i18n
+cd apps/native && pnpm add @hugeicons/react-native @hugeicons/core-free-icons @tanstack/query-async-storage-persister @tanstack/react-query-persist-client expo-localization@~16.0.0 react-i18next i18next @gowai/i18n
 ```
 
 **Step 2: Commit**
@@ -426,7 +426,7 @@ git commit -m "deps(native): add hugeicons, query-persist, i18n dependencies"
 **Step 1: Add dependencies**
 
 ```bash
-cd apps/web && pnpm add react-i18next i18next @advia/i18n
+cd apps/web && pnpm add react-i18next i18next @gowai/i18n
 ```
 
 **Step 2: Commit**
@@ -470,7 +470,7 @@ git commit -m "deps(api): add ai-sdk-tools for chat memory"
 
 ```typescript
 // apps/native/lib/i18n.ts
-import { initI18n, type SupportedLanguage } from '@advia/i18n';
+import { initI18n, type SupportedLanguage } from '@gowai/i18n';
 import * as Localization from 'expo-localization';
 
 export function setupI18n() {
@@ -479,7 +479,7 @@ export function setupI18n() {
   return initI18n(lng);
 }
 
-export { useTranslation, i18n } from '@advia/i18n';
+export { useTranslation, i18n } from '@gowai/i18n';
 ```
 
 **Step 2: Initialize i18n in root layout**
@@ -512,7 +512,7 @@ git commit -m "feat(native): configure i18n with device locale detection"
 
 ```typescript
 // apps/web/src/lib/i18n.ts
-import { initI18n, type SupportedLanguage } from '@advia/i18n';
+import { initI18n, type SupportedLanguage } from '@gowai/i18n';
 
 export function setupI18n() {
   const browserLang = typeof navigator !== 'undefined'
@@ -522,7 +522,7 @@ export function setupI18n() {
   return initI18n(lng);
 }
 
-export { useTranslation, i18n } from '@advia/i18n';
+export { useTranslation, i18n } from '@gowai/i18n';
 ```
 
 **Step 2: Initialize in layout (create client component wrapper if needed)**
@@ -836,7 +836,7 @@ export default function MapScreen() {
               color: colors.foreground,
             }}
           >
-            Advia
+            Gowai
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <Icon name="location" size={16} color={colors.mutedForeground} />
@@ -1214,7 +1214,7 @@ export default function WelcomeScreen() {
               color: colors.primary,
             }}
           >
-            Advia
+            Gowai
           </Text>
         </View>
 
@@ -1940,7 +1940,7 @@ export const queryClient = new QueryClient({
 
 export const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,
-  key: 'advia-query-cache',
+  key: 'gowai-query-cache',
 });
 ```
 
@@ -1983,8 +1983,8 @@ git commit -m "feat(native): configure TanStack Query with AsyncStorage persiste
 // packages/api/src/routers/user.ts
 import { z } from 'zod';
 import { protectedProcedure } from '../index';
-import { db } from '@advia/db';
-import { user } from '@advia/db/schema/auth';
+import { db } from '@gowai/db';
+import { user } from '@gowai/db/schema/auth';
 import { eq } from 'drizzle-orm';
 
 export const userRouter = {
@@ -2039,8 +2039,8 @@ git commit -m "feat(api): add user router with profile and stats"
 // packages/api/src/routers/locations.ts
 import { z } from 'zod';
 import { protectedProcedure } from '../index';
-import { db } from '@advia/db';
-import { userLocation } from '@advia/db/schema/user-locations';
+import { db } from '@gowai/db';
+import { userLocation } from '@gowai/db/schema/user-locations';
 import { eq, and } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 
@@ -2191,7 +2191,7 @@ export const alertsRouter = {
           `${NOAA_API_BASE}/alerts/active?point=${input.latitude},${input.longitude}`,
           {
             headers: {
-              'User-Agent': 'Advia Weather App',
+              'User-Agent': 'Gowai Weather App',
               Accept: 'application/geo+json',
             },
           }
@@ -2300,7 +2300,7 @@ git commit -m "feat(api): export all routers from main appRouter"
 **Step 1: Run type check on all packages**
 
 ```bash
-cd /Users/lucasmontegu/apps/advia && pnpm exec tsc --noEmit
+cd /Users/lucasmontegu/apps/gowai && pnpm exec tsc --noEmit
 ```
 
 **Step 2: Fix any type errors**

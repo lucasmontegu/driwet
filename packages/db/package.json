@@ -1,5 +1,5 @@
 {
-  "name": "@advia/db",
+  "name": "@gowai/db",
   "type": "module",
   "exports": {
     ".": {
@@ -16,7 +16,7 @@
     "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
-    "@advia/env": "workspace:*",
+    "@gowai/env": "workspace:*",
     "@neondatabase/serverless": "^1.0.2",
     "dotenv": "catalog:",
     "drizzle-orm": "^0.45.1",
@@ -24,7 +24,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@advia/config": "workspace:*",
+    "@gowai/config": "workspace:*",
     "@types/ws": "^8.18.1",
     "drizzle-kit": "^0.31.8",
     "typescript": "catalog:"

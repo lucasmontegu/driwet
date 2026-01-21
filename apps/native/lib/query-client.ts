@@ -1,7 +1,7 @@
 // apps/native/lib/query-client.ts
-import type { AppRouterClient } from '@advia/api/routers/index';
+import type { AppRouterClient } from '@gowai/api/routers/index';
 
-import { env } from '@advia/env/native';
+import { env } from '@gowai/env/native';
 import { createORPCClient } from '@orpc/client';
 import { RPCLink } from '@orpc/client/fetch';
 import { createTanstackQueryUtils } from '@orpc/tanstack-query';
@@ -25,7 +25,7 @@ export const queryClient = new QueryClient({
 // AsyncStorage persister for offline-first support
 export const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,
-  key: 'advia-query-cache',
+  key: 'gowai-query-cache',
 });
 
 // oRPC link with auth cookie forwarding

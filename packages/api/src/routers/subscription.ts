@@ -1,5 +1,5 @@
 import { protectedProcedure } from '../index';
-import { polarClient } from '@advia/auth/lib/payments';
+import { polarClient } from '@gowai/auth/lib/payments';
 
 export const subscriptionRouter = {
   getStatus: protectedProcedure.handler(async ({ context }) => {

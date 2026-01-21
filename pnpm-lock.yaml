@@ -44,7 +44,7 @@ importers:
 
   .:
     dependencies:
-      '@advia/env':
+      '@gowai/env':
         specifier: workspace:*
         version: link:packages/env
       dotenv:
@@ -54,12 +54,12 @@ importers:
         specifier: 'catalog:'
         version: 4.3.5
     devDependencies:
-      '@advia/config':
-        specifier: workspace:*
-        version: link:packages/config
       '@biomejs/biome':
         specifier: ^2.2.0
         version: 2.3.11
+      '@gowai/config':
+        specifier: workspace:*
+        version: link:packages/config
       '@types/node':
         specifier: ^22.13.14
         version: 22.19.7
@@ -72,15 +72,6 @@ importers:
 
   apps/native:
     dependencies:
-      '@advia/api':
-        specifier: workspace:*
-        version: link:../../packages/api
-      '@advia/env':
-        specifier: workspace:*
-        version: link:../../packages/env
-      '@advia/i18n':
-        specifier: workspace:^
-        version: link:../../packages/i18n
       '@ai-sdk/react':
         specifier: ^3.0.41
         version: 3.0.41(react@19.1.0)(zod@4.3.5)
@@ -102,6 +93,15 @@ importers:
       '@gorhom/bottom-sheet':
         specifier: ^5
         version: 5.2.8(@types/react@19.1.17)(react-native-gesture-handler@2.30.0(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-reanimated@4.1.6(@babel/core@7.28.6)(react-native-worklets@0.5.1(@babel/core@7.28.6)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@gowai/api':
+        specifier: workspace:*
+        version: link:../../packages/api
+      '@gowai/env':
+        specifier: workspace:*
+        version: link:../../packages/env
+      '@gowai/i18n':
+        specifier: workspace:^
+        version: link:../../packages/i18n
       '@hugeicons/core-free-icons':
         specifier: ^3.1.1
         version: 3.1.1
@@ -256,7 +256,7 @@ importers:
         specifier: ^5.0.10
         version: 5.0.10(@types/react@19.1.17)(immer@11.1.3)(react@19.1.0)(use-sync-external-store@1.6.0(react@19.1.0))
     devDependencies:
-      '@advia/config':
+      '@gowai/config':
         specifier: workspace:*
         version: link:../../packages/config
       '@types/node':
@@ -271,18 +271,6 @@ importers:
 
   apps/web:
     dependencies:
-      '@advia/api':
-        specifier: workspace:*
-        version: link:../../packages/api
-      '@advia/auth':
-        specifier: workspace:*
-        version: link:../../packages/auth
-      '@advia/env':
-        specifier: workspace:*
-        version: link:../../packages/env
-      '@advia/i18n':
-        specifier: workspace:^
-        version: link:../../packages/i18n
       '@ai-sdk/google':
         specifier: ^3.0.10
         version: 3.0.10(zod@4.3.5)
@@ -292,6 +280,18 @@ importers:
       '@base-ui/react':
         specifier: ^1.1.0
         version: 1.1.0(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@gowai/api':
+        specifier: workspace:*
+        version: link:../../packages/api
+      '@gowai/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
+      '@gowai/env':
+        specifier: workspace:*
+        version: link:../../packages/env
+      '@gowai/i18n':
+        specifier: workspace:^
+        version: link:../../packages/i18n
       '@heroui/react':
         specifier: 3.0.0-beta.5
         version: 3.0.0-beta.5(@types/react-dom@19.2.3(@types/react@19.2.8))(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(tailwindcss@4.1.18)
@@ -386,7 +386,7 @@ importers:
         specifier: 'catalog:'
         version: 4.3.5
     devDependencies:
-      '@advia/config':
+      '@gowai/config':
         specifier: workspace:*
         version: link:../../packages/config
       '@tailwindcss/postcss':
@@ -410,18 +410,18 @@ importers:
 
   packages/api:
     dependencies:
-      '@advia/auth':
-        specifier: workspace:*
-        version: link:../auth
-      '@advia/db':
-        specifier: workspace:*
-        version: link:../db
-      '@advia/env':
-        specifier: workspace:*
-        version: link:../env
       '@ai-sdk/google':
         specifier: ^3.0.10
         version: 3.0.10(zod@4.3.5)
+      '@gowai/auth':
+        specifier: workspace:*
+        version: link:../auth
+      '@gowai/db':
+        specifier: workspace:*
+        version: link:../db
+      '@gowai/env':
+        specifier: workspace:*
+        version: link:../env
       '@orpc/client':
         specifier: 'catalog:'
         version: 1.13.4(@opentelemetry/api@1.9.0)
@@ -459,7 +459,7 @@ importers:
         specifier: 'catalog:'
         version: 4.3.5
     devDependencies:
-      '@advia/config':
+      '@gowai/config':
         specifier: workspace:*
         version: link:../config
       typescript:
@@ -468,15 +468,15 @@ importers:
 
   packages/auth:
     dependencies:
-      '@advia/db':
-        specifier: workspace:*
-        version: link:../db
-      '@advia/env':
-        specifier: workspace:*
-        version: link:../env
       '@better-auth/expo':
         specifier: 'catalog:'
         version: 1.4.14(@better-auth/core@1.4.14(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.5))(jose@6.1.3)(kysely@0.28.9)(nanostores@1.1.0))(better-auth@1.4.14(drizzle-kit@0.31.8)(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(kysely@0.28.9))(next@16.1.3(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(expo-constants@18.0.13)(expo-linking@8.0.11)(expo-network@8.0.8(expo@54.0.31)(react@19.2.3))(expo-web-browser@15.0.10(expo@54.0.31)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.2.8)(react@19.2.3)))
+      '@gowai/db':
+        specifier: workspace:*
+        version: link:../db
+      '@gowai/env':
+        specifier: workspace:*
+        version: link:../env
       '@polar-sh/better-auth':
         specifier: 'catalog:'
         version: 1.6.4(@polar-sh/sdk@0.42.2)(@stripe/react-stripe-js@4.0.2(@stripe/stripe-js@7.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@stripe/stripe-js@7.9.0)(@types/react-dom@19.2.3(@types/react@19.2.8))(@types/react@19.2.8)(better-auth@1.4.14(drizzle-kit@0.31.8)(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(kysely@0.28.9))(next@16.1.3(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react-is@19.2.3)(react@19.2.3)(redux@5.0.1)(zod@4.3.5)
@@ -496,7 +496,7 @@ importers:
         specifier: 'catalog:'
         version: 4.3.5
     devDependencies:
-      '@advia/config':
+      '@gowai/config':
         specifier: workspace:*
         version: link:../config
       typescript:
@@ -507,7 +507,7 @@ importers:
 
   packages/db:
     dependencies:
-      '@advia/env':
+      '@gowai/env':
         specifier: workspace:*
         version: link:../env
       '@neondatabase/serverless':
@@ -526,7 +526,7 @@ importers:
         specifier: 'catalog:'
         version: 4.3.5
     devDependencies:
-      '@advia/config':
+      '@gowai/config':
         specifier: workspace:*
         version: link:../config
       '@types/ws':
@@ -554,7 +554,7 @@ importers:
         specifier: 'catalog:'
         version: 4.3.5
     devDependencies:
-      '@advia/config':
+      '@gowai/config':
         specifier: workspace:*
         version: link:../config
       '@types/node':
@@ -566,7 +566,7 @@ importers:
 
   packages/i18n:
     devDependencies:
-      '@advia/config':
+      '@gowai/config':
         specifier: workspace:*
         version: link:../config
       i18next:
@@ -8887,7 +8887,7 @@ snapshots:
       postcss: 8.4.49
       resolve-from: 5.0.0
     optionalDependencies:
-      expo: 54.0.31(@babel/core@7.28.6)(@expo/metro-runtime@6.1.2)(expo-router@6.0.21)(graphql@16.12.0)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.2.8)(react@19.2.3))(react@19.2.3)
+      expo: 54.0.31(@babel/core@7.28.6)(@expo/metro-runtime@6.1.2)(expo-router@6.0.21)(graphql@16.12.0)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -8968,7 +8968,7 @@ snapshots:
       '@expo/json-file': 10.0.8
       '@react-native/normalize-colors': 0.81.5
       debug: 4.4.3
-      expo: 54.0.31(@babel/core@7.28.6)(@expo/metro-runtime@6.1.2)(expo-router@6.0.21)(graphql@16.12.0)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.2.8)(react@19.2.3))(react@19.2.3)
+      expo: 54.0.31(@babel/core@7.28.6)(@expo/metro-runtime@6.1.2)(expo-router@6.0.21)(graphql@16.12.0)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       resolve-from: 5.0.0
       semver: 7.7.3
       xml2js: 0.6.0
@@ -12965,7 +12965,7 @@ snapshots:
       resolve-from: 5.0.0
     optionalDependencies:
       '@babel/runtime': 7.28.6
-      expo: 54.0.31(@babel/core@7.28.6)(@expo/metro-runtime@6.1.2)(expo-router@6.0.21)(graphql@16.12.0)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.2.8)(react@19.2.3))(react@19.2.3)
+      expo: 54.0.31(@babel/core@7.28.6)(@expo/metro-runtime@6.1.2)(expo-router@6.0.21)(graphql@16.12.0)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color

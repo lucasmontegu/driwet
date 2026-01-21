@@ -1,5 +1,5 @@
 {
-  "name": "@advia/env",
+  "name": "@gowai/env",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -15,7 +15,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@advia/config": "workspace:*",
+    "@gowai/config": "workspace:*",
     "@types/node": "^22.13.14",
     "typescript": "catalog:"
   }

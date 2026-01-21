@@ -1,6 +1,6 @@
 // apps/web/src/lib/i18n.ts
 "use client";
-import { initI18n, i18n, type SupportedLanguage } from '@advia/i18n';
+import { initI18n, i18n, type SupportedLanguage } from '@gowai/i18n';
 import { I18nextProvider, useTranslation } from 'react-i18next';
 
 export function setupI18n() {

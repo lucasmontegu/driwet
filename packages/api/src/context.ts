@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 
-import { auth } from "@advia/auth";
+import { auth } from "@gowai/auth";
 
 export async function createContext(req: NextRequest) {
   const session = await auth.api.getSession({

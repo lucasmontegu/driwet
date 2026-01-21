@@ -1,4 +1,4 @@
-import type { AppRouterClient } from "@advia/api/routers/index";
+import type { AppRouterClient } from "@gowai/api/routers/index";
 
 import { createORPCClient } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";

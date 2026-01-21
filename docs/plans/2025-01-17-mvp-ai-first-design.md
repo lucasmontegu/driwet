@@ -1,4 +1,4 @@
-# Advia MVP: AI-First Storm Advisor
+# Gowai MVP: AI-First Storm Advisor
 
 **Fecha:** 2025-01-17
 **Autor:** Lucas
@@ -86,7 +86,7 @@ analyzeRoute
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      ADVIA MVP ARCHITECTURE                  │
+│                      GOWAI MVP ARCHITECTURE                  │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  apps/native (Expo)                                          │

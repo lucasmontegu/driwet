@@ -1,10 +1,10 @@
-# Advia Mobile App - Phase 2: Real Data Integration
+# Gowai Mobile App - Phase 2: Real Data Integration
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:writing-plans to create the implementation plan from this design.
 
 ## Overview
 
-This phase removes mocks and implements real data flow, APIs, icons, internationalization, and UX improvements for the Advia mobile weather app.
+This phase removes mocks and implements real data flow, APIs, icons, internationalization, and UX improvements for the Gowai mobile weather app.
 
 ## Goals
 
@@ -30,7 +30,7 @@ This phase removes mocks and implements real data flow, APIs, icons, internation
 
 ### 2. Internationalization
 
-**Decision:** Shared package `@advia/i18n` with i18next
+**Decision:** Shared package `@gowai/i18n` with i18next
 
 ```
 packages/
@@ -133,7 +133,7 @@ chat.getSession()        // Get specific session messages
 
 ```
 ┌─────────────────────────┐
-│ Header: Advia    📍     │
+│ Header: Gowai    📍     │
 ├─────────────────────────┤
 │ [    Ad Banner    ]     │  ← New position
 ├─────────────────────────┤
@@ -159,7 +159,7 @@ chat.getSession()        // Get specific session messages
 ┌─────────────────────────┐
 │                         │
 │        [Logo]           │
-│        Advia            │
+│        Gowai            │
 │                         │
 │  Tu co-piloto climático │
 │  Evita tormentas.       │
@@ -331,7 +331,7 @@ Replace emojis with Hugeicons:
     "upgrade": "Upgrade"
   },
   "premium": {
-    "title": "Advia Premium",
+    "title": "Gowai Premium",
     "features": {
       "unlimitedRoutes": "Rutas ilimitadas",
       "realTimeAlerts": "Alertas en tiempo real",
@@ -478,7 +478,7 @@ apps/
   "expo-localization": "~16.0.0",
   "react-i18next": "^14.0.0",
   "i18next": "^24.0.0",
-  "@advia/i18n": "workspace:*"
+  "@gowai/i18n": "workspace:*"
 }
 ```
 
@@ -488,7 +488,7 @@ apps/
 {
   "react-i18next": "^14.0.0",
   "i18next": "^24.0.0",
-  "@advia/i18n": "workspace:*"
+  "@gowai/i18n": "workspace:*"
 }
 ```
 

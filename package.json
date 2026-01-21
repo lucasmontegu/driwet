@@ -1,5 +1,5 @@
 {
-  "name": "advia",
+  "name": "gowai",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -12,19 +12,19 @@
     "check-types": "turbo check-types",
     "dev:native": "turbo -F native dev",
     "dev:web": "turbo -F web dev",
-    "db:push": "turbo -F @advia/db db:push",
-    "db:studio": "turbo -F @advia/db db:studio",
-    "db:generate": "turbo -F @advia/db db:generate",
-    "db:migrate": "turbo -F @advia/db db:migrate",
+    "db:push": "turbo -F @gowai/db db:push",
+    "db:studio": "turbo -F @gowai/db db:studio",
+    "db:generate": "turbo -F @gowai/db db:generate",
+    "db:migrate": "turbo -F @gowai/db db:migrate",
     "check": "biome check --write ."
   },
   "dependencies": {
-    "@advia/env": "workspace:*",
+    "@gowai/env": "workspace:*",
     "dotenv": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@advia/config": "workspace:*",
+    "@gowai/config": "workspace:*",
     "@biomejs/biome": "^2.2.0",
     "@types/node": "^22.13.14",
     "turbo": "^2.6.3",
