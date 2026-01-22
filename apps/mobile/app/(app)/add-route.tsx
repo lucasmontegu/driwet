@@ -16,6 +16,7 @@ import { Icon } from '@/components/icons';
 import { useTranslation } from '@/lib/i18n';
 import { useLocation } from '@/hooks/use-location';
 import { useCreateRoute } from '@/hooks/use-api';
+import { Analytics } from '@/lib/analytics';
 
 type Place = {
   name: string;
@@ -71,6 +72,7 @@ export default function AddRouteScreen() {
         destinationLatitude: destination.latitude,
         destinationLongitude: destination.longitude,
       });
+      Analytics.routeCreated(false); // Weather alerts checked after creation
       router.back();
     } catch {
       Alert.alert(t('common.error'), t('common.retry'));

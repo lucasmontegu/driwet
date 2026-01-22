@@ -2,6 +2,7 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { api } from '@/lib/query-client';
 import { Linking, Platform } from 'react-native';
+import { Analytics } from '@/lib/analytics';
 
 // ============ Safe Places Types ============
 
@@ -145,6 +146,8 @@ export function useNavigateToPlace() {
       if (!success) {
         throw new Error('No se pudo abrir la navegación');
       }
+      // Track successful navigation to shelter
+      Analytics.shelterNavigated(params.place.type);
       return success;
     },
   });

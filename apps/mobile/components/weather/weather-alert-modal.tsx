@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import { View, Text, StyleSheet, Pressable, Modal, ScrollView } from 'react-native';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { Icon } from '@/components/icons';
 import { useTranslation } from '@/lib/i18n';
 import { RouteRiskBadge } from './route-risk-badge';
+import { Analytics } from '@/lib/analytics';
 
 type Severity = 'minor' | 'moderate' | 'severe' | 'extreme';
 type RoadRisk = 'low' | 'moderate' | 'high' | 'extreme';
@@ -43,6 +45,13 @@ export function WeatherAlertModal({
 }: WeatherAlertModalProps) {
   const colors = useThemeColors();
   const { t } = useTranslation();
+
+  // Track when user views a weather alert
+  useEffect(() => {
+    if (visible && alert) {
+      Analytics.weatherAlertViewed(alert.severity, alert.type);
+    }
+  }, [visible, alert]);
 
   if (!alert) return null;
 

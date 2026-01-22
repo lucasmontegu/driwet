@@ -7,6 +7,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useLocation } from '@/hooks/use-location';
 import { useSendChatMessage } from '@/hooks/use-api';
 import { Icon } from '@/components/icons';
+import { Analytics } from '@/lib/analytics';
 
 interface ChatMessage {
   id: string;
@@ -48,6 +49,7 @@ export function ChatBottomSheet() {
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setStreamingContent('');
+    Analytics.chatMessageSent();
 
     // Expand bottom sheet when sending
     bottomSheetRef.current?.snapToIndex(1);
@@ -89,6 +91,7 @@ export function ChatBottomSheet() {
 
   const handleSuggestion = useCallback((suggestion: string) => {
     setInput(suggestion);
+    Analytics.chatQuickActionUsed(suggestion);
   }, []);
 
   // Combine messages with streaming content for display

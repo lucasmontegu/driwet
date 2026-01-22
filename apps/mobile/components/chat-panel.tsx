@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import Animated, { FadeInUp } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Analytics } from "@/lib/analytics";
 
 type Message = {
   id: string;
@@ -36,6 +37,7 @@ export function ChatPanel({
     if (input.trim() && onSendMessage) {
       onSendMessage(input.trim());
       setInput("");
+      Analytics.chatMessageSent();
     }
   };
 
