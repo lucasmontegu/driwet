@@ -1,0 +1,4 @@
+# Ralphy Progress Log
+
+- [✓] 2026-01-22 03:25 - docs/driwet-mvp-roadmap.md
+- [✓] 2026-01-22 03:37 - implementa el roadmap

@@ -1,4 +1,4 @@
-# Gowai B2B Fleet Expansion Design
+# Driwet B2B Fleet Expansion Design
 
 **Fecha:** 2025-01-21
 **Status:** Roadmap (post-validación B2C)
@@ -8,7 +8,7 @@
 
 ## Resumen Ejecutivo
 
-Expansión de Gowai hacia el mercado B2B con dos verticales:
+Expansión de Driwet hacia el mercado B2B con dos verticales:
 1. **Flotas de delivery/logistics** — Dashboard web para fleet managers
 2. **Aseguradoras** — API para integrar alertas en sus sistemas (Fase 2)
 
@@ -182,7 +182,7 @@ fleetNotifications.notifyManager
 ### Comparación de Mercado
 
 - Samsara (suite completa): $30-40/vehículo/mes
-- Gowai (vertical weather): $2.50-4/vehículo/mes
+- Driwet (vertical weather): $2.50-4/vehículo/mes
 - **Posicionamiento:** 10x más económico por ser específico
 
 ---
@@ -269,7 +269,7 @@ fleetNotifications.notifyManager
 
 ## Validación vs. Principios "Apps Rentables 2026"
 
-| Principio | Gowai B2B |
+| Principio | Driwet B2B |
 |-----------|-----------|
 | Nicho específico | ✅ Fleet weather protection LATAM |
 | Problema doloroso | ✅ $2-7M ARS por siniestro |

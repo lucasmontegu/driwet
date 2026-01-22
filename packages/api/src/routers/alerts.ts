@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { publicProcedure, protectedProcedure } from '../index';
-
-const NOAA_API_BASE = 'https://api.weather.gov';
+import { tomorrowClient } from '../lib/tomorrow-io';
 
 export const alertsRouter = {
   getActive: publicProcedure
@@ -13,35 +12,54 @@ export const alertsRouter = {
     )
     .handler(async ({ input }) => {
       try {
-        const response = await fetch(
-          `${NOAA_API_BASE}/alerts/active?point=${input.latitude},${input.longitude}`,
-          {
-            headers: {
-              'User-Agent': 'Driwet Weather App',
-              Accept: 'application/geo+json',
-            },
-          }
-        );
+        // Fetch alerts from Tomorrow.io (works for Argentina/LATAM)
+        const events = await tomorrowClient.getEvents(input.latitude, input.longitude, 50);
 
-        if (!response.ok) {
-          return { alerts: [] };
-        }
+        // Map severity from Tomorrow.io to our format
+        const severityMap: Record<string, 'extreme' | 'severe' | 'moderate' | 'minor'> = {
+          extreme: 'extreme',
+          severe: 'severe',
+          moderate: 'moderate',
+          minor: 'minor',
+        };
 
-        const data = await response.json() as { features?: any[] };
+        // Map Tomorrow.io event types to our alert types
+        const alertTypeMap: Record<string, string> = {
+          fires: 'fire',
+          wind: 'wind',
+          winter: 'winter_storm',
+          floods: 'flood',
+          air: 'air_quality',
+          thunderstorm: 'thunderstorm',
+          tornado: 'tornado',
+          hail: 'hail',
+          hurricane: 'hurricane',
+        };
 
-        const alerts = data.features?.map((feature: any) => ({
-          id: feature.id,
-          type: feature.properties.event,
-          severity: mapSeverity(feature.properties.severity),
-          headline: feature.properties.headline,
-          description: feature.properties.description,
-          expires: feature.properties.expires,
-          polygon: feature.geometry,
-        })) || [];
+        const alerts = events.map((event) => {
+          const severity = severityMap[event.severity] || 'moderate';
+          const alertType = alertTypeMap[event.type] || 'other';
+
+          return {
+            id: event.id,
+            type: alertType,
+            severity,
+            headline: event.title,
+            description: event.description,
+            expires: event.endTime,
+            // Tomorrow.io doesn't provide polygon geometry, so we return null
+            // The map component will handle this gracefully
+            polygon: null as {
+              type: 'Polygon';
+              coordinates: number[][][];
+            } | null,
+          };
+        });
 
         return { alerts };
       } catch (error) {
-        console.error('Error fetching alerts:', error);
+        console.error('Error fetching alerts from Tomorrow.io:', error);
+        // Return empty array on error to prevent app crashes
         return { alerts: [] };
       }
     }),
@@ -51,16 +69,3 @@ export const alertsRouter = {
     return { alerts: [] };
   }),
 };
-
-function mapSeverity(noaaSeverity: string): 'extreme' | 'severe' | 'moderate' | 'minor' {
-  switch (noaaSeverity?.toLowerCase()) {
-    case 'extreme':
-      return 'extreme';
-    case 'severe':
-      return 'severe';
-    case 'moderate':
-      return 'moderate';
-    default:
-      return 'minor';
-  }
-}

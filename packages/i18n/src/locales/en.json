@@ -45,6 +45,10 @@
     "invalidLink": "Invalid link",
     "verifyError": "Error verifying the link"
   },
+  "location": {
+      "permissionDenied": "Location permission is needed to use the app",
+      "error": "Error getting location"
+  },
   "tabs": {
     "map": "Map",
     "routes": "Routes",
@@ -99,7 +103,7 @@
     "upgrade": "Upgrade"
   },
   "premium": {
-    "title": "Gowai Premium",
+    "title": "Driwet Premium",
     "features": {
       "unlimitedRoutes": "Unlimited routes",
       "realTimeAlerts": "Real-time alerts",
@@ -121,7 +125,9 @@
   },
   "chat": {
     "placeholder": "Type a message...",
-    "comingSoon": "This feature will be available soon."
+    "comingSoon": "This feature will be available soon.",
+    "thinking": "Thinking...",
+    "welcome": "Hi, I'm your weather assistant. Ask me about alerts in your area or if it's safe to travel somewhere."
   },
   "web": {
     "nav": {

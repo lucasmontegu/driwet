@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { getAlertsByPoint } from "@/lib/weather";
 
 export async function GET(request: NextRequest) {
@@ -13,10 +14,10 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const latitude = parseFloat(lat);
-  const longitude = parseFloat(lon);
+  const latitude = Number.parseFloat(lat);
+  const longitude = Number.parseFloat(lon);
 
-  if (isNaN(latitude) || isNaN(longitude)) {
+  if (Number.isNaN(latitude) || Number.isNaN(longitude)) {
     return NextResponse.json(
       { error: "Invalid lat or lon values" },
       { status: 400 }

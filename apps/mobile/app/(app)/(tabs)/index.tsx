@@ -1,13 +1,14 @@
 // apps/native/app/(app)/(tabs)/index.tsx
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useLocation } from '@/hooks/use-location';
-import { useActiveAlerts } from '@/hooks/use-api';
+import { useActiveAlerts, useCurrentWeather } from '@/hooks/use-api';
 import { MapViewComponent, type WeatherAlert } from '@/components/map-view';
 import { ChatBottomSheet } from '@/components/chat-bottom-sheet';
 import { AlertBanner } from '@/components/alert-banner';
 import { AdBanner } from '@/components/ad-banner';
+import { WeatherOverlay } from '@/components/weather/weather-overlay';
 import { Icon } from '@/components/icons';
 import { useTranslation } from '@/lib/i18n';
 
@@ -18,6 +19,13 @@ export default function MapScreen() {
 
   // Fetch alerts for current location
   const { data: alertsData } = useActiveAlerts(
+    location?.latitude ?? 0,
+    location?.longitude ?? 0,
+    !locationLoading && location !== null
+  );
+
+  // Fetch weather for current location
+  const { data: weatherData, isLoading: weatherLoading } = useCurrentWeather(
     location?.latitude ?? 0,
     location?.longitude ?? 0,
     !locationLoading && location !== null
@@ -62,7 +70,7 @@ export default function MapScreen() {
               color: colors.foreground,
             }}
           >
-            Gowai
+            Driwet
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <Icon name="location" size={16} color={colors.mutedForeground} />
@@ -95,6 +103,23 @@ export default function MapScreen() {
       {/* Map */}
       <View style={{ flex: 1 }}>
         <MapViewComponent alerts={alerts} />
+        
+        {/* Weather Card - Floating over map */}
+        <View style={styles.weatherCardContainer}>
+          <WeatherOverlay
+            weather={weatherData?.data ? {
+              temperature: weatherData.data.temperature,
+              humidity: weatherData.data.humidity,
+              windSpeed: weatherData.data.windSpeed,
+              visibility: weatherData.data.visibility,
+              precipitationIntensity: weatherData.data.precipitationIntensity,
+              precipitationType: weatherData.data.precipitationType,
+              roadRisk: weatherData.data.roadRisk,
+            } : null}
+            isLoading={weatherLoading}
+            showDetails={true}
+          />
+        </View>
       </View>
 
       {/* Chat Bottom Sheet */}
@@ -102,3 +127,12 @@ export default function MapScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  weatherCardContainer: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    maxWidth: 200,
+  },
+});

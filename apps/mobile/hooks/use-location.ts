@@ -1,5 +1,6 @@
 import * as Location from "expo-location";
 import { useEffect, useState } from "react";
+import { useTranslation } from "@/lib/i18n";
 
 export type LocationState = {
   latitude: number;
@@ -21,6 +22,8 @@ export function useLocation() {
   const [permissionStatus, setPermissionStatus] =
     useState<Location.PermissionStatus | null>(null);
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     let locationSubscription: Location.LocationSubscription | null = null;
 
@@ -32,7 +35,7 @@ export function useLocation() {
         if (status !== "granted") {
           setError({
             code: "PERMISSION_DENIED",
-            message: "Se necesita permiso de ubicación para usar la app",
+            message: t("location.permissionDenied"),
           });
           setIsLoading(false);
           return;
@@ -73,7 +76,7 @@ export function useLocation() {
         setError({
           code: "LOCATION_ERROR",
           message:
-            err instanceof Error ? err.message : "Error al obtener ubicación",
+            err instanceof Error ? err.message : t("location.error"),
         });
         setIsLoading(false);
       }

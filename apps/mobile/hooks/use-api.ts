@@ -38,6 +38,16 @@ export function useAlertHistory() {
   return useQuery(api.alerts.getHistory.queryOptions());
 }
 
+// ============ Weather Hooks ============
+
+export function useCurrentWeather(latitude: number, longitude: number, enabled = true) {
+  return useQuery({
+    ...api.weather.getCurrent.queryOptions({ input: { lat: latitude, lng: longitude } }),
+    enabled: enabled && latitude !== 0 && longitude !== 0,
+    refetchInterval: 1000 * 60 * 5, // Refetch every 5 minutes
+  });
+}
+
 // ============ Locations Hooks ============
 
 export function useLocations() {
@@ -194,8 +204,10 @@ export function useSendChatMessage() {
       location?: ChatLocation;
       onChunk?: (chunk: string) => void;
     }) => {
-      // For streaming, we need to await the generator first
-      const stream = await api.chat.sendMessage.call({
+      // Use the raw oRPC client for streaming (not TanStack Query utils)
+      const { apiClient } = await import('@/lib/query-client');
+      
+      const iterator = await apiClient.chat.sendMessage({
         message: params.message,
         history: params.history,
         location: params.location,
@@ -203,9 +215,11 @@ export function useSendChatMessage() {
 
       let fullContent = '';
 
-      for await (const chunk of stream) {
-        if (chunk.type === 'text' && chunk.content) {
-          fullContent += chunk.content;
+      // Consume the event iterator from streamToEventIterator
+      for await (const chunk of iterator) {
+        // Each chunk is a text part from the AI stream
+        if (typeof chunk === 'string') {
+          fullContent += chunk;
           params.onChunk?.(fullContent);
         }
       }

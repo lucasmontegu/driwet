@@ -19,7 +19,7 @@ export const env = createEnv({
     APPLE_CLIENT_SECRET: z.string().min(1),
     // Email
     RESEND_API_KEY: z.string().min(1),
-    EMAIL_FROM: z.string().email().default("Gowai <delivered@resend.dev>"),
+    EMAIL_FROM: z.string().email().default("Driwet <delivered@resend.dev>"),
     // Weather API
     TOMORROW_IO_API_KEY: z.string().min(1),
     // Mapbox (for server-side POI search)

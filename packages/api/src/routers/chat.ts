@@ -1,7 +1,8 @@
 // packages/api/src/routers/chat.ts
 import { z } from 'zod';
-import { streamText, tool, stepCountIs } from 'ai';
+import { streamText, tool } from 'ai';
 import { google } from '@ai-sdk/google';
+import { streamToEventIterator } from '@orpc/server';
 import { publicProcedure } from '../index';
 import { tomorrowClient } from '../lib/tomorrow-io';
 import { db } from '@driwet/db';
@@ -331,7 +332,7 @@ export const chatRouter = {
         }).optional(),
       })
     )
-    .handler(async function* ({ input }) {
+    .handler(async ({ input }) => {
       const messages = [
         ...(input.history?.map((msg) => ({
           role: msg.role as 'user' | 'assistant',
@@ -351,13 +352,10 @@ export const chatRouter = {
         system: systemPrompt,
         messages,
         tools: weatherTools,
-        stopWhen: stepCountIs(5), // Allow up to 5 sequential tool calls
+        maxSteps: 5, // Allow up to 5 sequential tool calls
       });
 
-      for await (const textPart of result.textStream) {
-        yield { type: 'text' as const, content: textPart };
-      }
-
-      yield { type: 'done' as const };
+      // Use oRPC's streamToEventIterator for proper SSE streaming
+      return streamToEventIterator(result.textStream);
     }),
 };
