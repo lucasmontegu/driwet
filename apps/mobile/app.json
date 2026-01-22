@@ -16,6 +16,7 @@
       "bundler": "metro"
     },
     "plugins": [
+      "./plugins/withDisableSandboxing.js",
       [
         "expo-font",
         {

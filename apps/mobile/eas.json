@@ -4,17 +4,33 @@
     "appVersionSource": "remote"
   },
   "build": {
+    "base": {
+      "env": {
+        "RNMAPBOX_MAPS_DOWNLOAD_TOKEN": "@MAPBOX_DOWNLOAD_TOKEN"
+      }
+    },
     "development": {
+      "extends": "base",
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
         "simulator": true
       }
     },
+    "development:device": {
+      "extends": "base",
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      }
+    },
     "preview": {
+      "extends": "base",
       "distribution": "internal"
     },
     "production": {
+      "extends": "base",
       "autoIncrement": true
     }
   },

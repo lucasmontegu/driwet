@@ -7,34 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1197A82D3C3F89F0BD0426A7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 234F78EFDE0E824C99C7F928 /* PrivacyInfo.xcprivacy */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		1D6B15E8D4334CD994B2E09A /* Inter_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23A48F34129E4D9A98E18DBB /* Inter_400Regular.ttf */; };
-		3C84264765AC4E60A7B974DD /* Inter_100Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4A80D621CAD34ABB8EFCDE27 /* Inter_100Thin.ttf */; };
+		2125FE5E15EF4A49B3FA15DF /* Inter_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD0627884EC841F8B32171A7 /* Inter_400Regular.ttf */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		40EA5ADB3A034C139D51F035 /* Inter_300Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD3B2CB957324C2AB1AE3381 /* Inter_300Light.ttf */; };
-		6FA0268F4724B00CEFC1E6C7 /* libPods-driwet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31E3BA9857242EF197ECA402 /* libPods-driwet.a */; };
+		8D1C061D0BD04EEBA361B36E /* Inter_300Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89C247FA4D1245949A4F727C /* Inter_300Light.ttf */; };
+		B8CAEB3AC8F447538510B3F4 /* Inter_600SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D22BB89EFF742AB827C8C2C /* Inter_600SemiBold.ttf */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		DF053D1E4C7D3A525370CD31 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612FF52F9AED0865A31F1F7A /* ExpoModulesProvider.swift */; };
+		CDD845002C4607EC03763924 /* libPods-driwet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31FD4439641BC3CDC1D42803 /* libPods-driwet.a */; };
+		D168D91ED7E7D530ABE1A4B7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9F0FD58ED653961FD20A8948 /* PrivacyInfo.xcprivacy */; };
+		DA5C4623190A41F23AC91E22 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19E8184F2AAF6762258844F /* ExpoModulesProvider.swift */; };
+		DCB3B26044E5444BB14323AE /* Inter_100Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 338338C0922148CB8126D41E /* Inter_100Thin.ttf */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
-		F2B91714052942B193B7C4C5 /* Inter_600SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7D8680E9DCAF4A1786BC97F7 /* Inter_600SemiBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* driwet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = driwet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = driwet/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = driwet/Info.plist; sourceTree = "<group>"; };
-		234F78EFDE0E824C99C7F928 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = driwet/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		23A48F34129E4D9A98E18DBB /* Inter_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_400Regular.ttf; path = "../node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf"; sourceTree = "<group>"; };
-		31E3BA9857242EF197ECA402 /* libPods-driwet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-driwet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		425FB8B70A471F933BA92435 /* Pods-driwet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-driwet.release.xcconfig"; path = "Target Support Files/Pods-driwet/Pods-driwet.release.xcconfig"; sourceTree = "<group>"; };
-		4A80D621CAD34ABB8EFCDE27 /* Inter_100Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_100Thin.ttf; path = "../node_modules/@expo-google-fonts/inter/100Thin/Inter_100Thin.ttf"; sourceTree = "<group>"; };
-		612FF52F9AED0865A31F1F7A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-driwet/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		7D8680E9DCAF4A1786BC97F7 /* Inter_600SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_600SemiBold.ttf; path = "../node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf"; sourceTree = "<group>"; };
+		31FD4439641BC3CDC1D42803 /* libPods-driwet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-driwet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		338338C0922148CB8126D41E /* Inter_100Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_100Thin.ttf; path = "../node_modules/@expo-google-fonts/inter/100Thin/Inter_100Thin.ttf"; sourceTree = "<group>"; };
+		3D22BB89EFF742AB827C8C2C /* Inter_600SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_600SemiBold.ttf; path = "../node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf"; sourceTree = "<group>"; };
+		89C247FA4D1245949A4F727C /* Inter_300Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_300Light.ttf; path = "../node_modules/@expo-google-fonts/inter/300Light/Inter_300Light.ttf"; sourceTree = "<group>"; };
+		9F0FD58ED653961FD20A8948 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = driwet/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = driwet/SplashScreen.storyboard; sourceTree = "<group>"; };
+		B5CBB4A6854F2E674C45978F /* Pods-driwet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-driwet.release.xcconfig"; path = "Target Support Files/Pods-driwet/Pods-driwet.release.xcconfig"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		DD3B2CB957324C2AB1AE3381 /* Inter_300Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_300Light.ttf; path = "../node_modules/@expo-google-fonts/inter/300Light/Inter_300Light.ttf"; sourceTree = "<group>"; };
-		E9BC0E123AC686DF20ADA163 /* Pods-driwet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-driwet.debug.xcconfig"; path = "Target Support Files/Pods-driwet/Pods-driwet.debug.xcconfig"; sourceTree = "<group>"; };
+		DA5E0555BB71CD9DDB0AF0F4 /* Pods-driwet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-driwet.debug.xcconfig"; path = "Target Support Files/Pods-driwet/Pods-driwet.debug.xcconfig"; sourceTree = "<group>"; };
+		DD0627884EC841F8B32171A7 /* Inter_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_400Regular.ttf; path = "../node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf"; sourceTree = "<group>"; };
+		E19E8184F2AAF6762258844F /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-driwet/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = driwet/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* driwet-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "driwet-Bridging-Header.h"; path = "driwet/driwet-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -45,7 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6FA0268F4724B00CEFC1E6C7 /* libPods-driwet.a in Frameworks */,
+				CDD845002C4607EC03763924 /* libPods-driwet.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,18 +61,56 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				234F78EFDE0E824C99C7F928 /* PrivacyInfo.xcprivacy */,
+				9F0FD58ED653961FD20A8948 /* PrivacyInfo.xcprivacy */,
 			);
 			name = driwet;
+			sourceTree = "<group>";
+		};
+		2663D556B1D546378EB103C7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				338338C0922148CB8126D41E /* Inter_100Thin.ttf */,
+				89C247FA4D1245949A4F727C /* Inter_300Light.ttf */,
+				DD0627884EC841F8B32171A7 /* Inter_400Regular.ttf */,
+				3D22BB89EFF742AB827C8C2C /* Inter_600SemiBold.ttf */,
+			);
+			name = Resources;
+			path = "";
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				31E3BA9857242EF197ECA402 /* libPods-driwet.a */,
+				31FD4439641BC3CDC1D42803 /* libPods-driwet.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		64BA99FD72FCE57EEB575F4A /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				823126547F5F2DDA4FD71F1F /* driwet */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
+		68C76B17782C64906B5F8991 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				DA5E0555BB71CD9DDB0AF0F4 /* Pods-driwet.debug.xcconfig */,
+				B5CBB4A6854F2E674C45978F /* Pods-driwet.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		823126547F5F2DDA4FD71F1F /* driwet */ = {
+			isa = PBXGroup;
+			children = (
+				E19E8184F2AAF6762258844F /* ExpoModulesProvider.swift */,
+			);
+			name = driwet;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -89,9 +127,9 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				925394A3777745CB92AC1597 /* Resources */,
-				BDF7696E22820986E6C6417C /* Pods */,
-				C93D9CF8BA4CA7614AC78F44 /* ExpoModulesProviders */,
+				2663D556B1D546378EB103C7 /* Resources */,
+				68C76B17782C64906B5F8991 /* Pods */,
+				64BA99FD72FCE57EEB575F4A /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -106,18 +144,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		925394A3777745CB92AC1597 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				4A80D621CAD34ABB8EFCDE27 /* Inter_100Thin.ttf */,
-				DD3B2CB957324C2AB1AE3381 /* Inter_300Light.ttf */,
-				23A48F34129E4D9A98E18DBB /* Inter_400Regular.ttf */,
-				7D8680E9DCAF4A1786BC97F7 /* Inter_600SemiBold.ttf */,
-			);
-			name = Resources;
-			path = "";
-			sourceTree = "<group>";
-		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
@@ -125,32 +151,6 @@
 			);
 			name = Supporting;
 			path = driwet/Supporting;
-			sourceTree = "<group>";
-		};
-		BDF7696E22820986E6C6417C /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				E9BC0E123AC686DF20ADA163 /* Pods-driwet.debug.xcconfig */,
-				425FB8B70A471F933BA92435 /* Pods-driwet.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		C93D9CF8BA4CA7614AC78F44 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				E06D70F983ED8ACFA29140D3 /* driwet */,
-			);
-			name = ExpoModulesProviders;
-			sourceTree = "<group>";
-		};
-		E06D70F983ED8ACFA29140D3 /* driwet */ = {
-			isa = PBXGroup;
-			children = (
-				612FF52F9AED0865A31F1F7A /* ExpoModulesProvider.swift */,
-			);
-			name = driwet;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -161,13 +161,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "driwet" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				DFA7D4FE711AF79FB0F24870 /* [Expo] Configure project */,
+				9E6124BD36EC3EB1104C1BDA /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				16B976312CB18DB5005C2B71 /* [CP] Embed Pods Frameworks */,
+				C04702133ACE9105C049882E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -217,11 +217,11 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				3C84264765AC4E60A7B974DD /* Inter_100Thin.ttf in Resources */,
-				40EA5ADB3A034C139D51F035 /* Inter_300Light.ttf in Resources */,
-				1D6B15E8D4334CD994B2E09A /* Inter_400Regular.ttf in Resources */,
-				F2B91714052942B193B7C4C5 /* Inter_600SemiBold.ttf in Resources */,
-				1197A82D3C3F89F0BD0426A7 /* PrivacyInfo.xcprivacy in Resources */,
+				DCB3B26044E5444BB14323AE /* Inter_100Thin.ttf in Resources */,
+				8D1C061D0BD04EEBA361B36E /* Inter_300Light.ttf in Resources */,
+				2125FE5E15EF4A49B3FA15DF /* Inter_400Regular.ttf in Resources */,
+				B8CAEB3AC8F447538510B3F4 /* Inter_600SemiBold.ttf in Resources */,
+				D168D91ED7E7D530ABE1A4B7 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,36 +267,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		16B976312CB18DB5005C2B71 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-driwet/Pods-driwet-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/MapboxMaps/MapboxMaps.framework",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxCommon/MapboxCommon.framework/MapboxCommon",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxCoreMaps/MapboxCoreMaps.framework/MapboxCoreMaps",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/React-Core-prebuilt/React.framework/React",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ReactNativeDependencies/ReactNativeDependencies.framework/ReactNativeDependencies",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Turf/Turf.framework/Turf",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxMaps.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxCommon.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxCoreMaps.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactNativeDependencies.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Turf.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-driwet/Pods-driwet-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -335,7 +305,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-driwet/Pods-driwet-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DFA7D4FE711AF79FB0F24870 /* [Expo] Configure project */ = {
+		9E6124BD36EC3EB1104C1BDA /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -359,6 +329,36 @@
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-driwet/expo-configure-project.sh\"\n";
 		};
+		C04702133ACE9105C049882E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-driwet/Pods-driwet-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/MapboxMaps/MapboxMaps.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxCommon/MapboxCommon.framework/MapboxCommon",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxCoreMaps/MapboxCoreMaps.framework/MapboxCoreMaps",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/React-Core-prebuilt/React.framework/React",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ReactNativeDependencies/ReactNativeDependencies.framework/ReactNativeDependencies",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Turf/Turf.framework/Turf",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxMaps.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxCommon.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxCoreMaps.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactNativeDependencies.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Turf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-driwet/Pods-driwet-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -367,7 +367,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				DF053D1E4C7D3A525370CD31 /* ExpoModulesProvider.swift in Sources */,
+				DA5C4623190A41F23AC91E22 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -376,13 +376,14 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E9BC0E123AC686DF20ADA163 /* Pods-driwet.debug.xcconfig */;
+			baseConfigurationReference = DA5E0555BB71CD9DDB0AF0F4 /* Pods-driwet.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = driwet/driwet.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"FB_SONARKIT_ENABLED=1",
@@ -412,12 +413,13 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 425FB8B70A471F933BA92435 /* Pods-driwet.release.xcconfig */;
+			baseConfigurationReference = B5CBB4A6854F2E674C45978F /* Pods-driwet.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = driwet/driwet.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = driwet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -472,6 +474,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -535,6 +538,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
