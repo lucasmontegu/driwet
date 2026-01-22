@@ -200,5 +200,39 @@
     "manageSubscription": "Manage subscription",
     "planMonthly": "Monthly plan",
     "planYearly": "Yearly plan"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "types": "Notification types",
+    "weatherAlerts": "Weather alerts",
+    "weatherAlertsDesc": "Receive alerts when dangerous weather is detected near you or on your route",
+    "routeUpdates": "Route updates",
+    "routeUpdatesDesc": "Get notified about weather changes affecting your saved routes",
+    "weeklySummary": "Weekly summary",
+    "weeklySummaryDesc": "Receive a weekly report of storms avoided and safety statistics",
+    "urgent": "Urgent",
+    "enableNotifications": "Enable notifications",
+    "enableDesc": "Get alerts before dangerous weather affects your route",
+    "notificationsDisabled": "Notifications are disabled",
+    "disabledDesc": "Enable notifications in your device settings to receive weather alerts",
+    "enable": "Enable",
+    "openSettings": "Settings",
+    "infoText": "Critical weather alerts may override Do Not Disturb to ensure your safety. You can customize this in your device settings."
+  },
+  "places": {
+    "loading": "Searching nearby places...",
+    "noPlacesFound": "No nearby places found",
+    "gasStation": "Gas station",
+    "restArea": "Rest area",
+    "town": "Town",
+    "nearbyGasStations": "Nearby gas stations",
+    "nearbyRestAreas": "Nearby rest areas",
+    "nearbyTowns": "Nearby towns"
+  },
+  "weather": {
+    "distanceAway": "{{distance}} km away",
+    "roadConditions": "Road conditions",
+    "viewShelters": "View shelters",
+    "alternateRoute": "Find alternate route"
   }
 }

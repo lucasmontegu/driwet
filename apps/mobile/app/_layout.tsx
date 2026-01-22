@@ -16,6 +16,7 @@ import {
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 
 import { AppThemeProvider } from '@/contexts/app-theme-context';
+import { NotificationsProvider } from '@/contexts/notifications-context';
 import { setupI18n, I18nextProvider, getI18nInstance } from '@/lib/i18n';
 import { queryClient, asyncStoragePersister } from '@/lib/query-client';
 
@@ -71,7 +72,9 @@ const [loaded, error] = useFonts({
           <KeyboardProvider>
             <AppThemeProvider>
               <HeroUINativeProvider>
-                <StackLayout />
+                <NotificationsProvider>
+                  <StackLayout />
+                </NotificationsProvider>
               </HeroUINativeProvider>
             </AppThemeProvider>
           </KeyboardProvider>

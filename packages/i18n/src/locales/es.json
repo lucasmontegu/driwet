@@ -200,5 +200,39 @@
     "manageSubscription": "Gestionar suscripción",
     "planMonthly": "Plan mensual",
     "planYearly": "Plan anual"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "types": "Tipos de notificaciones",
+    "weatherAlerts": "Alertas de clima",
+    "weatherAlertsDesc": "Recibe alertas cuando se detecte clima peligroso cerca de ti o en tu ruta",
+    "routeUpdates": "Actualizaciones de ruta",
+    "routeUpdatesDesc": "Recibe notificaciones sobre cambios de clima que afecten tus rutas guardadas",
+    "weeklySummary": "Resumen semanal",
+    "weeklySummaryDesc": "Recibe un reporte semanal de tormentas evitadas y estadísticas de seguridad",
+    "urgent": "Urgente",
+    "enableNotifications": "Habilitar notificaciones",
+    "enableDesc": "Recibe alertas antes de que el clima peligroso afecte tu ruta",
+    "notificationsDisabled": "Las notificaciones están deshabilitadas",
+    "disabledDesc": "Habilita las notificaciones en la configuración de tu dispositivo para recibir alertas de clima",
+    "enable": "Habilitar",
+    "openSettings": "Ajustes",
+    "infoText": "Las alertas críticas de clima pueden ignorar No Molestar para garantizar tu seguridad. Puedes personalizar esto en la configuración de tu dispositivo."
+  },
+  "places": {
+    "loading": "Buscando lugares cercanos...",
+    "noPlacesFound": "No se encontraron lugares cercanos",
+    "gasStation": "Estación de servicio",
+    "restArea": "Área de descanso",
+    "town": "Localidad",
+    "nearbyGasStations": "Estaciones de servicio cercanas",
+    "nearbyRestAreas": "Áreas de descanso cercanas",
+    "nearbyTowns": "Localidades cercanas"
+  },
+  "weather": {
+    "distanceAway": "a {{distance}} km",
+    "roadConditions": "Condiciones viales",
+    "viewShelters": "Ver refugios",
+    "alternateRoute": "Buscar ruta alternativa"
   }
 }
