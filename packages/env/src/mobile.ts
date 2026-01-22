@@ -6,6 +6,8 @@ export const env = createEnv({
   client: {
     EXPO_PUBLIC_SERVER_URL: z.url(),
     EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN: z.string().startsWith("pk."),
+    EXPO_PUBLIC_POSTHOG_KEY: z.string().optional(),
+    EXPO_PUBLIC_POSTHOG_HOST: z.string().url().optional(),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,

@@ -19,9 +19,13 @@ import { AppThemeProvider } from '@/contexts/app-theme-context';
 import { NotificationsProvider } from '@/contexts/notifications-context';
 import { setupI18n, I18nextProvider, getI18nInstance } from '@/lib/i18n';
 import { queryClient, asyncStoragePersister } from '@/lib/query-client';
+import { initAnalytics } from '@/lib/analytics';
 
 // Initialize i18n before app renders (synchronous with initImmediate: false)
 setupI18n();
+
+// Initialize analytics
+initAnalytics();
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
