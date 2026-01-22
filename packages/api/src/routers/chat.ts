@@ -347,15 +347,35 @@ export const chatRouter = {
         systemPrompt += `\n\nUbicación actual del usuario: ${input.location.latitude.toFixed(4)}, ${input.location.longitude.toFixed(4)}. Usá esta ubicación por defecto cuando el usuario pregunte sobre el clima "aquí" o "mi zona".`;
       }
 
-      const result = streamText({
-        model: google('gemini-2.0-flash'),
-        system: systemPrompt,
-        messages,
-        tools: weatherTools,
-        maxSteps: 5, // Allow up to 5 sequential tool calls
-      });
+      try {
+        const result = streamText({
+          model: google('gemini-2.0-flash'),
+          system: systemPrompt,
+          messages,
+          tools: weatherTools,
+        });
 
-      // Use oRPC's streamToEventIterator for proper SSE streaming
-      return streamToEventIterator(result.textStream);
+        // Use oRPC's streamToEventIterator for proper SSE streaming
+        return streamToEventIterator(result.textStream);
+      } catch (error) {
+        // Handle rate limit errors gracefully
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        const isRateLimited = errorMessage.includes('Resource exhausted') ||
+                             errorMessage.includes('429') ||
+                             errorMessage.includes('quota');
+
+        const fallbackMessage = isRateLimited
+          ? 'El servicio de IA está temporalmente sobrecargado. Por favor, intenta de nuevo en unos minutos. Mientras tanto, podés ver el clima directamente en el mapa.'
+          : 'Hubo un error procesando tu mensaje. Por favor, intenta de nuevo.';
+
+        // Return fallback as a ReadableStream
+        const fallbackStream = new ReadableStream({
+          start(controller) {
+            controller.enqueue(fallbackMessage);
+            controller.close();
+          },
+        });
+        return streamToEventIterator(fallbackStream);
+      }
     }),
 };
