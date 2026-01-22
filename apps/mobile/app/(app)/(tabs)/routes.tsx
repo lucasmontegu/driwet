@@ -21,7 +21,7 @@ export default function RoutesScreen() {
 
   const handleAddRoute = () => {
     requireAuth(() => {
-      router.push('/(app)/add-route');
+      router.push('/add-route' as any);
     });
   };
 
@@ -70,9 +70,9 @@ export default function RoutesScreen() {
               <Pressable
                 key={route.id}
                 onPress={() => router.push({
-                  pathname: '/(app)/route-detail',
+                  pathname: '/route-detail',
                   params: { id: route.id },
-                })}
+                } as any)}
                 style={{
                   backgroundColor: colors.card,
                   borderRadius: 12,

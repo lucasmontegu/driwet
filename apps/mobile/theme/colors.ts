@@ -38,6 +38,7 @@ export const colors = {
     minor: '#22C55E',
   },
   safe: '#10B981',
+  warning: '#F59E0B',
 } as const;
 
 export type ThemeColors = typeof colors.light;

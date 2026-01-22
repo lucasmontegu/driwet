@@ -17,6 +17,18 @@ export const routesRouter = {
     return routes;
   }),
 
+  getSaved: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .handler(async ({ input, context }) => {
+      const route = await db.query.savedRoute.findFirst({
+        where: and(
+          eq(savedRoute.id, input.id),
+          eq(savedRoute.userId, context.session.user.id)
+        ),
+      });
+      return route ?? null;
+    }),
+
   createSaved: protectedProcedure
     .input(
       z.object({

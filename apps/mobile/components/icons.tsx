@@ -25,6 +25,11 @@ import {
   Alert01Icon,
   LockIcon,
   ArrowLeft01Icon,
+  Delete02Icon,
+  InformationCircleIcon,
+  Refresh01Icon,
+  SunCloud01Icon,
+  AlertDiamondIcon,
 } from '@hugeicons/core-free-icons';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 
@@ -52,7 +57,12 @@ export type IconName =
   | 'check'
   | 'checkCircle'
   | 'alert'
-  | 'lock';
+  | 'lock'
+  | 'trash'
+  | 'info'
+  | 'refresh'
+  | 'weather'
+  | 'warning';
 
 const iconMap = {
   map: MapsIcon,
@@ -79,6 +89,11 @@ const iconMap = {
   checkCircle: CheckmarkCircle01Icon,
   alert: Alert01Icon,
   lock: LockIcon,
+  trash: Delete02Icon,
+  info: InformationCircleIcon,
+  refresh: Refresh01Icon,
+  weather: SunCloud01Icon,
+  warning: AlertDiamondIcon,
 } as const;
 
 interface IconProps {

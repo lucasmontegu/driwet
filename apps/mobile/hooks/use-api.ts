@@ -118,6 +118,13 @@ export function useSavedRoutes() {
   return useQuery(api.routes.listSaved.queryOptions());
 }
 
+export function useSavedRoute(id: string, enabled = true) {
+  return useQuery({
+    ...api.routes.getSaved.queryOptions({ input: { id } }),
+    enabled: enabled && !!id,
+  });
+}
+
 export function useCreateRoute() {
   const queryClient = useQueryClient();
 
