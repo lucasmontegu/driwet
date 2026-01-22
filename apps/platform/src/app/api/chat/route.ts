@@ -1,5 +1,5 @@
 import { google } from "@ai-sdk/google";
-import { streamText } from "ai";
+import { streamText, tool } from "ai";
 import { z } from "zod";
 import { getAlertsByPoint } from "@/lib/weather";
 
@@ -37,6 +37,30 @@ const getUserLocationSchema = z.object({
   reason: z.string().describe("Razón por la cual necesitas la ubicación"),
 });
 
+const showRouteWeatherSchema = z.object({
+  originLat: z.number().describe("Latitud del origen"),
+  originLon: z.number().describe("Longitud del origen"),
+  destLat: z.number().describe("Latitud del destino"),
+  destLon: z.number().describe("Longitud del destino"),
+  originName: z.string().optional().describe("Nombre del origen"),
+  destName: z.string().optional().describe("Nombre del destino"),
+});
+
+const findSafePlacesSchema = z.object({
+  latitude: z.number().describe("Latitud de la ubicación actual"),
+  longitude: z.number().describe("Longitud de la ubicación actual"),
+  radiusKm: z.number().optional().default(20).describe("Radio de búsqueda en km"),
+  urgency: z.enum(["low", "medium", "high"]).optional().default("medium")
+    .describe("Urgencia de la búsqueda - high para tormentas inminentes"),
+});
+
+const navigateToShelterSchema = z.object({
+  placeName: z.string().describe("Nombre del lugar de refugio"),
+  latitude: z.number().describe("Latitud del refugio"),
+  longitude: z.number().describe("Longitud del refugio"),
+  placeType: z.string().describe("Tipo de lugar: gas_station, rest_area, town"),
+});
+
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
@@ -45,28 +69,35 @@ export async function POST(req: Request) {
     system: `Eres Driwet, un asistente de alertas meteorológicas. Tu objetivo es mantener a los usuarios seguros informándoles sobre condiciones climáticas peligrosas.
 
 Capacidades:
-- Puedes obtener alertas meteorológicas para cualquier ubicación usando la herramienta getWeatherAlerts
-- Puedes mostrar alertas en el mapa usando la herramienta showAlertOnMap
-- Puedes analizar rutas para seguridad usando la herramienta analyzeRoute
+- Puedes obtener alertas meteorológicas para cualquier ubicación usando getWeatherAlerts
+- Puedes mostrar alertas en el mapa usando showAlertOnMap
+- Puedes analizar rutas para seguridad usando analyzeRoute
+- Puedes mostrar el clima en una ruta con colores de riesgo usando showRouteWeather
+- Puedes buscar refugios cercanos (estaciones de servicio, áreas de descanso, localidades) usando findSafePlaces
+- Puedes iniciar navegación a un refugio usando navigateToShelter
 
 Comportamiento:
 - Responde siempre en español a menos que el usuario escriba en otro idioma
 - Sé conciso pero informativo sobre las alertas
 - Prioriza la seguridad del usuario
-- Si hay alertas severas o extremas, enfatiza la urgencia
-- Sugiere acciones concretas cuando sea apropiado
+- Si hay alertas severas o extremas, enfatiza la urgencia y sugiere refugios
+- Cuando analices una ruta, muestra automáticamente el clima en el mapa
+- Si detectas peligro, ofrece buscar refugios cercanos
 
 Formato:
 - Usa emojis relacionados al clima para hacer los mensajes más visuales
 - Para alertas extremas usa ⚠️ o 🚨
-- Para información general usa 🌤️ o ℹ️`,
+- Para información general usa 🌤️ o ℹ️
+- Para refugios usa 🛡️ o ⛽
+- Para rutas seguras usa ✅
+- Para rutas con riesgo usa 🟠 o 🔴`,
     messages,
     tools: {
-      getWeatherAlerts: {
+      getWeatherAlerts: tool({
         description:
           "Obtiene las alertas meteorológicas activas para una ubicación específica. Usa esta herramienta cuando el usuario pregunte sobre el clima o alertas en un lugar.",
-        inputSchema: getWeatherAlertsSchema,
-        execute: async (args: z.infer<typeof getWeatherAlertsSchema>) => {
+        parameters: getWeatherAlertsSchema,
+        execute: async (args) => {
           const { latitude, longitude, locationName } = args;
           try {
             const alerts = await getAlertsByPoint(latitude, longitude);
@@ -103,13 +134,13 @@ Formato:
             };
           }
         },
-      },
+      }),
 
-      showAlertOnMap: {
+      showAlertOnMap: tool({
         description:
           "Muestra una alerta específica en el mapa del usuario. Usa esta herramienta después de obtener alertas para visualizarlas.",
-        inputSchema: showAlertOnMapSchema,
-        execute: async (args: z.infer<typeof showAlertOnMapSchema>) => {
+        parameters: showAlertOnMapSchema,
+        execute: async (args) => {
           const { alertId, alertType, severity, centerLat, centerLon, zoomLevel } = args;
           return {
             action: "showAlert",
@@ -120,13 +151,13 @@ Formato:
             zoom: zoomLevel,
           };
         },
-      },
+      }),
 
-      analyzeRoute: {
+      analyzeRoute: tool({
         description:
           "Analiza una ruta para determinar si es segura considerando las alertas meteorológicas actuales. Usa esta herramienta cuando el usuario pregunte sobre viajar a algún lugar.",
-        inputSchema: analyzeRouteSchema,
-        execute: async (args: z.infer<typeof analyzeRouteSchema>) => {
+        parameters: analyzeRouteSchema,
+        execute: async (args) => {
           const { startLat, startLon, endLat, endLon, startName, endName } = args;
           const midLat = (startLat + endLat) / 2;
           const midLon = (startLon + endLon) / 2;
@@ -173,19 +204,77 @@ Formato:
               : "Se recomienda posponer el viaje o buscar una ruta alternativa.",
           };
         },
-      },
+      }),
 
-      getUserLocation: {
+      getUserLocation: tool({
         description:
           "Solicita la ubicación actual del usuario. Usa esto cuando necesites saber dónde está el usuario.",
-        inputSchema: getUserLocationSchema,
-        execute: async (args: z.infer<typeof getUserLocationSchema>) => {
+        parameters: getUserLocationSchema,
+        execute: async (args) => {
           return {
             action: "requestLocation",
             reason: args.reason,
           };
         },
-      },
+      }),
+
+      showRouteWeather: tool({
+        description:
+          "Muestra el clima a lo largo de una ruta en el mapa con colores de riesgo (verde=seguro, amarillo=precaución, naranja=riesgo, rojo=peligro). Usa esto después de analizar una ruta para visualizarla.",
+        parameters: showRouteWeatherSchema,
+        execute: async (args) => {
+          const { originLat, originLon, destLat, destLon, originName, destName } = args;
+          return {
+            action: "showRouteWeather",
+            origin: {
+              lat: originLat,
+              lng: originLon,
+              name: originName,
+            },
+            destination: {
+              lat: destLat,
+              lng: destLon,
+              name: destName,
+            },
+          };
+        },
+      }),
+
+      findSafePlaces: tool({
+        description:
+          "Busca refugios cercanos como estaciones de servicio, áreas de descanso y localidades. Usa esto cuando el usuario necesite refugiarse de una tormenta.",
+        parameters: findSafePlacesSchema,
+        execute: async (args) => {
+          const { latitude, longitude, radiusKm, urgency } = args;
+          return {
+            action: "findSafePlaces",
+            location: { lat: latitude, lng: longitude },
+            radiusKm,
+            urgency,
+            message: urgency === "high"
+              ? "Buscando refugios cercanos de emergencia..."
+              : "Buscando lugares seguros en tu área...",
+          };
+        },
+      }),
+
+      navigateToShelter: tool({
+        description:
+          "Inicia la navegación hacia un refugio usando Waze o Google Maps. Usa esto cuando el usuario elija un refugio.",
+        parameters: navigateToShelterSchema,
+        execute: async (args) => {
+          const { placeName, latitude, longitude, placeType } = args;
+          return {
+            action: "navigateToShelter",
+            shelter: {
+              name: placeName,
+              lat: latitude,
+              lng: longitude,
+              type: placeType,
+            },
+          };
+        },
+      }),
     },
   });
 
