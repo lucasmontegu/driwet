@@ -12,10 +12,11 @@
   "welcome": {
     "tagline": "Your climate co-pilot",
     "subtitle": "Avoid storms. Arrive safely.",
-    "startFree": "Start for free",
-    "trialInfo": "3 days with everything included, no account needed",
-    "haveAccount": "Already have an account?",
-    "signIn": "Sign in"
+    "getStarted": "Get started",
+    "freeTrialNote": "Create your account in seconds. 3 days free with all features included.",
+    "feature1": "Real-time weather alerts on your route",
+    "feature2": "Plan trips with confidence using AI weather analysis",
+    "feature3": "Get notified before dangerous weather hits"
   },
   "auth": {
     "signInTitle": "Sign in",

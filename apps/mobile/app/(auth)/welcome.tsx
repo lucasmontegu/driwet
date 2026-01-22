@@ -1,132 +1,121 @@
 // apps/native/app/(auth)/welcome.tsx
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Button } from 'heroui-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useThemeColors } from '@/hooks/use-theme-colors';
-import { useTrialStore } from '@/stores/trial-store';
 import { useTranslation } from '@/lib/i18n';
+import { Icon } from '@/components/icons';
 
 export default function WelcomeScreen() {
   const router = useRouter();
   const colors = useThemeColors();
   const { t } = useTranslation();
-  const { startTrial } = useTrialStore();
 
-  const handleStart = () => {
-    startTrial();
-    router.replace('/(app)/(tabs)');
-  };
-
-  const handleSignIn = () => {
+  const handleGetStarted = () => {
     router.push('/(auth)/sign-in');
   };
 
+  const features = [
+    { icon: 'weather' as const, text: t('welcome.feature1') },
+    { icon: 'route' as const, text: t('welcome.feature2') },
+    { icon: 'notification' as const, text: t('welcome.feature3') },
+  ];
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View className="flex-1 justify-center items-center px-8">
-        {/* Logo */}
-        <View className="mb-8">
+      <View className="flex-1 justify-between px-8 py-12">
+        {/* Top section: Logo and tagline */}
+        <View className="items-center pt-8">
           <Text
             style={{
               fontFamily: 'NunitoSans_700Bold',
               fontSize: 48,
               color: colors.primary,
+              marginBottom: 16,
             }}
           >
             Driwet
           </Text>
-        </View>
 
-        {/* Tagline */}
-        <Text
-          style={{
-            fontFamily: 'NunitoSans_600SemiBold',
-            fontSize: 24,
-            color: colors.foreground,
-            textAlign: 'center',
-            marginBottom: 8,
-          }}
-        >
-          {t('welcome.tagline')}
-        </Text>
-
-        <Text
-          style={{
-            fontFamily: 'NunitoSans_400Regular',
-            fontSize: 16,
-            color: colors.mutedForeground,
-            textAlign: 'center',
-            marginBottom: 48,
-          }}
-        >
-          {t('welcome.subtitle')}
-        </Text>
-
-        {/* CTA */}
-        <Button
-          onPress={handleStart}
-          className="w-full"
-          size="lg"
-        >
-          <Button.Label>{t('welcome.startFree')}</Button.Label>
-        </Button>
-
-        <Text
-          style={{
-            fontFamily: 'NunitoSans_400Regular',
-            fontSize: 14,
-            color: colors.mutedForeground,
-            marginTop: 16,
-            textAlign: 'center',
-          }}
-        >
-          {t('welcome.trialInfo')}
-        </Text>
-
-        {/* Divider */}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: 32,
-            marginBottom: 24,
-            width: '100%',
-          }}
-        >
-          <View style={{ flex: 1, height: 1, backgroundColor: colors.border }} />
           <Text
             style={{
-              marginHorizontal: 16,
-              color: colors.mutedForeground,
-              fontFamily: 'NunitoSans_400Regular',
+              fontFamily: 'NunitoSans_600SemiBold',
+              fontSize: 24,
+              color: colors.foreground,
+              textAlign: 'center',
+              marginBottom: 8,
             }}
           >
-            {t('common.or')}
+            {t('welcome.tagline')}
           </Text>
-          <View style={{ flex: 1, height: 1, backgroundColor: colors.border }} />
-        </View>
 
-        {/* Sign in link */}
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text
             style={{
               fontFamily: 'NunitoSans_400Regular',
+              fontSize: 16,
               color: colors.mutedForeground,
+              textAlign: 'center',
             }}
           >
-            {t('welcome.haveAccount')}{' '}
+            {t('welcome.subtitle')}
           </Text>
-          <Pressable onPress={handleSignIn}>
-            <Text
+        </View>
+
+        {/* Middle: Feature highlights */}
+        <View className="gap-4">
+          {features.map((feature, index) => (
+            <View
+              key={index}
               style={{
-                fontFamily: 'NunitoSans_600SemiBold',
-                color: colors.primary,
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: colors.card,
+                padding: 16,
+                borderRadius: 12,
+                gap: 12,
               }}
             >
-              {t('welcome.signIn')}
-            </Text>
-          </Pressable>
+              <View
+                style={{
+                  backgroundColor: colors.primary + '20',
+                  padding: 10,
+                  borderRadius: 10,
+                }}
+              >
+                <Icon name={feature.icon} size={24} color={colors.primary} />
+              </View>
+              <Text
+                style={{
+                  flex: 1,
+                  fontFamily: 'NunitoSans_500Medium',
+                  fontSize: 15,
+                  color: colors.foreground,
+                }}
+              >
+                {feature.text}
+              </Text>
+            </View>
+          ))}
+        </View>
+
+        {/* Bottom: CTA */}
+        <View className="gap-4">
+          <Button onPress={handleGetStarted} className="w-full" size="lg">
+            <Button.Label>{t('welcome.getStarted')}</Button.Label>
+          </Button>
+
+          <Text
+            style={{
+              fontFamily: 'NunitoSans_400Regular',
+              fontSize: 13,
+              color: colors.mutedForeground,
+              textAlign: 'center',
+              lineHeight: 20,
+            }}
+          >
+            {t('welcome.freeTrialNote')}
+          </Text>
         </View>
       </View>
     </SafeAreaView>

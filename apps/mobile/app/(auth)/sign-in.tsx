@@ -5,21 +5,30 @@ import { Button } from 'heroui-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { authClient } from '@/lib/auth-client';
-import { Icon } from '@/components/icons';
 import { useTranslation } from '@/lib/i18n';
+import { useTrialStore } from '@/stores/trial-store';
 import { useState } from 'react';
 
 export default function SignInScreen() {
   const router = useRouter();
   const colors = useThemeColors();
   const { t } = useTranslation();
+  const { startTrial, trialStartDate } = useTrialStore();
   const [isLoading, setIsLoading] = useState<'google' | 'apple' | null>(null);
+
+  // Start trial for new users after successful auth
+  const onAuthSuccess = () => {
+    if (!trialStartDate) {
+      startTrial();
+    }
+    router.replace('/(app)/(tabs)');
+  };
 
   const handleGoogleSignIn = async () => {
     setIsLoading('google');
     try {
       await authClient.signIn.social({ provider: 'google' });
-      router.replace('/(app)/(tabs)');
+      onAuthSuccess();
     } catch (error) {
       console.error('Google sign-in error:', error);
     } finally {
@@ -31,7 +40,7 @@ export default function SignInScreen() {
     setIsLoading('apple');
     try {
       await authClient.signIn.social({ provider: 'apple' });
-      router.replace('/(app)/(tabs)');
+      onAuthSuccess();
     } catch (error) {
       console.error('Apple sign-in error:', error);
     } finally {
@@ -45,17 +54,7 @@ export default function SignInScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View className="flex-1 px-6 pt-4">
-        {/* Back button */}
-        <Pressable
-          onPress={() => router.back()}
-          className="mb-8"
-          style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}
-        >
-          <Icon name="arrowLeft" size={16} color={colors.primary} />
-          <Text style={{ color: colors.primary, fontSize: 16 }}>{t('auth.back')}</Text>
-        </Pressable>
-
+      <View className="flex-1 px-6 pt-8">
         {/* Header */}
         <Text
           style={{

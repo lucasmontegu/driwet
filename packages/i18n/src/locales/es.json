@@ -12,10 +12,11 @@
   "welcome": {
     "tagline": "Tu co-piloto climático",
     "subtitle": "Evita tormentas. Llega seguro.",
-    "startFree": "Comenzar gratis",
-    "trialInfo": "3 días con todo incluido, sin cuenta",
-    "haveAccount": "¿Ya tienes cuenta?",
-    "signIn": "Inicia sesión"
+    "getStarted": "Comenzar",
+    "freeTrialNote": "Crea tu cuenta en segundos. 3 días gratis con todas las funciones.",
+    "feature1": "Alertas de clima en tiempo real en tu ruta",
+    "feature2": "Planifica viajes con análisis de clima con IA",
+    "feature3": "Recibe avisos antes de que llegue clima peligroso"
   },
   "auth": {
     "signInTitle": "Inicia sesión",
