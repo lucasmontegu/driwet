@@ -7,6 +7,9 @@
     "base": {
       "env": {
         "RNMAPBOX_MAPS_DOWNLOAD_TOKEN": "@MAPBOX_DOWNLOAD_TOKEN"
+      },
+      "cache": {
+        "key": "v2-2026-01-22"
       }
     },
     "development": {
