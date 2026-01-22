@@ -3,8 +3,6 @@ import { polarClient } from '@driwet/auth/lib/payments';
 
 export const subscriptionRouter = {
   getStatus: protectedProcedure.handler(async ({ context }) => {
-    const userId = context.session.user.id;
-
     try {
       // Get customer by user metadata (email)
       const customers = await polarClient.customers.list({
@@ -21,7 +19,7 @@ export const subscriptionRouter = {
         };
       }
 
-      const customer = customers.result.items[0];
+      const customer = customers.result.items[0]!;
 
       // Get active subscriptions for this customer
       const subscriptions = await polarClient.subscriptions.list({
@@ -30,7 +28,8 @@ export const subscriptionRouter = {
         limit: 1,
       });
 
-      if (!subscriptions.result.items.length) {
+      const subscription = subscriptions.result.items[0];
+      if (!subscription) {
         return {
           isActive: false,
           plan: null,
@@ -38,8 +37,6 @@ export const subscriptionRouter = {
           customerId: customer.id,
         };
       }
-
-      const subscription = subscriptions.result.items[0];
 
       // Determine plan type based on recurring interval
       const plan = subscription.recurringInterval === 'year' ? 'yearly' : 'monthly';
