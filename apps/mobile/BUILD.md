@@ -18,6 +18,8 @@ Create `.env` in `apps/mobile/`:
 ```env
 EXPO_PUBLIC_SERVER_URL=http://localhost:3001
 EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN=pk.eyJ...  # Your Mapbox public token
+EXPO_PUBLIC_POSTHOG_KEY=phc_...             # Optional: PostHog project API key
+EXPO_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com  # Optional: PostHog host
 ```
 
 ### EAS Secrets (for cloud builds)
@@ -28,6 +30,12 @@ Mapbox requires a secret download token for EAS builds. Add it to EAS:
 # Get your secret token from https://account.mapbox.com/access-tokens/
 # Create token with DOWNLOADS:READ scope (starts with sk.eyJ...)
 npx eas-cli env:create --environment development --name MAPBOX_DOWNLOAD_TOKEN --value 'sk.YOUR_SECRET_TOKEN' --type secret
+```
+
+For production analytics, add PostHog credentials:
+
+```bash
+npx eas-cli env:create --environment production --name EXPO_PUBLIC_POSTHOG_KEY --value 'phc_YOUR_KEY' --type string
 ```
 
 ## Local Development
