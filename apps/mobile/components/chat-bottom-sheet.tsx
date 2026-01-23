@@ -1,11 +1,12 @@
 // apps/native/components/chat-bottom-sheet.tsx
-import { useMemo, useRef, useState, useCallback } from 'react';
+import { useMemo, useRef, useState, useCallback, useEffect } from 'react';
 import { View, Text, TextInput, Pressable, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useTranslation } from '@/lib/i18n';
 import { useLocation } from '@/hooks/use-location';
 import { useSendChatMessage } from '@/hooks/use-api';
+import { useTextToSpeech, speakAgentResponse } from '@/hooks/use-text-to-speech';
 import { Icon } from '@/components/icons';
 import { Analytics } from '@/lib/analytics';
 
@@ -29,12 +30,27 @@ export function ChatBottomSheet() {
   const [streamingContent, setStreamingContent] = useState('');
 
   const sendMessage = useSendChatMessage();
+  const tts = useTextToSpeech({ language: 'es-ES' });
 
   const quickSuggestions = [
     t('map.suggestions.workRoute') || '¿Cómo está el clima en mi ruta?',
     t('map.suggestions.nearbyAlerts') || '¿Hay alertas cerca?',
     t('map.suggestions.willItRain') || '¿Va a llover hoy?',
   ];
+
+  // Stop TTS when user starts typing
+  useEffect(() => {
+    if (input.length > 0 && tts.isSpeaking) {
+      tts.stop();
+    }
+  }, [input, tts]);
+
+  // Cleanup TTS on unmount
+  useEffect(() => {
+    return () => {
+      tts.stop();
+    };
+  }, [tts]);
 
   const handleSend = useCallback(async () => {
     const trimmedInput = input.trim();
@@ -77,6 +93,9 @@ export function ChatBottomSheet() {
         content: response,
       };
       setMessages((prev) => [...prev, assistantMessage]);
+
+      // Speak the response using TTS
+      speakAgentResponse(tts, response, { skipIfShort: true, minLength: 15 });
     } catch (error) {
       console.error('Chat error:', error);
       setStreamingContent('');
@@ -157,6 +176,16 @@ export function ChatBottomSheet() {
               <Text style={[styles.collapsedTitle, { color: colors.foreground }]}>
                 {t('map.chatPrompt') || 'Pregunta sobre el clima'}
               </Text>
+              <Pressable
+                onPress={() => tts.setEnabled(!tts.isEnabled)}
+                style={[styles.ttsToggle, { backgroundColor: tts.isEnabled ? colors.primary + '20' : colors.muted }]}
+              >
+                <Icon
+                  name="voice"
+                  size={18}
+                  color={tts.isEnabled ? colors.primary : colors.mutedForeground}
+                />
+              </Pressable>
             </View>
             <View style={styles.suggestionsContainer}>
               {quickSuggestions.map((suggestion) => (
@@ -249,6 +278,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     marginBottom: 16,
+  },
+  ttsToggle: {
+    marginLeft: 'auto',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   collapsedTitle: {
     fontFamily: 'NunitoSans_600SemiBold',
