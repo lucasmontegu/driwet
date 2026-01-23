@@ -16,6 +16,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useThemeColors } from '@/hooks/use-theme-colors';
+import { useLocation } from '@/hooks/use-location';
 import { Icon } from '@/components/icons';
 import { env } from '@driwet/env/mobile';
 
@@ -57,6 +58,7 @@ export function SmartSearchInput({
   onRouteChange,
 }: SmartSearchInputProps) {
   const colors = useThemeColors();
+  const { location: userLocation } = useLocation();
   const inputRef = useRef<TextInput>(null);
 
   const [inputValue, setInputValue] = useState('');
@@ -68,7 +70,7 @@ export function SmartSearchInput({
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Geocode search using Mapbox
-  const searchPlaces = useCallback(async (query: string) => {
+  const searchPlaces = useCallback(async (query: string, userLocation?: { latitude: number; longitude: number }) => {
     if (query.length < 2) {
       setSuggestions([]);
       return;
@@ -76,13 +78,19 @@ export function SmartSearchInput({
 
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?` +
+      // Build URL with parameters for better international results
+      let url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?` +
         `access_token=${env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN}&` +
-        `country=ar&` +
-        `types=place,locality,address&` +
-        `limit=5`
-      );
+        `types=place,locality,region,country,address&` +
+        `language=es&` +
+        `limit=6`;
+
+      // If we have user location, use proximity to bias (not restrict) results
+      if (userLocation) {
+        url += `&proximity=${userLocation.longitude},${userLocation.latitude}`;
+      }
+
+      const response = await fetch(url);
       const data = await response.json();
       setSuggestions(data.features || []);
     } catch (error) {
@@ -140,24 +148,24 @@ export function SmartSearchInput({
     searchTimeoutRef.current = setTimeout(() => {
       if (parsed.type === 'origin' && parsed.query) {
         setActiveField('origin');
-        searchPlaces(parsed.query);
+        searchPlaces(parsed.query, userLocation ?? undefined);
         setShowSuggestions(true);
       } else if (parsed.type === 'destination' && parsed.query) {
         setActiveField('destination');
-        searchPlaces(parsed.query);
+        searchPlaces(parsed.query, userLocation ?? undefined);
         setShowSuggestions(true);
       } else if (parsed.type === 'complete') {
         // For complete patterns, prioritize destination search
         setActiveField('destination');
         if (parsed.destinationQuery) {
-          searchPlaces(parsed.destinationQuery);
+          searchPlaces(parsed.destinationQuery, userLocation ?? undefined);
           setShowSuggestions(true);
         }
       } else {
         setShowSuggestions(false);
       }
     }, 300);
-  }, [parseInput, searchPlaces]);
+  }, [parseInput, searchPlaces, userLocation]);
 
   // Handle suggestion selection
   const handleSelectSuggestion = useCallback((feature: MapboxFeature) => {
