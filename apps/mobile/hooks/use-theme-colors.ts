@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useAppTheme } from '@/contexts/app-theme-context';
 import { colors, type ThemeColors } from '@/theme/colors';
 
+export type { ThemeColors };
 type UseThemeColorsReturn = ThemeColors & { alert: typeof colors.alert };
 
 export function useThemeColors(): UseThemeColorsReturn {
