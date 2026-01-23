@@ -11,6 +11,7 @@ import {
   Keyboard,
   ActivityIndicator,
   Platform,
+  GestureResponderEvent,
 } from 'react-native';
 import Animated, {
   FadeIn,
@@ -25,7 +26,9 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useLocation } from '@/hooks/use-location';
+import { useVoiceRecording } from '@/hooks/use-voice-recording';
 import { Icon } from '@/components/icons';
+import { RecordingIndicator } from '@/components/voice';
 import { env } from '@driwet/env/mobile';
 
 // Types
@@ -88,9 +91,30 @@ export function ChatInput({
   const [activeField, setActiveField] = useState<'origin' | 'destination' | 'chat' | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Voice recording
+  const voiceRecording = useVoiceRecording({
+    onTranscription: (text) => {
+      if (text.trim()) {
+        // If we have a route, treat as chat message
+        if (origin && destination) {
+          onChatSubmit(text.trim());
+        } else {
+          // Otherwise, populate the input for location search
+          setInputValue(text.trim());
+          handleTextChange(text.trim());
+        }
+      }
+    },
+    onError: (error) => {
+      console.error('Voice recording error:', error);
+    },
+    maxDuration: 30,
+  });
+
   // Animation values
   const expandProgress = useSharedValue(0);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const voicePressTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Animated styles for expansion
   const containerAnimatedStyle = useAnimatedStyle(() => {
@@ -308,17 +332,47 @@ export function ChatInput({
     }
   }, [inputValue, disabled, isLoading, origin, destination, activeField, onChatSubmit, searchPlaces, userLocation]);
 
-  // Handle voice button press (placeholder for STT)
-  const handleVoicePress = useCallback(() => {
-    // TODO: Implement STT in Phase 2
-    console.log('Voice input pressed - STT to be implemented');
-  }, []);
+  // Handle voice button - push-to-talk functionality
+  const handleVoicePressIn = useCallback(() => {
+    // Start recording after a short delay to confirm intent
+    voicePressTimeoutRef.current = setTimeout(() => {
+      voiceRecording.startRecording();
+    }, 150);
+  }, [voiceRecording]);
+
+  const handleVoicePressOut = useCallback(() => {
+    // Clear the timeout if released before delay
+    if (voicePressTimeoutRef.current) {
+      clearTimeout(voicePressTimeoutRef.current);
+      voicePressTimeoutRef.current = null;
+    }
+
+    // Stop recording if we were recording
+    if (voiceRecording.isRecording) {
+      voiceRecording.stopRecording();
+    }
+  }, [voiceRecording]);
+
+  const handleVoiceCancel = useCallback(() => {
+    // Cancel if user drags away
+    if (voicePressTimeoutRef.current) {
+      clearTimeout(voicePressTimeoutRef.current);
+      voicePressTimeoutRef.current = null;
+    }
+
+    if (voiceRecording.isRecording) {
+      voiceRecording.cancelRecording();
+    }
+  }, [voiceRecording]);
 
   // Cleanup
   useEffect(() => {
     return () => {
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current);
+      }
+      if (voicePressTimeoutRef.current) {
+        clearTimeout(voicePressTimeoutRef.current);
       }
     };
   }, []);
@@ -329,10 +383,23 @@ export function ChatInput({
     ? 'Preguntale a Driwet sobre tu ruta...'
     : 'A donde vamos?';
 
+  const isVoiceActive = voiceRecording.state !== 'idle' && voiceRecording.state !== 'done';
+
   return (
     <View style={[styles.wrapper, { paddingBottom: insets.bottom + 8 }]}>
+      {/* Recording indicator - above input when recording */}
+      {isVoiceActive && (
+        <View style={styles.recordingContainer}>
+          <RecordingIndicator
+            state={voiceRecording.state}
+            duration={voiceRecording.duration}
+            compact={false}
+          />
+        </View>
+      )}
+
       {/* Suggestions dropdown - above input */}
-      {showSuggestions && (
+      {showSuggestions && !isVoiceActive && (
         <Animated.View
           entering={FadeIn.duration(200)}
           exiting={FadeOut.duration(150)}
@@ -408,14 +475,35 @@ export function ChatInput({
 
         {/* Action buttons */}
         <View style={styles.actionsContainer}>
-          {/* Voice button */}
-          <TouchableOpacity
-            onPress={handleVoicePress}
-            style={[styles.actionButton, { backgroundColor: colors.muted }]}
-            disabled={disabled}
+          {/* Voice button - push-to-talk */}
+          <Pressable
+            onPressIn={handleVoicePressIn}
+            onPressOut={handleVoicePressOut}
+            onLongPress={() => {}} // Prevent default long press behavior
+            delayLongPress={150}
+            disabled={disabled || voiceRecording.isProcessing}
+            style={({ pressed }) => [
+              styles.actionButton,
+              {
+                backgroundColor: voiceRecording.isRecording
+                  ? colors.danger
+                  : pressed
+                    ? colors.primary
+                    : colors.muted,
+                transform: [{ scale: pressed || voiceRecording.isRecording ? 1.1 : 1 }],
+              },
+            ]}
           >
-            <Icon name="voice" size={20} color={colors.mutedForeground} />
-          </TouchableOpacity>
+            <Icon
+              name="voice"
+              size={20}
+              color={
+                voiceRecording.isRecording
+                  ? '#FFFFFF'
+                  : colors.mutedForeground
+              }
+            />
+          </Pressable>
 
           {/* Send button */}
           <TouchableOpacity
@@ -453,6 +541,9 @@ export function ChatInput({
 const styles = StyleSheet.create({
   wrapper: {
     paddingHorizontal: 16,
+  },
+  recordingContainer: {
+    marginBottom: 12,
   },
   container: {
     borderRadius: 24,
