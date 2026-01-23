@@ -24,6 +24,7 @@ export const env = createEnv({
     TOMORROW_IO_API_KEY: z.string().min(1),
     // Mapbox (for server-side POI search)
     MAPBOX_ACCESS_TOKEN: z.string().startsWith("pk.").optional(),
+    OPEN_WEATHER_API_KEY: z.string().min(1),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,

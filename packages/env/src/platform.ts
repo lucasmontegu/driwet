@@ -19,6 +19,7 @@ export const env = createEnv({
     APPLE_CLIENT_ID: z.string().min(1),
     APPLE_CLIENT_SECRET: z.string().min(1),
     RESEND_API_KEY: z.string().min(1),
+    OPEN_WEATHER_API_KEY: z.string().min(1),
   },
   client: {},
   runtimeEnv: {
@@ -37,6 +38,7 @@ export const env = createEnv({
     APPLE_CLIENT_ID: process.env.APPLE_CLIENT_ID,
     APPLE_CLIENT_SECRET: process.env.APPLE_CLIENT_SECRET,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
+    OPEN_WEATHER_API_KEY: process.env.OPEN_WEATHER_API_KEY,
   },
   emptyStringAsUndefined: true,
 });

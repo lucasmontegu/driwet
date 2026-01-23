@@ -7,37 +7,37 @@ settings:
 catalogs:
   default:
     '@better-auth/expo':
-      specifier: ^1.4.17
+      specifier: ^1.4.9
       version: 1.4.17
     '@orpc/client':
-      specifier: ^1.13.4
+      specifier: ^1.12.2
       version: 1.13.4
     '@orpc/openapi':
-      specifier: ^1.13.4
+      specifier: ^1.12.2
       version: 1.13.4
     '@orpc/server':
-      specifier: ^1.13.4
+      specifier: ^1.12.2
       version: 1.13.4
     '@orpc/zod':
-      specifier: ^1.13.4
+      specifier: ^1.12.2
       version: 1.13.4
     '@polar-sh/better-auth':
       specifier: ^1.6.4
       version: 1.6.4
     better-auth:
-      specifier: ^1.4.17
+      specifier: ^1.4.9
       version: 1.4.17
     dotenv:
-      specifier: ^17.2.3
+      specifier: ^17.2.2
       version: 17.2.3
     next:
       specifier: ^16.1.4
       version: 16.1.4
     typescript:
-      specifier: ^5.9.3
+      specifier: ^5
       version: 5.9.3
     zod:
-      specifier: ^4.3.5
+      specifier: 'catalog:'
       version: 4.3.5
 
 importers:
@@ -323,6 +323,12 @@ importers:
 
   apps/platform:
     dependencies:
+      '@ai-sdk-tools/agents':
+        specifier: ^1.2.0
+        version: 1.2.0(ai@6.0.44(zod@4.3.5))(zod@4.3.5)
+      '@ai-sdk-tools/memory':
+        specifier: ^1.2.0
+        version: 1.2.0(ai@6.0.44(zod@4.3.5))
       '@ai-sdk/google':
         specifier: ^3.0.10
         version: 3.0.10(zod@4.3.5)
@@ -373,7 +379,7 @@ importers:
         version: 1.13.4(@opentelemetry/api@1.9.0)(@orpc/contract@1.13.4(@opentelemetry/api@1.9.0))(@orpc/server@1.13.4(@opentelemetry/api@1.9.0)(ws@8.19.0))(ws@8.19.0)(zod@4.3.5)
       '@polar-sh/better-auth':
         specifier: 'catalog:'
-        version: 1.6.4(@polar-sh/sdk@0.42.2)(@stripe/react-stripe-js@4.0.2(@stripe/stripe-js@7.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@stripe/stripe-js@7.9.0)(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(better-auth@1.4.17(drizzle-kit@0.31.8)(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(kysely@0.28.10))(next@16.1.4(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react-is@19.2.3)(react@19.2.3)(redux@5.0.1)(zod@4.3.5)
+        version: 1.6.4(@polar-sh/sdk@0.42.2)(@stripe/react-stripe-js@4.0.2(@stripe/stripe-js@7.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@stripe/stripe-js@7.9.0)(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(better-auth@1.4.17(drizzle-kit@0.31.8)(next@16.1.4(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react-is@19.2.3)(react@19.2.3)(redux@5.0.1)(zod@4.3.5)
       '@tanstack/react-form':
         specifier: ^1.27.7
         version: 1.27.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -383,6 +389,9 @@ importers:
       ai:
         specifier: ^6.0.44
         version: 6.0.44(zod@4.3.5)
+      ai-sdk-tools:
+        specifier: ^1.2.0
+        version: 1.2.0(@ai-sdk/react@3.0.46(react@19.2.3)(zod@4.3.5))(ai@6.0.44(zod@4.3.5))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(zod@4.3.5)(zustand@5.0.10(@types/react@19.2.9)(immer@11.1.3)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3)))
       babel-plugin-react-compiler:
         specifier: ^1.0.0
         version: 1.0.0
@@ -639,6 +648,39 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     peerDependenciesMeta:
       graphql:
+        optional: true
+
+  '@ai-sdk-tools/agents@1.2.0':
+    resolution: {integrity: sha512-x1cTxnWDy/1Y63Ca875LDQXgy6dycTZ5BikMmCwRs5zHn4WOcudFfEgdFZndGA8wZFntk8V5LiUlJ7rSwYCp1g==}
+    peerDependencies:
+      '@ai-sdk-tools/artifacts': '*'
+      '@ai-sdk-tools/cache': '*'
+      ai: '>=5.0.0'
+      zod: ^3.25.76 || ^4.1.8
+    peerDependenciesMeta:
+      '@ai-sdk-tools/artifacts':
+        optional: true
+      '@ai-sdk-tools/cache':
+        optional: true
+
+  '@ai-sdk-tools/memory@1.2.0':
+    resolution: {integrity: sha512-ET8CQMyHsdEMVSYnBjopHWwR6j6W6tmB+djMybFiloPLF9NfsFr9bXt2hb7+/oFyE9zKAGWQXqUY+Z+kUueR2w==}
+    peerDependencies:
+      '@upstash/redis': ^1.34.3
+      ai: ^5.0.0
+      drizzle-orm: ^0.36.0
+      ioredis: ^5.0.0
+      redis: ^4.0.0
+    peerDependenciesMeta:
+      '@upstash/redis':
+        optional: true
+      ai:
+        optional: true
+      drizzle-orm:
+        optional: true
+      ioredis:
+        optional: true
+      redis:
         optional: true
 
   '@ai-sdk/gateway@3.0.16':
@@ -7978,6 +8020,17 @@ snapshots:
     optionalDependencies:
       graphql: 16.12.0
 
+  '@ai-sdk-tools/agents@1.2.0(ai@6.0.44(zod@4.3.5))(zod@4.3.5)':
+    dependencies:
+      ai: 6.0.44(zod@4.3.5)
+      zod: 4.3.5
+
+  '@ai-sdk-tools/memory@1.2.0(ai@6.0.44(zod@4.3.5))':
+    dependencies:
+      zod: 4.3.5
+    optionalDependencies:
+      ai: 6.0.44(zod@4.3.5)
+
   '@ai-sdk/gateway@3.0.16(zod@4.3.5)':
     dependencies:
       '@ai-sdk/provider': 3.0.4
@@ -9229,7 +9282,7 @@ snapshots:
       postcss: 8.4.49
       resolve-from: 5.0.0
     optionalDependencies:
-      expo: 54.0.32(@babel/core@7.28.6)(@expo/metro-runtime@6.1.2)(expo-router@6.0.22)(graphql@16.12.0)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      expo: 54.0.32(@babel/core@7.28.6)(@expo/metro-runtime@6.1.2)(expo-router@6.0.22)(graphql@16.12.0)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.2.9)(react@19.2.3))(react@19.2.3)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -9310,7 +9363,7 @@ snapshots:
       '@expo/json-file': 10.0.8
       '@react-native/normalize-colors': 0.81.5
       debug: 4.4.3
-      expo: 54.0.32(@babel/core@7.28.6)(@expo/metro-runtime@6.1.2)(expo-router@6.0.22)(graphql@16.12.0)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      expo: 54.0.32(@babel/core@7.28.6)(@expo/metro-runtime@6.1.2)(expo-router@6.0.22)(graphql@16.12.0)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.2.9)(react@19.2.3))(react@19.2.3)
       resolve-from: 5.0.0
       semver: 7.7.3
       xml2js: 0.6.0
@@ -9973,6 +10026,22 @@ snapshots:
       '@polar-sh/checkout': 0.1.15(@stripe/react-stripe-js@4.0.2(@stripe/stripe-js@7.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@stripe/stripe-js@7.9.0)(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react-is@19.2.3)(react@19.2.3)(redux@5.0.1)
       '@polar-sh/sdk': 0.42.2
       better-auth: 1.4.17(drizzle-kit@0.31.8)(drizzle-orm@0.45.1(@neondatabase/serverless@1.0.2)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(kysely@0.28.10))(next@16.1.4(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      zod: 4.3.5
+    transitivePeerDependencies:
+      - '@stripe/react-stripe-js'
+      - '@stripe/stripe-js'
+      - '@types/react'
+      - '@types/react-dom'
+      - react
+      - react-dom
+      - react-is
+      - redux
+
+  '@polar-sh/better-auth@1.6.4(@polar-sh/sdk@0.42.2)(@stripe/react-stripe-js@4.0.2(@stripe/stripe-js@7.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@stripe/stripe-js@7.9.0)(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(better-auth@1.4.17(drizzle-kit@0.31.8)(next@16.1.4(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react-is@19.2.3)(react@19.2.3)(redux@5.0.1)(zod@4.3.5)':
+    dependencies:
+      '@polar-sh/checkout': 0.1.15(@stripe/react-stripe-js@4.0.2(@stripe/stripe-js@7.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@stripe/stripe-js@7.9.0)(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react-is@19.2.3)(react@19.2.3)(redux@5.0.1)
+      '@polar-sh/sdk': 0.42.2
+      better-auth: 1.4.17(drizzle-kit@0.31.8)(next@16.1.4(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       zod: 4.3.5
     transitivePeerDependencies:
       - '@stripe/react-stripe-js'
@@ -13130,6 +13199,16 @@ snapshots:
       react-dom: 19.2.3(react@19.2.3)
       zustand: 5.0.10(@types/react@19.2.9)(immer@11.1.3)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
 
+  ai-sdk-tools@1.2.0(@ai-sdk/react@3.0.46(react@19.2.3)(zod@4.3.5))(ai@6.0.44(zod@4.3.5))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(zod@4.3.5)(zustand@5.0.10(@types/react@19.2.9)(immer@11.1.3)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))):
+    dependencies:
+      ai: 6.0.44(zod@4.3.5)
+      zod: 4.3.5
+    optionalDependencies:
+      '@ai-sdk/react': 3.0.46(react@19.2.3)(zod@4.3.5)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+      zustand: 5.0.10(@types/react@19.2.9)(immer@11.1.3)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
+
   ai@6.0.39(zod@4.3.5):
     dependencies:
       '@ai-sdk/gateway': 3.0.16(zod@4.3.5)
@@ -13336,7 +13415,7 @@ snapshots:
       resolve-from: 5.0.0
     optionalDependencies:
       '@babel/runtime': 7.28.6
-      expo: 54.0.32(@babel/core@7.28.6)(@expo/metro-runtime@6.1.2)(expo-router@6.0.22)(graphql@16.12.0)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      expo: 54.0.32(@babel/core@7.28.6)(@expo/metro-runtime@6.1.2)(expo-router@6.0.22)(graphql@16.12.0)(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.2.9)(react@19.2.3))(react@19.2.3)
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -13393,6 +13472,26 @@ snapshots:
     optionalDependencies:
       drizzle-kit: 0.31.8
       drizzle-orm: 0.45.1(@neondatabase/serverless@1.0.2)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(kysely@0.28.10)
+      next: 16.1.4(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+
+  better-auth@1.4.17(drizzle-kit@0.31.8)(next@16.1.4(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+    dependencies:
+      '@better-auth/core': 1.4.17(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.5))(jose@6.1.3)(kysely@0.28.10)(nanostores@1.1.0)
+      '@better-auth/telemetry': 1.4.17(@better-auth/core@1.4.17(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.3.5))(jose@6.1.3)(kysely@0.28.10)(nanostores@1.1.0))
+      '@better-auth/utils': 0.3.0
+      '@better-fetch/fetch': 1.1.21
+      '@noble/ciphers': 2.1.1
+      '@noble/hashes': 2.0.1
+      better-call: 1.1.8(zod@4.3.5)
+      defu: 6.1.4
+      jose: 6.1.3
+      kysely: 0.28.10
+      nanostores: 1.1.0
+      zod: 4.3.5
+    optionalDependencies:
+      drizzle-kit: 0.31.8
       next: 16.1.4(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
