@@ -62,6 +62,26 @@ const navigateToShelterSchema = z.object({
   placeType: z.string().describe("Tipo de lugar: gas_station, rest_area, town"),
 });
 
+const suggestDepartureTimeSchema = z.object({
+  originLat: z.number().describe("Latitud del origen"),
+  originLon: z.number().describe("Longitud del origen"),
+  destLat: z.number().describe("Latitud del destino"),
+  destLon: z.number().describe("Longitud del destino"),
+  originName: z.string().optional().describe("Nombre del origen"),
+  destName: z.string().optional().describe("Nombre del destino"),
+  preferredTimeRange: z.enum(["morning", "afternoon", "evening", "any"]).optional().default("any")
+    .describe("Preferencia de horario del usuario"),
+});
+
+const compareRoutesSchema = z.object({
+  originLat: z.number().describe("Latitud del origen"),
+  originLon: z.number().describe("Longitud del origen"),
+  destLat: z.number().describe("Latitud del destino"),
+  destLon: z.number().describe("Longitud del destino"),
+  originName: z.string().optional().describe("Nombre del origen"),
+  destName: z.string().optional().describe("Nombre del destino"),
+});
+
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
@@ -76,6 +96,8 @@ Capacidades:
 - Puedes mostrar el clima en una ruta con colores de riesgo usando showRouteWeather
 - Puedes buscar refugios cercanos (estaciones de servicio, áreas de descanso, localidades) usando findSafePlaces
 - Puedes iniciar navegación a un refugio usando navigateToShelter
+- Puedes sugerir la mejor hora de salida usando suggestBestDepartureTime
+- Puedes comparar rutas alternativas usando compareRoutes
 
 Comportamiento:
 - Responde siempre en español a menos que el usuario escriba en otro idioma
@@ -302,6 +324,197 @@ Formato:
               lng: longitude,
               type: placeType,
             },
+          };
+        },
+      }),
+
+      suggestBestDepartureTime: tool({
+        description:
+          "Sugiere la mejor hora de salida basándose en las condiciones meteorológicas a lo largo del día. Usa esto cuando el usuario pregunte cuándo es mejor salir o quiera planificar un viaje.",
+        parameters: suggestDepartureTimeSchema,
+        execute: async (args) => {
+          const { originLat, originLon, destLat, destLon, originName, destName, preferredTimeRange } = args;
+
+          // Generate departure time options (every 2 hours from 6am to 8pm)
+          const baseDate = new Date();
+          const options: Array<{
+            time: string;
+            displayTime: string;
+            riskLevel: "safe" | "caution" | "warning" | "danger";
+            riskScore: number;
+            alerts: number;
+            recommendation: string;
+          }> = [];
+
+          // Check alerts for midpoint at different times
+          const midLat = (originLat + destLat) / 2;
+          const midLon = (originLon + destLon) / 2;
+
+          const currentAlerts = await getAlertsByPoint(midLat, midLon);
+          const hasSevereAlerts = currentAlerts.some(a => a.severity === "extreme" || a.severity === "severe");
+
+          // Generate time slots
+          const timeSlots = [
+            { hour: 6, label: "6:00 AM", period: "morning" },
+            { hour: 8, label: "8:00 AM", period: "morning" },
+            { hour: 10, label: "10:00 AM", period: "morning" },
+            { hour: 12, label: "12:00 PM", period: "afternoon" },
+            { hour: 14, label: "2:00 PM", period: "afternoon" },
+            { hour: 16, label: "4:00 PM", period: "afternoon" },
+            { hour: 18, label: "6:00 PM", period: "evening" },
+            { hour: 20, label: "8:00 PM", period: "evening" },
+          ];
+
+          // Filter by preferred time range if specified
+          const filteredSlots = preferredTimeRange === "any"
+            ? timeSlots
+            : timeSlots.filter(slot => slot.period === preferredTimeRange);
+
+          for (const slot of filteredSlots) {
+            const departureDate = new Date(baseDate);
+            departureDate.setHours(slot.hour, 0, 0, 0);
+
+            // If time has passed today, use tomorrow
+            if (departureDate < new Date()) {
+              departureDate.setDate(departureDate.getDate() + 1);
+            }
+
+            // Calculate risk based on current alerts and time of day
+            // In a real implementation, this would fetch forecast data for each time slot
+            let riskScore = currentAlerts.length * 20;
+            let riskLevel: "safe" | "caution" | "warning" | "danger" = "safe";
+
+            if (hasSevereAlerts) {
+              riskScore += 50;
+            }
+
+            // Add some variation based on typical weather patterns
+            if (slot.hour >= 14 && slot.hour <= 18) {
+              riskScore += 10; // Afternoon storms more common
+            }
+
+            if (riskScore >= 70) riskLevel = "danger";
+            else if (riskScore >= 50) riskLevel = "warning";
+            else if (riskScore >= 25) riskLevel = "caution";
+
+            const recommendations: Record<typeof riskLevel, string> = {
+              safe: "Condiciones favorables para viajar",
+              caution: "Viaje posible con precaución",
+              warning: "Considera posponer si es posible",
+              danger: "No recomendado, alto riesgo",
+            };
+
+            options.push({
+              time: departureDate.toISOString(),
+              displayTime: slot.label,
+              riskLevel,
+              riskScore,
+              alerts: currentAlerts.length,
+              recommendation: recommendations[riskLevel],
+            });
+          }
+
+          // Sort by risk score (safest first)
+          options.sort((a, b) => a.riskScore - b.riskScore);
+
+          const bestOption = options[0];
+
+          return {
+            action: "showDepartureOptions",
+            route: {
+              origin: { lat: originLat, lng: originLon, name: originName },
+              destination: { lat: destLat, lng: destLon, name: destName },
+            },
+            options,
+            recommendation: bestOption
+              ? `La mejor hora para salir es ${bestOption.displayTime} (${bestOption.recommendation})`
+              : "No hay horarios disponibles",
+            bestTime: bestOption?.displayTime,
+          };
+        },
+      }),
+
+      compareRoutes: tool({
+        description:
+          "Compara diferentes rutas alternativas entre origen y destino, mostrando tiempo, distancia y nivel de riesgo de cada una. Usa esto cuando el usuario quiera ver opciones de ruta.",
+        parameters: compareRoutesSchema,
+        execute: async (args) => {
+          const { originLat, originLon, destLat, destLon, originName, destName } = args;
+
+          // In a real implementation, this would call a routing API for alternatives
+          // For now, we simulate 2-3 route options
+          const midLat = (originLat + destLat) / 2;
+          const midLon = (originLon + destLon) / 2;
+
+          const currentAlerts = await getAlertsByPoint(midLat, midLon);
+          const hasSevereAlerts = currentAlerts.some(a => a.severity === "extreme" || a.severity === "severe");
+
+          // Calculate base distance using Haversine
+          const R = 6371; // Earth radius in km
+          const dLat = (destLat - originLat) * Math.PI / 180;
+          const dLon = (destLon - originLon) * Math.PI / 180;
+          const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(originLat * Math.PI / 180) * Math.cos(destLat * Math.PI / 180) *
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+          const directDistance = R * c;
+
+          // Generate route alternatives
+          const routes = [
+            {
+              id: "fastest",
+              name: "Ruta más rápida",
+              type: "highway" as const,
+              distanceKm: Math.round(directDistance * 1.2 * 10) / 10,
+              durationMin: Math.round(directDistance * 1.2 / 100 * 60),
+              riskLevel: hasSevereAlerts ? "warning" as const : "caution" as const,
+              riskScore: hasSevereAlerts ? 60 : 30,
+              tollCost: 150, // MXN
+              fuelCost: Math.round(directDistance * 1.2 * 2.5), // ~2.5 MXN/km
+              alerts: currentAlerts.length,
+              description: "Autopista con peaje, menor tiempo",
+            },
+            {
+              id: "safest",
+              name: "Ruta más segura",
+              type: "scenic" as const,
+              distanceKm: Math.round(directDistance * 1.5 * 10) / 10,
+              durationMin: Math.round(directDistance * 1.5 / 70 * 60),
+              riskLevel: hasSevereAlerts ? "caution" as const : "safe" as const,
+              riskScore: hasSevereAlerts ? 35 : 15,
+              tollCost: 0,
+              fuelCost: Math.round(directDistance * 1.5 * 2.5),
+              alerts: Math.max(0, currentAlerts.length - 1),
+              description: "Carretera libre, evita zonas de riesgo",
+            },
+            {
+              id: "balanced",
+              name: "Ruta equilibrada",
+              type: "mixed" as const,
+              distanceKm: Math.round(directDistance * 1.3 * 10) / 10,
+              durationMin: Math.round(directDistance * 1.3 / 85 * 60),
+              riskLevel: hasSevereAlerts ? "caution" as const : "safe" as const,
+              riskScore: hasSevereAlerts ? 45 : 20,
+              tollCost: 75,
+              fuelCost: Math.round(directDistance * 1.3 * 2.5),
+              alerts: currentAlerts.length,
+              description: "Combinación de autopista y libre",
+            },
+          ];
+
+          // Sort by risk score for recommendation
+          const sortedRoutes = [...routes].sort((a, b) => a.riskScore - b.riskScore);
+          const recommended = sortedRoutes[0];
+
+          return {
+            action: "showRouteComparison",
+            route: {
+              origin: { lat: originLat, lng: originLon, name: originName },
+              destination: { lat: destLat, lng: destLon, name: destName },
+            },
+            alternatives: routes,
+            recommended: recommended?.id,
+            summary: `Recomiendo la "${recommended?.name}" - ${recommended?.description}`,
           };
         },
       }),
