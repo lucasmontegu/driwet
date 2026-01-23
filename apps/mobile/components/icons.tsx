@@ -34,6 +34,11 @@ import {
   Clock01Icon,
   Search01Icon,
   Mic01Icon,
+  GasStationIcon,
+  ParkingArea02Icon,
+  Store01Icon,
+  Navigation03Icon,
+  ShieldUserIcon,
 } from '@hugeicons/core-free-icons';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 
@@ -60,6 +65,7 @@ export type IconName =
   | 'close'
   | 'check'
   | 'checkCircle'
+  | 'checkmark'
   | 'alert'
   | 'lock'
   | 'trash'
@@ -70,7 +76,12 @@ export type IconName =
   | 'chevron-down'
   | 'clock'
   | 'search'
-  | 'voice';
+  | 'voice'
+  | 'gas'
+  | 'parking'
+  | 'store'
+  | 'navigation'
+  | 'shield';
 
 const iconMap = {
   map: MapsIcon,
@@ -95,6 +106,7 @@ const iconMap = {
   close: Cancel01Icon,
   check: Tick01Icon,
   checkCircle: CheckmarkCircle01Icon,
+  checkmark: Tick01Icon,
   alert: Alert01Icon,
   lock: LockIcon,
   trash: Delete02Icon,
@@ -106,6 +118,11 @@ const iconMap = {
   clock: Clock01Icon,
   search: Search01Icon,
   voice: Mic01Icon,
+  gas: GasStationIcon,
+  parking: ParkingArea02Icon,
+  store: Store01Icon,
+  navigation: Navigation03Icon,
+  shield: ShieldUserIcon,
 } as const;
 
 interface IconProps {

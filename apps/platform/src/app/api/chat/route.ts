@@ -2,6 +2,7 @@ import { google } from "@ai-sdk/google";
 import { streamText, tool } from "ai";
 import { z } from "zod";
 import { getAlertsByPoint } from "@/lib/weather";
+import { findSafeStops } from "@/lib/places";
 
 export const maxDuration = 30;
 
@@ -246,15 +247,44 @@ Formato:
         parameters: findSafePlacesSchema,
         execute: async (args) => {
           const { latitude, longitude, radiusKm, urgency } = args;
-          return {
-            action: "findSafePlaces",
-            location: { lat: latitude, lng: longitude },
-            radiusKm,
-            urgency,
-            message: urgency === "high"
-              ? "Buscando refugios cercanos de emergencia..."
-              : "Buscando lugares seguros en tu área...",
-          };
+          try {
+            const stops = await findSafeStops(latitude, longitude, radiusKm, urgency);
+
+            if (stops.length === 0) {
+              return {
+                success: true,
+                action: "showSafeStops",
+                stops: [],
+                message: "No encontré refugios cercanos. Considera detenerte en un lugar seguro fuera de la carretera.",
+              };
+            }
+
+            return {
+              success: true,
+              action: "showSafeStops",
+              stops: stops.map((stop) => ({
+                id: stop.id,
+                name: stop.name,
+                type: stop.type,
+                lat: stop.latitude,
+                lng: stop.longitude,
+                distanceKm: stop.distanceKm,
+                address: stop.address,
+                reason: stop.reason,
+              })),
+              message: urgency === "high"
+                ? `Encontré ${stops.length} refugios cercanos de emergencia`
+                : `Encontré ${stops.length} lugares seguros en tu área`,
+            };
+          } catch (error) {
+            console.error("Error finding safe places:", error);
+            return {
+              success: false,
+              action: "showSafeStops",
+              stops: [],
+              message: "Error buscando refugios. Intenta detenerte en un lugar seguro.",
+            };
+          }
         },
       }),
 
