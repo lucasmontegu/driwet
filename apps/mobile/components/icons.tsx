@@ -30,6 +30,9 @@ import {
   Refresh01Icon,
   SunCloud01Icon,
   AlertDiamondIcon,
+  ArrowDown01Icon,
+  Clock01Icon,
+  Search01Icon,
 } from '@hugeicons/core-free-icons';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 
@@ -62,7 +65,10 @@ export type IconName =
   | 'info'
   | 'refresh'
   | 'weather'
-  | 'warning';
+  | 'warning'
+  | 'chevron-down'
+  | 'clock'
+  | 'search';
 
 const iconMap = {
   map: MapsIcon,
@@ -94,6 +100,9 @@ const iconMap = {
   refresh: Refresh01Icon,
   weather: SunCloud01Icon,
   warning: AlertDiamondIcon,
+  'chevron-down': ArrowDown01Icon,
+  clock: Clock01Icon,
+  search: Search01Icon,
 } as const;
 
 interface IconProps {
@@ -101,9 +110,10 @@ interface IconProps {
   size?: number;
   color?: string;
   strokeWidth?: number;
+  style?: object;
 }
 
-export function Icon({ name, size = 24, color, strokeWidth = 1.5 }: IconProps) {
+export function Icon({ name, size = 24, color, strokeWidth = 1.5, style }: IconProps) {
   const colors = useThemeColors();
   const IconComponent = iconMap[name];
 
@@ -113,6 +123,7 @@ export function Icon({ name, size = 24, color, strokeWidth = 1.5 }: IconProps) {
       size={size}
       color={color || colors.foreground}
       strokeWidth={strokeWidth}
+      style={style}
     />
   );
 }

@@ -8,7 +8,7 @@ function TabIcon({ name, focused }: { name: IconName; focused: boolean }) {
   return (
     <Icon
       name={name}
-      size={24}
+      size={22}
       color={focused ? colors.primary : colors.mutedForeground}
     />
   );
@@ -24,15 +24,19 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: colors.card,
           borderTopColor: colors.border,
-          height: 80,
-          paddingBottom: 20,
-          paddingTop: 10,
+          borderTopWidth: 0,
+          height: 56,
+          paddingBottom: 8,
+          paddingTop: 6,
+          elevation: 0,
+          shadowOpacity: 0,
         },
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.mutedForeground,
         tabBarLabelStyle: {
-          fontFamily: 'NunitoSans_600SemiBold',
-          fontSize: 12,
+          fontFamily: 'Inter_600SemiBold',
+          fontSize: 10,
+          marginTop: -2,
         },
       }}
     >
