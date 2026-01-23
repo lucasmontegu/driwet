@@ -1,16 +1,10 @@
 // apps/platform/src/app/api/subscription/portal/route.ts
 import { auth } from "@driwet/auth";
 import { polarClient } from "@driwet/auth/lib/payments";
-import { env } from "@driwet/env/server";
 import { NextResponse, type NextRequest } from "next/server";
 import { headers } from "next/headers";
 
 export async function GET(request: NextRequest) {
-  // Check if Polar is configured
-  if (!env.POLAR_ACCESS_TOKEN) {
-    return NextResponse.json({ error: "Subscriptions not configured" }, { status: 503 });
-  }
-
   try {
     // Get current session
     const session = await auth.api.getSession({

@@ -7,10 +7,11 @@ export const env = createEnv({
     DATABASE_URL: z.string().min(1),
     BETTER_AUTH_SECRET: z.string().min(32),
     BETTER_AUTH_URL: z.string().url(),
-    // Polar (optional - for subscriptions)
-    POLAR_ACCESS_TOKEN: z.string().min(1).optional(),
-    POLAR_MONTHLY_PRODUCT_ID: z.string().min(1).optional(),
-    POLAR_YEARLY_PRODUCT_ID: z.string().min(1).optional(),
+    // Polar (subscriptions)
+    POLAR_ACCESS_TOKEN: z.string().min(1),
+    POLAR_MONTHLY_PRODUCT_ID: z.string().min(1),
+    POLAR_YEARLY_PRODUCT_ID: z.string().min(1),
+    POLAR_WEBHOOK_SECRET: z.string().min(1).optional(),
     CORS_ORIGIN: z.string().url(),
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
     // Social auth providers

@@ -1,21 +1,9 @@
 import { protectedProcedure } from '../index';
-import { getPolarClient, isPolarConfigured } from '@driwet/auth/lib/payments';
+import { polarClient } from '@driwet/auth/lib/payments';
 
 export const subscriptionRouter = {
   getStatus: protectedProcedure.handler(async ({ context }) => {
-    // Return inactive if Polar is not configured
-    if (!isPolarConfigured) {
-      return {
-        isActive: false,
-        plan: null,
-        expiresAt: null,
-        customerId: null,
-      };
-    }
-
     try {
-      const polarClient = getPolarClient();
-
       // Get customer by user metadata (email)
       const customers = await polarClient.customers.list({
         email: context.session.user.email,

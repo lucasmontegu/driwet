@@ -13,11 +13,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
   }
 
-  // Check if Polar is configured
-  if (!env.POLAR_ACCESS_TOKEN || !env.POLAR_MONTHLY_PRODUCT_ID || !env.POLAR_YEARLY_PRODUCT_ID) {
-    return NextResponse.json({ error: "Subscriptions not configured" }, { status: 503 });
-  }
-
   try {
     // Get current session
     const session = await auth.api.getSession({
