@@ -145,7 +145,7 @@ export function SmartSearchInput({
     const parsed = parseInput(text);
 
     // Debounce search
-    searchTimeoutRef.current = setTimeout(() => {
+    searchTimeoutRef.current = setTimeout(async () => {
       if (parsed.type === 'origin' && parsed.query) {
         setActiveField('origin');
         searchPlaces(parsed.query, userLocation ?? undefined);
@@ -155,7 +155,36 @@ export function SmartSearchInput({
         searchPlaces(parsed.query, userLocation ?? undefined);
         setShowSuggestions(true);
       } else if (parsed.type === 'complete') {
-        // For complete patterns, prioritize destination search
+        // For complete patterns, first auto-geocode origin, then search destination
+        if (parsed.originQuery && !origin) {
+          // Auto-geocode origin and set it
+          try {
+            let url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(parsed.originQuery)}.json?` +
+              `access_token=${env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN}&` +
+              `types=place,locality,region,country,address&` +
+              `language=es&` +
+              `limit=1`;
+            if (userLocation) {
+              url += `&proximity=${userLocation.longitude},${userLocation.latitude}`;
+            }
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.features && data.features.length > 0) {
+              const feature = data.features[0];
+              const originLocation: RouteLocation = {
+                name: feature.place_name.split(',')[0] || feature.place_name,
+                coordinates: {
+                  latitude: feature.center[1],
+                  longitude: feature.center[0],
+                },
+              };
+              onRouteChange(originLocation, destination);
+            }
+          } catch (error) {
+            console.error('Auto-geocode origin error:', error);
+          }
+        }
+        // Then search for destination
         setActiveField('destination');
         if (parsed.destinationQuery) {
           searchPlaces(parsed.destinationQuery, userLocation ?? undefined);
@@ -165,7 +194,7 @@ export function SmartSearchInput({
         setShowSuggestions(false);
       }
     }, 300);
-  }, [parseInput, searchPlaces, userLocation]);
+  }, [parseInput, searchPlaces, userLocation, origin, destination, onRouteChange]);
 
   // Handle suggestion selection
   const handleSelectSuggestion = useCallback((feature: MapboxFeature) => {

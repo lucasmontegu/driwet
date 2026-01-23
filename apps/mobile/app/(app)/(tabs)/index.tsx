@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useLocation } from '@/hooks/use-location';
 import { useActiveAlerts, useCurrentWeather } from '@/hooks/use-api';
+import { useRouteDirections } from '@/hooks/use-route-directions';
 import { MapViewComponent, type WeatherAlert } from '@/components/map-view';
 import { ChatInputBar } from '@/components/chat-input-bar';
 import { SmartSearchInput } from '@/components/smart-search-input';
@@ -56,6 +57,13 @@ export default function MapScreen() {
     polygon: alert.polygon,
   }));
 
+  // Fetch route directions when origin and destination are set
+  const { data: routeDirections, isLoading: directionsLoading } = useRouteDirections(
+    origin?.coordinates ?? null,
+    destination?.coordinates ?? null,
+    !!origin && !!destination
+  );
+
   const handleRouteChange = useCallback((newOrigin: RouteLocation | null, newDestination: RouteLocation | null) => {
     setOrigin(newOrigin);
     setDestination(newDestination);
@@ -80,10 +88,10 @@ export default function MapScreen() {
     router.push(`/route-detail?id=${trip.routeId}`);
   }, [router]);
 
-  // Mock data for suggestions (in production, this would come from APIs)
-  const mockSuggestionsData = useMemo(() => ({
-    distance: 150,
-    duration: 130,
+  // Route data for suggestions sheet (distance and duration from real API, others still mock)
+  const routeSuggestionsData = useMemo(() => ({
+    distance: routeDirections?.distance ?? 0,
+    duration: routeDirections?.duration ?? 0,
     temperature: weatherData?.data?.temperature,
     alerts: alerts.length > 0 ? alerts.map((alert) => ({
       id: alert.id,
@@ -130,7 +138,7 @@ export default function MapScreen() {
         maxCapacity: 600,
       },
     ],
-  }), [alerts, weatherData?.data?.temperature]);
+  }), [alerts, weatherData?.data?.temperature, routeDirections]);
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -210,12 +218,12 @@ export default function MapScreen() {
           <SuggestionsSheet
             origin={origin}
             destination={destination}
-            distance={mockSuggestionsData.distance}
-            duration={mockSuggestionsData.duration}
-            temperature={mockSuggestionsData.temperature}
-            alerts={mockSuggestionsData.alerts}
-            stops={mockSuggestionsData.stops}
-            destinations={mockSuggestionsData.destinations}
+            distance={routeSuggestionsData.distance}
+            duration={routeSuggestionsData.duration}
+            temperature={routeSuggestionsData.temperature}
+            alerts={routeSuggestionsData.alerts}
+            stops={routeSuggestionsData.stops}
+            destinations={routeSuggestionsData.destinations}
             onClose={() => setShowSuggestions(false)}
           />
         )}
