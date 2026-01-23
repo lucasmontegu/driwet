@@ -1,6 +1,9 @@
 PODS:
   - EXApplication (7.0.8):
     - ExpoModulesCore
+  - EXAV (16.0.8):
+    - ExpoModulesCore
+    - ReactCommon/turbomodule/core
   - EXConstants (18.0.13):
     - ExpoModulesCore
   - EXJSONUtils (0.15.0)
@@ -219,6 +222,8 @@ PODS:
     - RNScreens
   - ExpoKeepAwake (15.0.8):
     - ExpoModulesCore
+  - ExpoLinearGradient (15.0.8):
+    - ExpoModulesCore
   - ExpoLinking (8.0.11):
     - ExpoModulesCore
   - ExpoLocalization (17.0.8):
@@ -251,6 +256,8 @@ PODS:
   - ExpoNetwork (8.0.8):
     - ExpoModulesCore
   - ExpoSecureStore (15.0.8):
+    - ExpoModulesCore
+  - ExpoSpeech (14.0.8):
     - ExpoModulesCore
   - ExpoSplashScreen (31.0.13):
     - ExpoModulesCore
@@ -2332,6 +2339,7 @@ PODS:
 
 DEPENDENCIES:
   - "EXApplication (from `../../../node_modules/.pnpm/expo-application@7.0.8_expo@54.0.32/node_modules/expo-application/ios`)"
+  - "EXAV (from `../../../node_modules/.pnpm/expo-av@16.0.8_expo@54.0.32_react-native-web@0.21.2_react-dom@19.1.0_react@19.1.0__reac_59e75f4338c897fbacaeb150b4e3cbd0/node_modules/expo-av/ios`)"
   - "EXConstants (from `../../../node_modules/.pnpm/expo-constants@18.0.13_expo@54.0.32_react-native@0.81.5_@babel+core@7.28.6_@types+react@19.1.17_react@19.1.0_/node_modules/expo-constants/ios`)"
   - "EXJSONUtils (from `../../../node_modules/.pnpm/expo-json-utils@0.15.0/node_modules/expo-json-utils/ios`)"
   - "EXManifests (from `../../../node_modules/.pnpm/expo-manifests@1.0.10_expo@54.0.32/node_modules/expo-manifests/ios`)"
@@ -2348,12 +2356,14 @@ DEPENDENCIES:
   - "ExpoHaptics (from `../../../node_modules/.pnpm/expo-haptics@15.0.8_expo@54.0.32/node_modules/expo-haptics/ios`)"
   - "ExpoHead (from `../../../node_modules/.pnpm/expo-router@6.0.22_2117985f5f33daec6fb5ca193704f5bd/node_modules/expo-router/ios`)"
   - "ExpoKeepAwake (from `../../../node_modules/.pnpm/expo-keep-awake@15.0.8_expo@54.0.32_react@19.1.0/node_modules/expo-keep-awake/ios`)"
+  - "ExpoLinearGradient (from `../../../node_modules/.pnpm/expo-linear-gradient@15.0.8_expo@54.0.32_react-native@0.81.5_@babel+core@7.28.6_@types+_53aef72480df9baa4504f4743d9c64bb/node_modules/expo-linear-gradient/ios`)"
   - "ExpoLinking (from `../../../node_modules/.pnpm/expo-linking@8.0.11_expo@54.0.32_react-native@0.81.5_@babel+core@7.28.6_@types+react@19.1.17_react@19.1.0__react@19.1.0/node_modules/expo-linking/ios`)"
   - "ExpoLocalization (from `../../../node_modules/.pnpm/expo-localization@17.0.8_expo@54.0.32_react@19.1.0/node_modules/expo-localization/ios`)"
   - "ExpoLocation (from `../../../node_modules/.pnpm/expo-location@19.0.8_expo@54.0.32/node_modules/expo-location/ios`)"
   - "ExpoModulesCore (from `../../../node_modules/.pnpm/expo-modules-core@3.0.29_react-native@0.81.5_@babel+core@7.28.6_@types+react@19.1.17_react@19.1.0__react@19.1.0/node_modules/expo-modules-core`)"
   - "ExpoNetwork (from `../../../node_modules/.pnpm/expo-network@8.0.8_expo@54.0.32_react@19.1.0/node_modules/expo-network/ios`)"
   - "ExpoSecureStore (from `../../../node_modules/.pnpm/expo-secure-store@15.0.8_expo@54.0.32/node_modules/expo-secure-store/ios`)"
+  - "ExpoSpeech (from `../../../node_modules/.pnpm/expo-speech@14.0.8_expo@54.0.32/node_modules/expo-speech/ios`)"
   - "ExpoSplashScreen (from `../../../node_modules/.pnpm/expo-splash-screen@31.0.13_expo@54.0.32/node_modules/expo-splash-screen/ios`)"
   - "ExpoSystemUI (from `../../../node_modules/.pnpm/expo-system-ui@6.0.9_expo@54.0.32_react-native-web@0.21.2_react-dom@19.1.0_react@19.1.0_f50a4c3429b0e4ab285136ba1e1e78df/node_modules/expo-system-ui/ios`)"
   - "ExpoWebBrowser (from `../../../node_modules/.pnpm/expo-web-browser@15.0.10_expo@54.0.32_react-native@0.81.5_@babel+core@7.28.6_@types+react@19.1.17_react@19.1.0_/node_modules/expo-web-browser/ios`)"
@@ -2448,6 +2458,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   EXApplication:
     :path: "../../../node_modules/.pnpm/expo-application@7.0.8_expo@54.0.32/node_modules/expo-application/ios"
+  EXAV:
+    :path: "../../../node_modules/.pnpm/expo-av@16.0.8_expo@54.0.32_react-native-web@0.21.2_react-dom@19.1.0_react@19.1.0__reac_59e75f4338c897fbacaeb150b4e3cbd0/node_modules/expo-av/ios"
   EXConstants:
     :path: "../../../node_modules/.pnpm/expo-constants@18.0.13_expo@54.0.32_react-native@0.81.5_@babel+core@7.28.6_@types+react@19.1.17_react@19.1.0_/node_modules/expo-constants/ios"
   EXJSONUtils:
@@ -2480,6 +2492,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/.pnpm/expo-router@6.0.22_2117985f5f33daec6fb5ca193704f5bd/node_modules/expo-router/ios"
   ExpoKeepAwake:
     :path: "../../../node_modules/.pnpm/expo-keep-awake@15.0.8_expo@54.0.32_react@19.1.0/node_modules/expo-keep-awake/ios"
+  ExpoLinearGradient:
+    :path: "../../../node_modules/.pnpm/expo-linear-gradient@15.0.8_expo@54.0.32_react-native@0.81.5_@babel+core@7.28.6_@types+_53aef72480df9baa4504f4743d9c64bb/node_modules/expo-linear-gradient/ios"
   ExpoLinking:
     :path: "../../../node_modules/.pnpm/expo-linking@8.0.11_expo@54.0.32_react-native@0.81.5_@babel+core@7.28.6_@types+react@19.1.17_react@19.1.0__react@19.1.0/node_modules/expo-linking/ios"
   ExpoLocalization:
@@ -2492,6 +2506,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/.pnpm/expo-network@8.0.8_expo@54.0.32_react@19.1.0/node_modules/expo-network/ios"
   ExpoSecureStore:
     :path: "../../../node_modules/.pnpm/expo-secure-store@15.0.8_expo@54.0.32/node_modules/expo-secure-store/ios"
+  ExpoSpeech:
+    :path: "../../../node_modules/.pnpm/expo-speech@14.0.8_expo@54.0.32/node_modules/expo-speech/ios"
   ExpoSplashScreen:
     :path: "../../../node_modules/.pnpm/expo-splash-screen@31.0.13_expo@54.0.32/node_modules/expo-splash-screen/ios"
   ExpoSystemUI:
@@ -2660,6 +2676,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   EXApplication: 1e98d4b1dccdf30627f92917f4b2c5a53c330e5f
+  EXAV: b60fcf142fae6684d295bc28cd7cfcb3335570ea
   EXConstants: fce59a631a06c4151602843667f7cfe35f81e271
   EXJSONUtils: 1d3e4590438c3ee593684186007028a14b3686cd
   EXManifests: a8d97683e5c7a3b026ffbd58559c64dc655b747b
@@ -2676,12 +2693,14 @@ SPEC CHECKSUMS:
   ExpoHaptics: d3a6375d8dcc3a1083d003bc2298ff654fafb536
   ExpoHead: 4425246bc93411f0fe7f6945f95f698e91db8780
   ExpoKeepAwake: 55f75eca6499bb9e4231ebad6f3e9cb8f99c0296
+  ExpoLinearGradient: 809102bdb979f590083af49f7fa4805cd931bd58
   ExpoLinking: 8f0aaf69aa56f832913030503b6263dc6f647f37
   ExpoLocalization: d9168d5300a5b03e5e78b986124d11fb6ec3ebbd
   ExpoLocation: d5b61cb4970fa982e39ca94246a206a0c3b812ca
   ExpoModulesCore: f3da4f1ab5a8375d0beafab763739dbee8446583
   ExpoNetwork: ee1fb67b0de59ab7f36794caf8242955dd8ae046
   ExpoSecureStore: d32f751874a2ceb5aaeebeb3578e165c1ba2b24a
+  ExpoSpeech: d22b56570ccfab5a27112dc9691f1ac83537de26
   ExpoSplashScreen: bc3cffefca2716e5f22350ca109badd7e50ec14d
   ExpoSystemUI: 2ad325f361a2fcd96a464e8574e19935c461c9cc
   ExpoWebBrowser: 17b064c621789e41d4816c95c93f429b84971f52

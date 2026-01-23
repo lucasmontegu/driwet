@@ -8,7 +8,44 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { organization } from "better-auth/plugins"
 
-import { polarClient } from "./lib/payments";
+import { polarClient, isPolarConfigured } from "./lib/payments";
+
+// Build base plugins
+const basePlugins = [
+  organization({
+    teams: { enabled: true },
+  }),
+  nextCookies(),
+  expo(),
+] as const;
+
+// Build Polar plugin if configured
+const polarPlugin = isPolarConfigured && polarClient
+  ? [
+      polar({
+        client: polarClient,
+        createCustomerOnSignUp: false,
+        enableCustomerPortal: true,
+        use: [
+          checkout({
+            products: [
+              {
+                productId: env.POLAR_MONTHLY_PRODUCT_ID!,
+                slug: "monthly",
+              },
+              {
+                productId: env.POLAR_YEARLY_PRODUCT_ID!,
+                slug: "yearly",
+              },
+            ],
+            successUrl: "driwet://subscription/success",
+            authenticatedUsersOnly: true,
+          }),
+          portal(),
+        ],
+      }),
+    ]
+  : [];
 
 export const auth = betterAuth({
   experimental: {
@@ -38,33 +75,5 @@ export const auth = betterAuth({
       clientSecret: env.APPLE_CLIENT_SECRET,
     },
   },
-  plugins: [
-    organization({
-      teams: { enabled: true },
-    }),
-    polar({
-      client: polarClient,
-      createCustomerOnSignUp: false,
-      enableCustomerPortal: true,
-      use: [
-        checkout({
-          products: [
-            {
-              productId: env.POLAR_MONTHLY_PRODUCT_ID,
-              slug: "monthly",
-            },
-            {
-              productId: env.POLAR_YEARLY_PRODUCT_ID,
-              slug: "yearly",
-            },
-          ],
-          successUrl: "driwet://subscription/success",
-          authenticatedUsersOnly: true,
-        }),
-        portal(),
-      ],
-    }),
-    nextCookies(),
-    expo(),
-  ],
+  plugins: [...basePlugins, ...polarPlugin],
 });

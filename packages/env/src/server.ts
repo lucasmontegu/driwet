@@ -7,9 +7,10 @@ export const env = createEnv({
     DATABASE_URL: z.string().min(1),
     BETTER_AUTH_SECRET: z.string().min(32),
     BETTER_AUTH_URL: z.string().url(),
-    POLAR_ACCESS_TOKEN: z.string().min(1),
-    POLAR_MONTHLY_PRODUCT_ID: z.string().min(1),
-    POLAR_YEARLY_PRODUCT_ID: z.string().min(1),
+    // Polar (optional - for subscriptions)
+    POLAR_ACCESS_TOKEN: z.string().min(1).optional(),
+    POLAR_MONTHLY_PRODUCT_ID: z.string().min(1).optional(),
+    POLAR_YEARLY_PRODUCT_ID: z.string().min(1).optional(),
     CORS_ORIGIN: z.string().url(),
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
     // Social auth providers
@@ -19,7 +20,7 @@ export const env = createEnv({
     APPLE_CLIENT_SECRET: z.string().min(1),
     // Email
     RESEND_API_KEY: z.string().min(1),
-    EMAIL_FROM: z.string().email().default("Driwet <delivered@resend.dev>"),
+    EMAIL_FROM: z.string().min(1).default("Driwet <delivered@resend.dev>"),
     // Weather API
     TOMORROW_IO_API_KEY: z.string().min(1),
     // Mapbox (for server-side POI search)
