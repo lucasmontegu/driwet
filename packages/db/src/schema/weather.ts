@@ -9,7 +9,7 @@ import {
   jsonb,
   date,
 } from "drizzle-orm/pg-core";
-import { user } from "./auth";
+import { users } from "./auth";
 import { savedRoute } from "./routes";
 
 // Weather data types
@@ -88,7 +88,7 @@ export const routeWeatherAnalysis = pgTable(
     id: text("id").primaryKey(),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "cascade" }),
     savedRouteId: text("saved_route_id").references(() => savedRoute.id, {
       onDelete: "set null",
     }),
@@ -108,9 +108,9 @@ export const routeWeatherAnalysis = pgTable(
 export const routeWeatherAnalysisRelations = relations(
   routeWeatherAnalysis,
   ({ one }) => ({
-    user: one(user, {
+    user: one(users, {
       fields: [routeWeatherAnalysis.userId],
-      references: [user.id],
+      references: [users.id],
     }),
     savedRoute: one(savedRoute, {
       fields: [routeWeatherAnalysis.savedRouteId],

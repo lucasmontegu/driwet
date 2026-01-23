@@ -8,6 +8,7 @@ import { authClient } from '@/lib/auth-client';
 import { useTranslation } from '@/lib/i18n';
 import { useTrialStore } from '@/stores/trial-store';
 import { Analytics, identifyUser } from '@/lib/analytics';
+import { queryClient } from '@/lib/query-client';
 import { useState } from 'react';
 
 export default function SignInScreen() {
@@ -35,6 +36,9 @@ export default function SignInScreen() {
         name: session.data.user.name ?? null,
       });
     }
+
+    // Invalidate all queries so they refetch with the new auth token
+    await queryClient.invalidateQueries();
 
     router.replace('/(app)/(tabs)');
   };

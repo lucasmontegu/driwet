@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1768689879003,
-      "tag": "0000_yellow_multiple_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1768934186374,
-      "tag": "0001_clammy_namora",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1768959762871,
-      "tag": "0002_brown_cannonball",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1769009681874,
-      "tag": "0003_concerned_omega_red",
+      "when": 1769135370010,
+      "tag": "0000_unusual_post",
       "breakpoints": true
     }
   ]

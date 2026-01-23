@@ -7,7 +7,7 @@ import {
   jsonb,
   index,
 } from "drizzle-orm/pg-core";
-import { user } from "./auth";
+import { users } from "./auth";
 
 export type AlertType =
   | "tornado"
@@ -36,7 +36,7 @@ export const alertHistory = pgTable(
     id: text("id").primaryKey(),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "cascade" }),
     externalId: text("external_id"), // ID from the weather API
     alertType: text("alert_type").notNull().$type<AlertType>(),
     severity: text("severity").notNull().$type<AlertSeverity>(),
@@ -61,8 +61,8 @@ export const alertHistory = pgTable(
 );
 
 export const alertHistoryRelations = relations(alertHistory, ({ one }) => ({
-  user: one(user, {
+  user: one(users, {
     fields: [alertHistory.userId],
-    references: [user.id],
+    references: [users.id],
   }),
 }));

@@ -7,7 +7,7 @@ import {
   numeric,
   index,
 } from "drizzle-orm/pg-core";
-import { user } from "./auth";
+import { users } from "./auth";
 
 export const userLocation = pgTable(
   "user_location",
@@ -15,7 +15,7 @@ export const userLocation = pgTable(
     id: text("id").primaryKey(),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     latitude: numeric("latitude", { precision: 10, scale: 7 }).notNull(),
     longitude: numeric("longitude", { precision: 10, scale: 7 }).notNull(),
@@ -34,8 +34,8 @@ export const userLocation = pgTable(
 );
 
 export const userLocationRelations = relations(userLocation, ({ one }) => ({
-  user: one(user, {
+  user: one(users, {
     fields: [userLocation.userId],
-    references: [user.id],
+    references: [users.id],
   }),
 }));

@@ -1,14 +1,14 @@
 import { z } from 'zod';
 import { protectedProcedure } from '../index';
 import { db } from '@driwet/db';
-import { user } from '@driwet/db/schema/auth';
+import { users } from '@driwet/db/schema/auth';
 import { tripHistory } from '@driwet/db/schema/routes';
 import { eq, sql } from 'drizzle-orm';
 
 export const userRouter = {
   getProfile: protectedProcedure.handler(async ({ context }) => {
-    const userData = await db.query.user.findFirst({
-      where: eq(user.id, context.session.user.id),
+    const userData = await db.query.users.findFirst({
+      where: eq(users.id, context.session.user.id),
     });
     return userData;
   }),

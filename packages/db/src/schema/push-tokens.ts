@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp, index } from "drizzle-orm/pg-core";
-import { user } from "./auth";
+import { users } from "./auth";
 
 export const pushToken = pgTable(
   "push_token",
@@ -8,7 +8,7 @@ export const pushToken = pgTable(
     id: text("id").primaryKey(),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "cascade" }),
     token: text("token").notNull().unique(),
     platform: text("platform").notNull().$type<"ios" | "android">(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -24,8 +24,8 @@ export const pushToken = pgTable(
 );
 
 export const pushTokenRelations = relations(pushToken, ({ one }) => ({
-  user: one(user, {
+  user: one(users, {
     fields: [pushToken.userId],
-    references: [user.id],
+    references: [users.id],
   }),
 }));

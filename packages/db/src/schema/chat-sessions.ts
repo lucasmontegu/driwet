@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp, jsonb, index } from "drizzle-orm/pg-core";
-import { user } from "./auth";
+import { users } from "./auth";
 
 export type ChatMessage = {
   id: string;
@@ -21,7 +21,7 @@ export const chatSession = pgTable(
     id: text("id").primaryKey(),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "cascade" }),
     messages: jsonb("messages").$type<ChatMessage[]>().default([]).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
@@ -36,8 +36,8 @@ export const chatSession = pgTable(
 );
 
 export const chatSessionRelations = relations(chatSession, ({ one }) => ({
-  user: one(user, {
+  user: one(users, {
     fields: [chatSession.userId],
-    references: [user.id],
+    references: [users.id],
   }),
 }));

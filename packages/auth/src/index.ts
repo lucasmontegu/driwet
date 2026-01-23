@@ -2,23 +2,31 @@ import { db } from "@driwet/db";
 import * as schema from "@driwet/db/schema/auth";
 import { env } from "@driwet/env/server";
 import { expo } from "@better-auth/expo";
-import { magicLink } from "better-auth/plugins";
 import { polar, checkout, portal } from "@polar-sh/better-auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
+import { organization } from "better-auth/plugins"
 
 import { polarClient } from "./lib/payments";
-import { sendMagicLinkEmail } from "./lib/email";
 
 export const auth = betterAuth({
+  experimental: {
+    joins: true
+  },
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: schema,
+    usePlural: true,
   }),
   trustedOrigins: [env.CORS_ORIGIN, "driwet://", "exp://"],
+  session: {
+    expiresIn: 60 * 60 * 24 * 30, // 30 days
+    updateAge: 60 * 60 * 24, // Refresh session expiry every day when used
+  },
   emailAndPassword: {
-    enabled: false,
+    enabled: true,
+    minPasswordLength: 8,
   },
   socialProviders: {
     google: {
@@ -31,28 +39,8 @@ export const auth = betterAuth({
     },
   },
   plugins: [
-    magicLink({
-      sendMagicLink: async ({ email, url, token }) => {
-        // Check if the callback URL indicates a native app request
-        const parsedUrl = new URL(url);
-        const callbackURL = parsedUrl.searchParams.get("callbackURL") || "";
-        const isNativeApp = callbackURL.startsWith("/(app)") || callbackURL.includes("driwet://");
-
-        // For native apps, create a deep link URL
-        let finalUrl = url;
-        if (isNativeApp) {
-          // Replace the web callback with the native deep link
-          // The native app will handle driwet://auth/magic-link?token=...
-          const nativeDeepLink = `driwet://auth/magic-link?token=${token}`;
-          finalUrl = nativeDeepLink;
-        }
-
-        await sendMagicLinkEmail({
-          email,
-          url: finalUrl,
-          isNativeApp,
-        });
-      },
+    organization({
+      teams: { enabled: true },
     }),
     polar({
       client: polarClient,

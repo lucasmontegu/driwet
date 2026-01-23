@@ -7,18 +7,18 @@ import {
   pgEnum,
   index,
 } from "drizzle-orm/pg-core";
-import { user } from "./auth";
+import { users } from "./auth";
 
-// B2B organization plans
-export const orgPlanEnum = pgEnum("org_plan", [
+// B2B fleet plans
+export const fleetPlanEnum = pgEnum("fleet_plan", [
   "starter",
   "pro",
   "business",
   "enterprise",
 ]);
 
-// Organization member roles
-export const orgRoleEnum = pgEnum("org_role", ["owner", "admin", "viewer"]);
+// Fleet member roles
+export const fleetRoleEnum = pgEnum("fleet_role", ["owner", "admin", "viewer"]);
 
 // Vehicle status
 export const vehicleStatusEnum = pgEnum("vehicle_status", [
@@ -26,11 +26,11 @@ export const vehicleStatusEnum = pgEnum("vehicle_status", [
   "inactive",
 ]);
 
-// Organizations table (B2B customers)
-export const organization = pgTable("organization", {
+// Fleet table (B2B customers with vehicle fleets)
+export const fleet = pgTable("fleet", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
-  plan: orgPlanEnum("plan").default("starter").notNull(),
+  plan: fleetPlanEnum("plan").default("starter").notNull(),
   billingEmail: text("billing_email"),
   maxVehicles: integer("max_vehicles").default(25).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -40,24 +40,24 @@ export const organization = pgTable("organization", {
     .notNull(),
 });
 
-// Organization members (users belonging to an org)
-export const orgMember = pgTable(
-  "org_member",
+// Fleet members (users belonging to a fleet)
+export const fleetMember = pgTable(
+  "fleet_member",
   {
     id: text("id").primaryKey(),
-    organizationId: text("organization_id")
+    fleetId: text("fleet_id")
       .notNull()
-      .references(() => organization.id, { onDelete: "cascade" }),
+      .references(() => fleet.id, { onDelete: "cascade" }),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    role: orgRoleEnum("role").default("viewer").notNull(),
+      .references(() => users.id, { onDelete: "cascade" }),
+    role: fleetRoleEnum("role").default("viewer").notNull(),
     invitedAt: timestamp("invited_at").defaultNow().notNull(),
     joinedAt: timestamp("joined_at"),
   },
   (table) => [
-    index("org_member_org_idx").on(table.organizationId),
-    index("org_member_user_idx").on(table.userId),
+    index("fleet_member_fleet_idx").on(table.fleetId),
+    index("fleet_member_user_idx").on(table.userId),
   ],
 );
 
@@ -66,19 +66,19 @@ export const vehicle = pgTable(
   "vehicle",
   {
     id: text("id").primaryKey(),
-    organizationId: text("organization_id")
+    fleetId: text("fleet_id")
       .notNull()
-      .references(() => organization.id, { onDelete: "cascade" }),
+      .references(() => fleet.id, { onDelete: "cascade" }),
     plate: text("plate").notNull(),
     label: text("label"), // Optional friendly name (e.g., "Moto 15")
-    assignedUserId: text("assigned_user_id").references(() => user.id, {
+    assignedUserId: text("assigned_user_id").references(() => users.id, {
       onDelete: "set null",
     }),
     status: vehicleStatusEnum("status").default("active").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (table) => [
-    index("vehicle_org_idx").on(table.organizationId),
+    index("vehicle_fleet_idx").on(table.fleetId),
     index("vehicle_assigned_user_idx").on(table.assignedUserId),
   ],
 );
@@ -88,63 +88,63 @@ export const fleetAlertHistory = pgTable(
   "fleet_alert_history",
   {
     id: text("id").primaryKey(),
-    organizationId: text("organization_id")
+    fleetId: text("fleet_id")
       .notNull()
-      .references(() => organization.id, { onDelete: "cascade" }),
+      .references(() => fleet.id, { onDelete: "cascade" }),
     alertType: text("alert_type").notNull(),
     severity: text("severity").notNull(), // low, medium, high, extreme
     vehiclesAffected: integer("vehicles_affected").default(0).notNull(),
     managedAt: timestamp("managed_at"),
-    managedBy: text("managed_by").references(() => user.id, {
+    managedBy: text("managed_by").references(() => users.id, {
       onDelete: "set null",
     }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (table) => [
-    index("fleet_alert_org_idx").on(table.organizationId),
+    index("fleet_alert_fleet_idx").on(table.fleetId),
     index("fleet_alert_created_idx").on(table.createdAt),
   ],
 );
 
 // Relations
-export const organizationRelations = relations(organization, ({ many }) => ({
-  members: many(orgMember),
+export const fleetRelations = relations(fleet, ({ many }) => ({
+  members: many(fleetMember),
   vehicles: many(vehicle),
   alertHistory: many(fleetAlertHistory),
 }));
 
-export const orgMemberRelations = relations(orgMember, ({ one }) => ({
-  organization: one(organization, {
-    fields: [orgMember.organizationId],
-    references: [organization.id],
+export const fleetMemberRelations = relations(fleetMember, ({ one }) => ({
+  fleet: one(fleet, {
+    fields: [fleetMember.fleetId],
+    references: [fleet.id],
   }),
-  user: one(user, {
-    fields: [orgMember.userId],
-    references: [user.id],
+  user: one(users, {
+    fields: [fleetMember.userId],
+    references: [users.id],
   }),
 }));
 
 export const vehicleRelations = relations(vehicle, ({ one }) => ({
-  organization: one(organization, {
-    fields: [vehicle.organizationId],
-    references: [organization.id],
+  fleet: one(fleet, {
+    fields: [vehicle.fleetId],
+    references: [fleet.id],
   }),
-  assignedUser: one(user, {
+  assignedUser: one(users, {
     fields: [vehicle.assignedUserId],
-    references: [user.id],
+    references: [users.id],
   }),
 }));
 
 export const fleetAlertHistoryRelations = relations(
   fleetAlertHistory,
   ({ one }) => ({
-    organization: one(organization, {
-      fields: [fleetAlertHistory.organizationId],
-      references: [organization.id],
+    fleet: one(fleet, {
+      fields: [fleetAlertHistory.fleetId],
+      references: [fleet.id],
     }),
-    managedByUser: one(user, {
+    managedByUser: one(users, {
       fields: [fleetAlertHistory.managedBy],
-      references: [user.id],
+      references: [users.id],
     }),
   }),
 );

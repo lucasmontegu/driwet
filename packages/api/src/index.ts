@@ -7,6 +7,7 @@ export const o = os.$context<Context>();
 export const publicProcedure = o;
 
 const requireAuth = o.middleware(async ({ context, next }) => {
+  console.log("context.session", context.session);
   if (!context.session?.user) {
     throw new ORPCError("UNAUTHORIZED");
   }

@@ -1,5 +1,5 @@
 export * from "./auth";
-export * from "./organizations";
+export * from "./fleets";
 export * from "./push-tokens";
 export * from "./user-locations";
 export * from "./alert-history";

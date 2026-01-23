@@ -9,7 +9,7 @@ import {
   index,
   jsonb,
 } from "drizzle-orm/pg-core";
-import { user } from "./auth";
+import { users } from "./auth";
 import type { RoadRisk, WeatherSnapshot, TripAlert } from "./weather";
 
 // Saved routes (e.g., "Home to Work")
@@ -19,7 +19,7 @@ export const savedRoute = pgTable(
     id: text("id").primaryKey(),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     originName: text("origin_name").notNull(),
     originLatitude: numeric("origin_latitude", { precision: 10, scale: 7 }).notNull(),
@@ -38,9 +38,9 @@ export const savedRoute = pgTable(
 );
 
 export const savedRouteRelations = relations(savedRoute, ({ one, many }) => ({
-  user: one(user, {
+  user: one(users, {
     fields: [savedRoute.userId],
-    references: [user.id],
+    references: [users.id],
   }),
   trips: many(tripHistory),
 }));
@@ -55,7 +55,7 @@ export const tripHistory = pgTable(
     id: text("id").primaryKey(),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "cascade" }),
     savedRouteId: text("saved_route_id").references(() => savedRoute.id, { onDelete: "set null" }),
     originName: text("origin_name").notNull(),
     originLatitude: numeric("origin_latitude", { precision: 10, scale: 7 }).notNull(),
@@ -86,9 +86,9 @@ export const tripHistory = pgTable(
 );
 
 export const tripHistoryRelations = relations(tripHistory, ({ one }) => ({
-  user: one(user, {
+  user: one(users, {
     fields: [tripHistory.userId],
-    references: [user.id],
+    references: [users.id],
   }),
   savedRoute: one(savedRoute, {
     fields: [tripHistory.savedRouteId],

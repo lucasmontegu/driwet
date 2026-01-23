@@ -31,13 +31,21 @@ export const asyncStoragePersister = createAsyncStoragePersister({
 // oRPC link with auth cookie forwarding
 const link = new RPCLink({
   url: `${env.EXPO_PUBLIC_SERVER_URL}/api/rpc`,
-  headers() {
-    const headers = new Map<string, string>();
-    const cookies = authClient.getCookie();
-    if (cookies) {
-      headers.set('Cookie', cookies);
+  credentials: 'omit', // Required when manually setting Cookie header
+  headers: async () => {
+    let cookies = authClient.getCookie();
+    if (__DEV__) {
+      console.log('[API] Raw cookie:', cookies);
     }
-    return Object.fromEntries(headers);
+    if (cookies) {
+      // Clean up malformed cookie - remove leading "; " if present
+      cookies = cookies.replace(/^;\s*/, '');
+      if (__DEV__) {
+        console.log('[API] Cleaned cookie:', cookies.substring(0, 80) + '...');
+      }
+      return { Cookie: cookies };
+    }
+    return {};
   },
 });
 

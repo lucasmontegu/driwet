@@ -1,7 +1,5 @@
-// biome-ignore assist/source/organizeImports: <explanation>
 import { env } from "@driwet/env/mobile";
 import { expoClient } from "@better-auth/expo/client";
-import { magicLinkClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
@@ -14,6 +12,5 @@ export const authClient = createAuthClient({
       storagePrefix: Constants.expoConfig?.scheme as string,
       storage: SecureStore,
     }),
-    magicLinkClient(),
   ],
 });

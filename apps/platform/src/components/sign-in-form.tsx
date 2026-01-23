@@ -17,25 +17,31 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () 
   const { isPending } = authClient.useSession();
 
   const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState<'magic' | 'google' | 'apple' | null>(null);
-  const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState<'email' | 'google' | 'apple' | null>(null);
 
-  const handleMagicLink = async () => {
-    if (!email.trim()) {
-      toast.error(t('auth.enterEmailError'));
+  const handleEmailSignIn = async () => {
+    if (!email.trim() || !password) {
+      toast.error(t('auth.fillAllFields'));
       return;
     }
 
-    setIsLoading('magic');
+    setIsLoading('email');
     try {
-      await authClient.signIn.magicLink({
+      const result = await authClient.signIn.email({
         email: email.trim(),
-        callbackURL: '/dashboard',
+        password,
       });
-      setMagicLinkSent(true);
-      toast.success(t('auth.magicLinkSent'));
+
+      if (result.error) {
+        toast.error(result.error.message || t('auth.signInError'));
+        return;
+      }
+
+      toast.success(t('web.auth.signInSuccess'));
+      router.push('/dashboard');
     } catch (error) {
-      toast.error(t('auth.sendError'));
+      toast.error(t('auth.signInError'));
     } finally {
       setIsLoading(null);
     }
@@ -69,27 +75,6 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () 
 
   if (isPending) {
     return <Loader />;
-  }
-
-  if (magicLinkSent) {
-    return (
-      <div className="mx-auto w-full mt-10 max-w-md p-6 text-center">
-        <div className="mb-6">
-          <svg className="mx-auto h-16 w-16 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-        </div>
-        <h1 className="mb-4 text-2xl font-bold">{t('auth.checkEmail')}</h1>
-        <p className="text-muted-foreground mb-2">{t('auth.magicLinkSent')}</p>
-        <p className="font-semibold mb-6">{email}</p>
-        <Button
-          variant="outline"
-          onClick={() => setMagicLinkSent(false)}
-        >
-          {t('auth.useAnotherEmail')}
-        </Button>
-      </div>
-    );
   }
 
   return (
@@ -136,7 +121,7 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () 
         </div>
       </div>
 
-      {/* Magic link form */}
+      {/* Email/Password form */}
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">{t('web.auth.email')}</Label>
@@ -149,12 +134,23 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () 
           />
         </div>
 
+        <div className="space-y-2">
+          <Label htmlFor="password">{t('web.auth.password')}</Label>
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder={t('auth.passwordPlaceholder')}
+          />
+        </div>
+
         <Button
           className="w-full"
-          onClick={handleMagicLink}
+          onClick={handleEmailSignIn}
           disabled={isLoading !== null}
         >
-          {isLoading === 'magic' ? t('auth.sending') : t('auth.sendMagicLink')}
+          {isLoading === 'email' ? t('web.auth.signingIn') : t('web.auth.signIn')}
         </Button>
       </div>
 
