@@ -6,11 +6,11 @@ export const env = createEnv({
   server: {
     DATABASE_URL: z.string().min(1),
     BETTER_AUTH_SECRET: z.string().min(32),
-    BETTER_AUTH_URL: z.url(),
+    BETTER_AUTH_URL: z.string().url(),
     POLAR_ACCESS_TOKEN: z.string().min(1),
     POLAR_MONTHLY_PRODUCT_ID: z.string().min(1),
     POLAR_YEARLY_PRODUCT_ID: z.string().min(1),
-    CORS_ORIGIN: z.url(),
+    CORS_ORIGIN: z.string().url(),
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
     // Social auth providers
     GOOGLE_CLIENT_ID: z.string().min(1),
