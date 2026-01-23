@@ -1,7 +1,7 @@
 // apps/native/app/(app)/(tabs)/profile.tsx
 import { View, Text, Pressable, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { useTrialStore } from '@/stores/trial-store';
 import { authClient } from '@/lib/auth-client';
@@ -12,7 +12,7 @@ import { useUserProfile, useUserStats } from '@/hooks/use-api';
 type SettingItem = {
   icon: IconName;
   labelKey: string;
-  route: string | null;
+  route: Href | null;
   valueKey?: string;
 };
 
@@ -28,11 +28,11 @@ export default function ProfileScreen() {
   const { data: stats, isLoading: statsLoading } = useUserStats();
 
   const settings: SettingItem[] = [
-    { icon: 'notification', labelKey: 'profile.notifications', route: '/(app)/notifications' },
-    { icon: 'location', labelKey: 'profile.savedLocations', route: '/(app)/locations' },
+    { icon: 'notification', labelKey: 'profile.notifications', route: '/notifications' },
+    { icon: 'location', labelKey: 'profile.savedLocations', route: '/locations' },
     { icon: 'theme', labelKey: 'profile.theme', route: null, valueKey: 'profile.themeAuto' },
     { icon: 'language', labelKey: 'profile.language', route: null, valueKey: 'profile.languageSpanish' },
-    { icon: 'help', labelKey: 'profile.help', route: '/(app)/help' },
+    { icon: 'help', labelKey: 'profile.help', route: null },
   ];
 
   const handleLogout = async () => {
@@ -44,9 +44,9 @@ export default function ProfileScreen() {
     router.push('/(app)/premium');
   };
 
-  const handleSettingPress = (route: string | null) => {
+  const handleSettingPress = (route: Href | null) => {
     if (route) {
-      router.push(route as any);
+      router.push(route);
     }
   };
 

@@ -51,7 +51,11 @@ export default function MapScreen() {
     : null;
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View
+      style={{ flex: 1, backgroundColor: colors.background }}
+      accessible={false}
+      accessibilityLabel={t('map.screenLabel')}
+    >
       {/* Header */}
       <SafeAreaView edges={['top']} style={{ backgroundColor: colors.card }}>
         <View
@@ -62,6 +66,7 @@ export default function MapScreen() {
             paddingHorizontal: 16,
             paddingVertical: 12,
           }}
+          accessibilityRole="header"
         >
           <Text
             style={{
@@ -69,10 +74,17 @@ export default function MapScreen() {
               fontSize: 20,
               color: colors.foreground,
             }}
+            accessibilityRole="header"
+            accessibilityLabel="Driwet"
           >
             Driwet
           </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <View
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}
+            accessible={true}
+            accessibilityRole="text"
+            accessibilityLabel={t('map.myZone')}
+          >
             <Icon name="location" size={16} color={colors.mutedForeground} />
             <Text
               style={{
@@ -101,11 +113,20 @@ export default function MapScreen() {
       )}
 
       {/* Map */}
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1 }} accessibilityLabel={t('map.mapArea')}>
         <MapViewComponent alerts={alerts} />
-        
+
         {/* Weather Card - Floating over map */}
-        <View style={styles.weatherCardContainer}>
+        <View
+          style={styles.weatherCardContainer}
+          accessible={true}
+          accessibilityRole="summary"
+          accessibilityLabel={
+            weatherData?.data
+              ? `${t('weather.temperature')}: ${Math.round(weatherData.data.temperature)}°C, ${t('weather.risk')}: ${weatherData.data.roadRisk}`
+              : t('weather.loading')
+          }
+        >
           <WeatherOverlay
             weather={weatherData?.data ? {
               temperature: weatherData.data.temperature,

@@ -8,7 +8,8 @@
     "error": "Error",
     "retry": "Retry",
     "or": "or",
-    "back": "Back"
+    "back": "Back",
+    "to": "to"
   },
   "welcome": {
     "tagline": "Your climate co-pilot",
@@ -58,6 +59,8 @@
   },
   "map": {
     "myZone": "My zone",
+    "screenLabel": "Weather map screen",
+    "mapArea": "Interactive weather map",
     "chatPlaceholder": "Type a message...",
     "chatPrompt": "Where are you going today?",
     "suggestions": {
@@ -105,7 +108,11 @@
     "riskExtreme": "Danger - avoid if possible",
     "distance": "{{km}} km",
     "duration": "{{min}} min",
-    "refreshWeather": "Refresh weather"
+    "refreshWeather": "Refresh weather",
+    "tapToViewDetails": "Tap to view route details",
+    "addNewHint": "Create a new saved route",
+    "removeFavorite": "Remove from favorites",
+    "addFavorite": "Add to favorites"
   },
   "profile": {
     "title": "Profile",
@@ -235,6 +242,9 @@
     "distanceAway": "{{distance}} km away",
     "roadConditions": "Road conditions",
     "viewShelters": "View shelters",
-    "alternateRoute": "Find alternate route"
+    "alternateRoute": "Find alternate route",
+    "temperature": "Temperature",
+    "risk": "Risk level",
+    "loading": "Loading weather data"
   }
 }

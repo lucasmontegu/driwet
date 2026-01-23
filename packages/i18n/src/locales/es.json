@@ -8,7 +8,8 @@
     "error": "Error",
     "retry": "Reintentar",
     "or": "o",
-    "back": "Volver"
+    "back": "Volver",
+    "to": "a"
   },
   "welcome": {
     "tagline": "Tu co-piloto climático",
@@ -58,6 +59,8 @@
   },
   "map": {
     "myZone": "Mi zona",
+    "screenLabel": "Pantalla del mapa del clima",
+    "mapArea": "Mapa interactivo del clima",
     "chatPlaceholder": "Escribe un mensaje...",
     "chatPrompt": "¿A dónde vas hoy?",
     "suggestions": {
@@ -105,7 +108,11 @@
     "riskExtreme": "Peligro - evitar si es posible",
     "distance": "{{km}} km",
     "duration": "{{min}} min",
-    "refreshWeather": "Actualizar clima"
+    "refreshWeather": "Actualizar clima",
+    "tapToViewDetails": "Toca para ver detalles de la ruta",
+    "addNewHint": "Crear una nueva ruta guardada",
+    "removeFavorite": "Quitar de favoritos",
+    "addFavorite": "Agregar a favoritos"
   },
   "profile": {
     "title": "Perfil",
@@ -235,6 +242,9 @@
     "distanceAway": "a {{distance}} km",
     "roadConditions": "Condiciones viales",
     "viewShelters": "Ver refugios",
-    "alternateRoute": "Buscar ruta alternativa"
+    "alternateRoute": "Buscar ruta alternativa",
+    "temperature": "Temperatura",
+    "risk": "Nivel de riesgo",
+    "loading": "Cargando datos del clima"
   }
 }

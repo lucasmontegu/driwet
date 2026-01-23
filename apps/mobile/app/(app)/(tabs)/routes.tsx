@@ -21,7 +21,7 @@ export default function RoutesScreen() {
 
   const handleAddRoute = () => {
     requireAuth(() => {
-      router.push('/add-route' as any);
+      router.push('/add-route');
     });
   };
 
@@ -57,6 +57,7 @@ export default function RoutesScreen() {
             color: colors.foreground,
             marginBottom: 24,
           }}
+          accessibilityRole="header"
         >
           {t('routes.title')}
         </Text>
@@ -69,10 +70,7 @@ export default function RoutesScreen() {
             {savedRoutes?.map((route) => (
               <Pressable
                 key={route.id}
-                onPress={() => router.push({
-                  pathname: '/route-detail',
-                  params: { id: route.id },
-                } as any)}
+                onPress={() => router.push(`/route-detail?id=${route.id}`)}
                 style={{
                   backgroundColor: colors.card,
                   borderRadius: 12,
@@ -80,6 +78,9 @@ export default function RoutesScreen() {
                   borderWidth: 1,
                   borderColor: route.isFavorite ? colors.primary : colors.border,
                 }}
+                accessibilityRole="button"
+                accessibilityLabel={`${route.name}: ${route.originName} ${t('common.to')} ${route.destinationName}`}
+                accessibilityHint={t('routes.tapToViewDetails')}
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
                   <Icon name="location" size={18} color={colors.foreground} />
@@ -97,6 +98,8 @@ export default function RoutesScreen() {
                   <Pressable
                     onPress={() => toggleFavorite.mutate(route.id)}
                     style={{ padding: 4 }}
+                    accessibilityRole="button"
+                    accessibilityLabel={route.isFavorite ? t('routes.removeFavorite') : t('routes.addFavorite')}
                   >
                     <Icon
                       name="star"
@@ -136,6 +139,9 @@ export default function RoutesScreen() {
                 justifyContent: 'center',
                 gap: 8,
               }}
+              accessibilityRole="button"
+              accessibilityLabel={t('routes.addNew')}
+              accessibilityHint={t('routes.addNewHint')}
             >
               <Icon name="route" size={18} color={colors.primary} />
               <Text
@@ -158,6 +164,7 @@ export default function RoutesScreen() {
             color: colors.foreground,
             marginBottom: 16,
           }}
+          accessibilityRole="header"
         >
           {t('routes.history')}
         </Text>
@@ -174,6 +181,9 @@ export default function RoutesScreen() {
                   alignItems: 'flex-start',
                   gap: 12,
                 }}
+                accessible={true}
+                accessibilityRole="text"
+                accessibilityLabel={`${formatDate(trip.startedAt)}: ${getOutcomeText(trip.outcome)}, ${trip.originName} ${t('common.to')} ${trip.destinationName}`}
               >
                 <View
                   style={{

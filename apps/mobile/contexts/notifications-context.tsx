@@ -1,6 +1,6 @@
 // apps/mobile/contexts/notifications-context.tsx
 import React, { createContext, useContext, useCallback, useEffect, useState, type ReactNode } from 'react';
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
 import {
   useNotifications,
   useNotificationResponse,
@@ -68,35 +68,23 @@ export function NotificationsProvider({ children }: NotificationsProviderProps) 
             const alertData = data as WeatherAlertNotification;
             // Navigate to map centered on alert location
             if (alertData.latitude && alertData.longitude) {
-              router.push({
-                pathname: '/(app)/(tabs)/',
-                params: {
-                  lat: alertData.latitude.toString(),
-                  lng: alertData.longitude.toString(),
-                  alertId: alertData.alertId,
-                },
-              } as any);
+              const mapUrl = `/?lat=${alertData.latitude}&lng=${alertData.longitude}&alertId=${alertData.alertId}` as Href;
+              router.push(mapUrl);
             } else {
-              router.push('/(app)/(tabs)' as any);
+              router.push('/');
             }
             break;
 
           case 'shelter_suggestion':
             const shelterData = data as ShelterNotification;
             // Navigate to map with shelter highlighted
-            router.push({
-              pathname: '/(app)/(tabs)',
-              params: {
-                lat: shelterData.latitude.toString(),
-                lng: shelterData.longitude.toString(),
-                showShelters: 'true',
-              },
-            } as any);
+            const shelterUrl = `/?lat=${shelterData.latitude}&lng=${shelterData.longitude}&showShelters=true` as Href;
+            router.push(shelterUrl);
             break;
 
           default:
             // Default: go to home
-            router.push('/(app)/(tabs)' as any);
+            router.push('/');
         }
       }
     },
@@ -123,16 +111,22 @@ export function NotificationsProvider({ children }: NotificationsProviderProps) 
 
   // Track incoming notifications for unread count
   useEffect(() => {
+    let subscription: { remove: () => void } | null = null;
+    let isMounted = true;
+
     // Import dynamically to avoid circular deps
     import('expo-notifications').then((Notifications) => {
-      const subscription = Notifications.addNotificationReceivedListener(() => {
+      if (!isMounted) return;
+
+      subscription = Notifications.addNotificationReceivedListener(() => {
         setUnreadCount((prev) => prev + 1);
       });
-
-      return () => {
-        subscription.remove();
-      };
     });
+
+    return () => {
+      isMounted = false;
+      subscription?.remove();
+    };
   }, []);
 
   const value: NotificationsContextValue = {

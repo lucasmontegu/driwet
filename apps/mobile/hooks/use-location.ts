@@ -1,5 +1,5 @@
 import * as Location from "expo-location";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useTranslation } from "@/lib/i18n";
 
 export type LocationState = {
@@ -24,18 +24,25 @@ export function useLocation() {
 
   const { t } = useTranslation();
 
+  // Use ref to avoid restarting location tracking when t changes
+  const tRef = useRef(t);
+  tRef.current = t;
+
   useEffect(() => {
     let locationSubscription: Location.LocationSubscription | null = null;
+    let isMounted = true;
 
     async function startLocationTracking() {
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
+        if (!isMounted) return;
+
         setPermissionStatus(status);
 
         if (status !== "granted") {
           setError({
             code: "PERMISSION_DENIED",
-            message: t("location.permissionDenied"),
+            message: tRef.current("location.permissionDenied"),
           });
           setIsLoading(false);
           return;
@@ -45,6 +52,8 @@ export function useLocation() {
         const initialLocation = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.Balanced,
         });
+
+        if (!isMounted) return;
 
         setLocation({
           latitude: initialLocation.coords.latitude,
@@ -63,6 +72,7 @@ export function useLocation() {
             distanceInterval: 10,
           },
           (newLocation) => {
+            if (!isMounted) return;
             setLocation({
               latitude: newLocation.coords.latitude,
               longitude: newLocation.coords.longitude,
@@ -73,10 +83,11 @@ export function useLocation() {
           }
         );
       } catch (err) {
+        if (!isMounted) return;
         setError({
           code: "LOCATION_ERROR",
           message:
-            err instanceof Error ? err.message : t("location.error"),
+            err instanceof Error ? err.message : tRef.current("location.error"),
         });
         setIsLoading(false);
       }
@@ -85,9 +96,8 @@ export function useLocation() {
     startLocationTracking();
 
     return () => {
-      if (locationSubscription) {
-        locationSubscription.remove();
-      }
+      isMounted = false;
+      locationSubscription?.remove();
     };
   }, []);
 
