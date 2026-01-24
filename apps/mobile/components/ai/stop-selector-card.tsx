@@ -1,9 +1,10 @@
 // apps/mobile/components/ai/stop-selector-card.tsx
 import { useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Pressable, Linking, Platform } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Animated, { FadeIn, FadeOut, Layout } from 'react-native-reanimated';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { Icon } from '@/components/icons';
+import { buildNavigationURL, safeOpenURL, sanitizeCoordinates } from '@/lib/url-security';
 
 export type SafeStop = {
   id: string;
@@ -57,26 +58,30 @@ function StopItem({
     }
   };
 
-  const openNavigation = useCallback(() => {
-    // Open in Waze or Google Maps
-    const wazeUrl = `https://waze.com/ul?ll=${stop.lat},${stop.lng}&navigate=yes`;
-    const googleMapsUrl = Platform.select({
-      ios: `comgooglemaps://?daddr=${stop.lat},${stop.lng}&directionsmode=driving`,
-      android: `google.navigation:q=${stop.lat},${stop.lng}`,
-    });
+  const openNavigation = useCallback(async () => {
+    // Validate coordinates before building URLs
+    const coords = sanitizeCoordinates(stop.lat, stop.lng);
+    if (!coords) {
+      console.error('[Security] Invalid coordinates for navigation');
+      return;
+    }
 
-    // Try Waze first, then Google Maps, then web fallback
-    Linking.canOpenURL(wazeUrl).then((canOpen) => {
-      if (canOpen) {
-        Linking.openURL(wazeUrl);
-      } else if (googleMapsUrl) {
-        Linking.openURL(googleMapsUrl).catch(() => {
-          Linking.openURL(`https://maps.google.com/maps?daddr=${stop.lat},${stop.lng}`);
-        });
-      }
-    });
+    // Build validated navigation URLs
+    const wazeUrl = buildNavigationURL('waze', coords.latitude, coords.longitude);
+    const googleUrl = buildNavigationURL('google', coords.latitude, coords.longitude);
 
-    onNavigate();
+    // Try Waze first, then Google Maps
+    if (wazeUrl && await safeOpenURL(wazeUrl)) {
+      onNavigate();
+      return;
+    }
+
+    if (googleUrl && await safeOpenURL(googleUrl)) {
+      onNavigate();
+      return;
+    }
+
+    console.warn('[Navigation] Could not open any navigation app');
   }, [stop, onNavigate]);
 
   return (

@@ -9,6 +9,7 @@ import {
   type WeatherAlertNotification,
   type ShelterNotification,
 } from '@/hooks/use-notifications';
+import { sanitizeCoordinates, isValidId } from '@/lib/url-security';
 
 // ============ Types ============
 
@@ -64,33 +65,48 @@ export function NotificationsProvider({ children }: NotificationsProviderProps) 
       // Handle navigation based on notification type
       if ('type' in data) {
         switch (data.type) {
-          case 'weather_alert':
+          case 'weather_alert': {
             const alertData = data as WeatherAlertNotification;
-            // Navigate to map centered on alert location
-            if (alertData.latitude && alertData.longitude) {
-              const mapUrl = `/?lat=${alertData.latitude}&lng=${alertData.longitude}&alertId=${alertData.alertId}` as Href;
+            // Validate coordinates and alertId before constructing URL
+            const alertCoords = sanitizeCoordinates(alertData.latitude, alertData.longitude);
+            const validAlertId = isValidId(alertData.alertId) ? alertData.alertId : null;
+
+            if (alertCoords && validAlertId) {
+              const mapUrl = `/?lat=${alertCoords.latitude}&lng=${alertCoords.longitude}&alertId=${validAlertId}` as Href;
               router.push(mapUrl);
             } else {
+              // Invalid data, navigate to home
               router.push('/');
             }
             break;
+          }
 
-          case 'shelter_suggestion':
+          case 'shelter_suggestion': {
             const shelterData = data as ShelterNotification;
-            // Navigate to map with shelter highlighted
-            const shelterUrl = `/?lat=${shelterData.latitude}&lng=${shelterData.longitude}&showShelters=true` as Href;
-            router.push(shelterUrl);
-            break;
+            // Validate coordinates before constructing URL
+            const shelterCoords = sanitizeCoordinates(shelterData.latitude, shelterData.longitude);
 
-          case 'scheduled_trip':
+            if (shelterCoords) {
+              const shelterUrl = `/?lat=${shelterCoords.latitude}&lng=${shelterCoords.longitude}&showShelters=true` as Href;
+              router.push(shelterUrl);
+            } else {
+              // Invalid data, navigate to home
+              router.push('/');
+            }
+            break;
+          }
+
+          case 'scheduled_trip': {
             // Navigate to route details for scheduled trip
             const tripData = data as { tripId?: string; routeId?: string };
-            if (tripData.routeId) {
+            // Validate routeId before using in URL
+            if (tripData.routeId && isValidId(tripData.routeId)) {
               router.push(`/route-detail?id=${tripData.routeId}` as Href);
             } else {
               router.push('/routes' as Href);
             }
             break;
+          }
 
           default:
             // Default: go to home

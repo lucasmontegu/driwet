@@ -70,7 +70,15 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, async ({ data, error }: { data:
     return; // No active route, no need to check weather
   }
 
-  const activeRoute: ActiveRoute = JSON.parse(activeRouteJson);
+  let activeRoute: ActiveRoute;
+  try {
+    activeRoute = JSON.parse(activeRouteJson);
+  } catch (error) {
+    console.error('[Security] Failed to parse active route JSON:', error);
+    // Clear corrupted data
+    await AsyncStorage.removeItem(ACTIVE_ROUTE_KEY);
+    return;
+  }
 
   // Check if enough time has passed since last alert check
   const lastCheckJson = await AsyncStorage.getItem(LAST_ALERT_CHECK_KEY);
@@ -260,7 +268,16 @@ export async function clearActiveRoute(): Promise<void> {
  */
 export async function getActiveRoute(): Promise<ActiveRoute | null> {
   const json = await AsyncStorage.getItem(ACTIVE_ROUTE_KEY);
-  return json ? JSON.parse(json) : null;
+  if (!json) return null;
+
+  try {
+    return JSON.parse(json);
+  } catch (error) {
+    console.error('[Security] Failed to parse active route JSON:', error);
+    // Clear corrupted data
+    await AsyncStorage.removeItem(ACTIVE_ROUTE_KEY);
+    return null;
+  }
 }
 
 /**
@@ -268,5 +285,14 @@ export async function getActiveRoute(): Promise<ActiveRoute | null> {
  */
 export async function getLastBackgroundLocation(): Promise<StoredLocation | null> {
   const json = await AsyncStorage.getItem(LOCATION_STORAGE_KEY);
-  return json ? JSON.parse(json) : null;
+  if (!json) return null;
+
+  try {
+    return JSON.parse(json);
+  } catch (error) {
+    console.error('[Security] Failed to parse stored location JSON:', error);
+    // Clear corrupted data
+    await AsyncStorage.removeItem(LOCATION_STORAGE_KEY);
+    return null;
+  }
 }

@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet, Pressable, FlatList, Linking } from 'react-native';
+import { View, Text, StyleSheet, Pressable, FlatList } from 'react-native';
 import { useThemeColors } from '@/hooks/use-theme-colors';
 import { Icon, type IconName } from '@/components/icons';
 import { useTranslation } from '@/lib/i18n';
+import { buildNavigationURL, safeOpenURL, sanitizeCoordinates } from '@/lib/url-security';
 
 type PlaceType = 'gas_station' | 'rest_area' | 'town';
 
@@ -51,9 +52,18 @@ function PlaceItem({
   const { t } = useTranslation();
   const config = PLACE_TYPE_CONFIG[place.type];
 
-  const openInMaps = () => {
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`;
-    Linking.openURL(url);
+  const openInMaps = async () => {
+    // Validate coordinates before building URL
+    const coords = sanitizeCoordinates(place.latitude, place.longitude);
+    if (!coords) {
+      console.error('[Security] Invalid place coordinates');
+      return;
+    }
+
+    const url = buildNavigationURL('google', coords.latitude, coords.longitude);
+    if (url) {
+      await safeOpenURL(url);
+    }
   };
 
   return (

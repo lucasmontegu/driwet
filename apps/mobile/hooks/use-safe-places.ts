@@ -1,8 +1,9 @@
 // apps/mobile/hooks/use-safe-places.ts
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { api } from '@/lib/query-client';
-import { Linking, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import { Analytics } from '@/lib/analytics';
+import { buildNavigationURL, safeOpenURL, sanitizeCoordinates } from '@/lib/url-security';
 
 // ============ Safe Places Types ============
 
@@ -84,24 +85,26 @@ export async function navigateToPlace(
   place: SafePlace,
   preferredApp: 'waze' | 'google' | 'apple' = 'waze'
 ): Promise<boolean> {
-  const { latitude, longitude, name } = place;
+  const { latitude, longitude } = place;
 
-  const urls = {
-    waze: `https://waze.com/ul?ll=${latitude},${longitude}&navigate=yes&z=10`,
-    google: `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}&travelmode=driving`,
-    apple: `maps://maps.apple.com/?daddr=${latitude},${longitude}&dirflg=d`,
+  // Validate coordinates before building URLs
+  const coords = sanitizeCoordinates(latitude, longitude);
+  if (!coords) {
+    console.error('[Security] Invalid coordinates for navigation');
+    return false;
+  }
+
+  // Build validated URLs
+  const urls: Record<'waze' | 'google' | 'apple', string | null> = {
+    waze: buildNavigationURL('waze', coords.latitude, coords.longitude),
+    google: buildNavigationURL('google', coords.latitude, coords.longitude),
+    apple: buildNavigationURL('apple', coords.latitude, coords.longitude),
   };
 
   // Try preferred app first
   const preferredUrl = urls[preferredApp];
-  try {
-    const canOpen = await Linking.canOpenURL(preferredUrl);
-    if (canOpen) {
-      await Linking.openURL(preferredUrl);
-      return true;
-    }
-  } catch {
-    // Continue to fallback
+  if (preferredUrl && await safeOpenURL(preferredUrl)) {
+    return true;
   }
 
   // Fallback order: Waze -> Google -> Apple (or Google on Android)
@@ -112,25 +115,19 @@ export async function navigateToPlace(
 
   for (const app of fallbackOrder) {
     if (app === preferredApp) continue; // Already tried
-    try {
-      const url = urls[app];
-      const canOpen = await Linking.canOpenURL(url);
-      if (canOpen) {
-        await Linking.openURL(url);
-        return true;
-      }
-    } catch {
-      // Continue to next
+    const url = urls[app];
+    if (url && await safeOpenURL(url)) {
+      return true;
     }
   }
 
-  // Last resort: open in browser
-  try {
-    await Linking.openURL(urls.google);
-    return true;
-  } catch {
-    return false;
+  // Last resort: try Google Maps web
+  const googleUrl = urls.google;
+  if (googleUrl) {
+    return await safeOpenURL(googleUrl);
   }
+
+  return false;
 }
 
 /**

@@ -5,9 +5,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Linking,
   Alert,
 } from 'react-native';
+import { buildNavigationURL, safeOpenURL, sanitizeCoordinates } from '@/lib/url-security';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import Animated, {
   useAnimatedStyle,
@@ -137,30 +137,57 @@ export function SuggestionsSheet({
     });
   }, []);
 
-  const openInGoogleMaps = useCallback(() => {
+  const openInGoogleMaps = useCallback(async () => {
     if (!origin || !destination) return;
 
-    // Build waypoints from selected stops
-    const waypoints = stops
-      .filter((stop) => selectedStops.has(stop.id))
-      .map((stop) => `${stop.name}`)
-      .join('|');
-
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin.name)}&destination=${encodeURIComponent(destination.name)}${waypoints ? `&waypoints=${encodeURIComponent(waypoints)}` : ''}&travelmode=driving`;
-
-    Linking.openURL(url).catch(() => {
+    // Validate destination coordinates
+    const destCoords = sanitizeCoordinates(
+      destination.coordinates.latitude,
+      destination.coordinates.longitude
+    );
+    if (!destCoords) {
+      console.error('[Security] Invalid destination coordinates');
       Alert.alert('Error', 'No se pudo abrir Google Maps');
-    });
-  }, [origin, destination, stops, selectedStops]);
+      return;
+    }
 
-  const openInWaze = useCallback(() => {
+    // Build validated URL
+    const url = buildNavigationURL('google', destCoords.latitude, destCoords.longitude);
+    if (!url) {
+      Alert.alert('Error', 'No se pudo abrir Google Maps');
+      return;
+    }
+
+    const opened = await safeOpenURL(url);
+    if (!opened) {
+      Alert.alert('Error', 'No se pudo abrir Google Maps');
+    }
+  }, [destination]);
+
+  const openInWaze = useCallback(async () => {
     if (!destination) return;
 
-    const url = `https://waze.com/ul?ll=${destination.coordinates.latitude},${destination.coordinates.longitude}&navigate=yes`;
-
-    Linking.openURL(url).catch(() => {
+    // Validate coordinates before building URL
+    const coords = sanitizeCoordinates(
+      destination.coordinates.latitude,
+      destination.coordinates.longitude
+    );
+    if (!coords) {
+      console.error('[Security] Invalid destination coordinates');
       Alert.alert('Error', 'No se pudo abrir Waze');
-    });
+      return;
+    }
+
+    const url = buildNavigationURL('waze', coords.latitude, coords.longitude);
+    if (!url) {
+      Alert.alert('Error', 'No se pudo abrir Waze');
+      return;
+    }
+
+    const opened = await safeOpenURL(url);
+    if (!opened) {
+      Alert.alert('Error', 'No se pudo abrir Waze');
+    }
   }, [destination]);
 
   const formatDuration = (minutes: number) => {
