@@ -293,16 +293,16 @@ export const weatherFactory = {
 		segments.sort((a, b) => a.km - b.km);
 
 		// Calculate overall risk
-		const riskPriority: Record<string, number> = {
+		type Risk = "low" | "moderate" | "high" | "extreme";
+		const riskPriority: Record<Risk, number> = {
 			low: 0,
 			moderate: 1,
 			high: 2,
 			extreme: 3,
 		};
-		type Risk = "low" | "moderate" | "high" | "extreme";
 		const overallRisk = segments.reduce<Risk>(
 			(highest, s) =>
-				riskPriority[s.weather.roadRisk] > riskPriority[highest]
+				(riskPriority[s.weather.roadRisk] ?? 0) > (riskPriority[highest] ?? 0)
 					? s.weather.roadRisk
 					: highest,
 			"low",

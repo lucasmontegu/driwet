@@ -16,7 +16,7 @@ import {
 } from "./utils";
 
 const OPENWEATHER_API_BASE = "https://api.openweathermap.org/data/2.5";
-const OPENWEATHER_API_3 = "https://api.openweathermap.org/data/3.0";
+// const OPENWEATHER_API_3 = "https://api.openweathermap.org/data/3.0"; // Reserved for future use
 
 // OpenWeather free tier: 1000 calls/day
 const DAILY_LIMIT = 1000;
