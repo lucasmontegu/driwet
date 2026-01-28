@@ -6,7 +6,7 @@ import Mapbox, {
 	MapView as RNMapView,
 	UserTrackingMode,
 } from "@rnmapbox/maps";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
 	ActivityIndicator,
 	type LayoutChangeEvent,
@@ -44,8 +44,6 @@ type MapViewProps = {
 	origin?: { latitude: number; longitude: number };
 	/** Route geometry from Directions API (coordinates array [lng, lat][]) */
 	routeGeometry?: [number, number][];
-	/** Whether to show weather radar overlay */
-	showWeatherRadar?: boolean;
 	/** Callback when map is ready */
 	onMapReady?: () => void;
 };
@@ -74,47 +72,12 @@ export function MapViewComponent({
 	destination,
 	origin,
 	routeGeometry,
-	showWeatherRadar = true,
 	onMapReady,
 }: MapViewProps) {
 	const { location } = useLocation();
 	const colors = useThemeColors();
 	const [mapLoaded, setMapLoaded] = useState(false);
 	const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-	const [radarTimestamp, setRadarTimestamp] = useState<string | null>(null);
-
-	// Fetch latest radar timestamp from RainViewer API
-	useEffect(() => {
-		const fetchRadarTimestamp = async () => {
-			try {
-				const response = await fetch(
-					"https://api.rainviewer.com/public/weather-maps.json",
-				);
-				const data = await response.json();
-				if (data.radar?.past?.length > 0) {
-					// Get the most recent radar frame
-					const latestFrame = data.radar.past[data.radar.past.length - 1];
-					setRadarTimestamp(latestFrame.path);
-				}
-			} catch (error) {
-				console.error("Error fetching radar timestamp:", error);
-			}
-		};
-
-		if (showWeatherRadar) {
-			fetchRadarTimestamp();
-			// Refresh every 5 minutes
-			const interval = setInterval(fetchRadarTimestamp, 5 * 60 * 1000);
-			return () => clearInterval(interval);
-		}
-	}, [showWeatherRadar]);
-
-	// RainViewer radar tile URL
-	const radarTileUrl = useMemo(() => {
-		if (!radarTimestamp) return null;
-		// RainViewer tile URL format with transparency and color scheme
-		return `https://tilecache.rainviewer.com${radarTimestamp}/256/{z}/{x}/{y}/4/1_1.png`;
-	}, [radarTimestamp]);
 
 	const initialCenter = location
 		? [location.longitude, location.latitude]
@@ -212,25 +175,6 @@ export function MapViewComponent({
 							animationMode="flyTo"
 							animationDuration={1000}
 						/>
-					)}
-
-					{/* Weather Radar Layer */}
-					{showWeatherRadar && radarTileUrl && (
-						<Mapbox.RasterSource
-							id="rainviewer-source"
-							tileUrlTemplates={[radarTileUrl]}
-							tileSize={256}
-							minZoomLevel={1}
-							maxZoomLevel={10}
-						>
-							<Mapbox.RasterLayer
-								id="rainviewer-layer"
-								sourceID="rainviewer-source"
-								style={{
-									rasterOpacity: 0.7,
-								}}
-							/>
-						</Mapbox.RasterSource>
 					)}
 
 					{/* User location puck */}
