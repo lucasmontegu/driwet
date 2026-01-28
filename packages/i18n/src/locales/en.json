@@ -55,7 +55,8 @@
 	"tabs": {
 		"map": "Map",
 		"routes": "Routes",
-		"profile": "Profile"
+		"profile": "Profile",
+		"alerts": "Alerts"
 	},
 	"map": {
 		"myZone": "My zone",
@@ -69,12 +70,21 @@
 			"willItRain": "Will it rain today?"
 		}
 	},
+	"navigation": {
+		"cancelNavigation": "Cancel navigation?",
+		"cancelMessage": "Are you sure you want to cancel navigation?",
+		"continue": "Continue"
+	},
 	"alerts": {
 		"extreme": "Extreme alert",
 		"severe": "Severe alert",
 		"moderate": "Moderate alert",
 		"minor": "Minor alert",
-		"distance": "{{distance}} away"
+		"distance": "{{distance}} away",
+		"routeAlerts": "Route alerts",
+		"weatherAlert": "Weather alert",
+		"activeWeatherAlert": "Active weather alert",
+		"activeNow": "Active now"
 	},
 	"routes": {
 		"title": "My Routes",
@@ -112,7 +122,12 @@
 		"tapToViewDetails": "Tap to view route details",
 		"addNewHint": "Create a new saved route",
 		"removeFavorite": "Remove from favorites",
-		"addFavorite": "Add to favorites"
+		"addFavorite": "Add to favorites",
+		"today": "Today",
+		"yesterday": "Yesterday",
+		"scheduled": "Scheduled:",
+		"tip": "Tip",
+		"tipDescription": "Save frequently traveled routes to get weather alerts before you leave."
 	},
 	"profile": {
 		"title": "Profile",
@@ -163,7 +178,18 @@
 		"placeholder": "Type a message...",
 		"comingSoon": "This feature will be available soon.",
 		"thinking": "Thinking...",
-		"welcome": "Hi, I'm your weather assistant. Ask me about alerts in your area or if it's safe to travel somewhere."
+		"welcome": "Hi, I'm your weather assistant. Ask me about alerts in your area or if it's safe to travel somewhere.",
+		"title": "Driwet Copilot",
+		"welcomeMessage": "Hi, I'm Driwet Copilot. Ask me about the weather on your route, weather alerts, or where to stop if there are storms.",
+		"inputPlaceholder": "Ask about the weather or your route...",
+		"myLocation": "My location",
+		"destination": "Destination",
+		"quickRouteWeather": "Route weather",
+		"quickAlerts": "Alerts",
+		"quickStops": "Stops",
+		"askRouteWeather": "How's the weather for my route?",
+		"askHailAlerts": "Are there any hail alerts?",
+		"askStops": "Where can I stop if there's a storm?"
 	},
 	"web": {
 		"nav": {
@@ -197,10 +223,17 @@
 		"noAlerts": "Alerts disabled",
 		"deleteConfirm": "Delete this location?",
 		"deleteDescription": "This action cannot be undone",
+		"name": "Name",
 		"namePlaceholder": "Location name",
 		"home": "Home",
 		"work": "Work",
-		"custom": "Custom"
+		"custom": "Custom",
+		"myLocation": "My location",
+		"searchAddress": "Search address...",
+		"whereFrom": "Where are you leaving from?",
+		"whereTo": "Where are you going?",
+		"typeAddress": "Type an address or place",
+		"selectOnMap": "Tap on the map to select a location"
 	},
 	"subscription": {
 		"verifying": "Verifying subscription",
@@ -249,7 +282,8 @@
 		"alternateRoute": "Find alternate route",
 		"temperature": "Temperature",
 		"risk": "Risk level",
-		"loading": "Loading weather data"
+		"loading": "Loading weather data",
+		"climate": "Weather"
 	},
 	"onboarding": {
 		"hook": {
@@ -299,5 +333,25 @@
 		"planFirstTrip": "Plan my first trip",
 		"listening": "Listening...",
 		"thinking": "Thinking..."
+	},
+	"schedule": {
+		"title": "Schedule trip",
+		"today": "Today",
+		"tomorrow": "Tomorrow",
+		"dayAfterTomorrow": "Day after",
+		"schedule": "Schedule",
+		"whenLeaving": "When are you leaving?",
+		"notifyFrom": "Notify me from",
+		"reportFrequency": "Report frequency",
+		"every1h": "Every 1h",
+		"every2h": "Every 2h",
+		"every3h": "Every 3h",
+		"notifyDescription": "You'll receive weather reports {{hours}} hours before departure",
+		"summaryAt": "at",
+		"summaryReports": "Reports every {{frequency}}h from {{hours}}h before",
+		"scheduleTrip": "Schedule trip",
+		"tripIn": "Your trip in {{hours}}h",
+		"timeToLeave": "Time to leave!",
+		"notificationBody": "{{origin}} → {{destination}}. Tap to check the weather."
 	}
 }

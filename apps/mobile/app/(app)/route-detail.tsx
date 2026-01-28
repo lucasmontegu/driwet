@@ -15,6 +15,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Icon } from "@/components/icons";
 import { MapViewComponent } from "@/components/map-view";
+import { RouteRiskBadge } from "@/components/route-risk-badge";
 import {
 	AISafetySummary,
 	SafeStopCard,
@@ -24,8 +25,7 @@ import {
 	type WeatherCondition,
 	type WeatherSegmentData,
 	WeatherTimeline,
-} from "@/components/route";
-import { RouteRiskBadge } from "@/components/route-risk-badge";
+} from "@/components/route-weather-components";
 import { useDeleteRoute, useRecordTrip, useSavedRoute } from "@/hooks/use-api";
 import {
 	getRiskDescription,
@@ -317,7 +317,7 @@ export default function RouteDetailScreen() {
 								color: colors.primary,
 							}}
 						>
-							{t("auth.back")}
+							{t("common.back")}
 						</Text>
 					</Pressable>
 				</View>

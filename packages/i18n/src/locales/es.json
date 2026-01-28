@@ -55,7 +55,8 @@
 	"tabs": {
 		"map": "Mapa",
 		"routes": "Rutas",
-		"profile": "Perfil"
+		"profile": "Perfil",
+		"alerts": "Alertas"
 	},
 	"map": {
 		"myZone": "Mi zona",
@@ -69,12 +70,21 @@
 			"willItRain": "¿Va a llover hoy?"
 		}
 	},
+	"navigation": {
+		"cancelNavigation": "¿Cancelar navegación?",
+		"cancelMessage": "¿Estás seguro de que querés cancelar la navegación?",
+		"continue": "Continuar"
+	},
 	"alerts": {
 		"extreme": "Alerta extrema",
 		"severe": "Alerta severa",
 		"moderate": "Alerta moderada",
 		"minor": "Alerta menor",
-		"distance": "a {{distance}}"
+		"distance": "a {{distance}}",
+		"routeAlerts": "Alertas en ruta",
+		"weatherAlert": "Alerta meteorológica",
+		"activeWeatherAlert": "Alerta meteorológica activa",
+		"activeNow": "Activa ahora"
 	},
 	"routes": {
 		"title": "Mis Rutas",
@@ -112,7 +122,12 @@
 		"tapToViewDetails": "Toca para ver detalles de la ruta",
 		"addNewHint": "Crear una nueva ruta guardada",
 		"removeFavorite": "Quitar de favoritos",
-		"addFavorite": "Agregar a favoritos"
+		"addFavorite": "Agregar a favoritos",
+		"today": "Hoy",
+		"yesterday": "Ayer",
+		"scheduled": "Programado:",
+		"tip": "Tip",
+		"tipDescription": "Guarda las rutas que usas frecuentemente para recibir alertas de clima antes de salir."
 	},
 	"profile": {
 		"title": "Perfil",
@@ -163,7 +178,18 @@
 		"placeholder": "Escribe un mensaje...",
 		"comingSoon": "Esta funcionalidad estará disponible pronto.",
 		"thinking": "Pensando...",
-		"welcome": "Hola, soy tu asistente de clima. Pregúntame sobre alertas en tu zona o si es seguro viajar a algún lugar."
+		"welcome": "Hola, soy tu asistente de clima. Pregúntame sobre alertas en tu zona o si es seguro viajar a algún lugar.",
+		"title": "Driwet Copilot",
+		"welcomeMessage": "Hola, soy Driwet Copilot. Pregúntame sobre el clima en tu ruta, alertas meteorológicas, o dónde parar si hay tormentas.",
+		"inputPlaceholder": "Pregunta sobre el clima o tu ruta...",
+		"myLocation": "Mi ubicación",
+		"destination": "Destino",
+		"quickRouteWeather": "Clima ruta",
+		"quickAlerts": "Alertas",
+		"quickStops": "Paradas",
+		"askRouteWeather": "¿Cómo está el clima para mi ruta?",
+		"askHailAlerts": "¿Hay alertas de granizo?",
+		"askStops": "¿Dónde puedo parar si hay tormenta?"
 	},
 	"web": {
 		"nav": {
@@ -197,10 +223,17 @@
 		"noAlerts": "Alertas desactivadas",
 		"deleteConfirm": "¿Eliminar esta ubicación?",
 		"deleteDescription": "Esta acción no se puede deshacer",
+		"name": "Nombre",
 		"namePlaceholder": "Nombre de la ubicación",
 		"home": "Casa",
 		"work": "Trabajo",
-		"custom": "Personalizado"
+		"custom": "Personalizado",
+		"myLocation": "Mi ubicación",
+		"searchAddress": "Buscar dirección...",
+		"whereFrom": "¿Desde dónde sales?",
+		"whereTo": "¿A dónde vas?",
+		"typeAddress": "Escribe una dirección o lugar",
+		"selectOnMap": "Toca en el mapa para seleccionar una ubicación"
 	},
 	"subscription": {
 		"verifying": "Verificando suscripción",
@@ -249,7 +282,8 @@
 		"alternateRoute": "Buscar ruta alternativa",
 		"temperature": "Temperatura",
 		"risk": "Nivel de riesgo",
-		"loading": "Cargando datos del clima"
+		"loading": "Cargando datos del clima",
+		"climate": "Clima"
 	},
 	"onboarding": {
 		"hook": {
@@ -299,5 +333,25 @@
 		"planFirstTrip": "Planear mi primer viaje",
 		"listening": "Escuchando...",
 		"thinking": "Pensando..."
+	},
+	"schedule": {
+		"title": "Programar viaje",
+		"today": "Hoy",
+		"tomorrow": "Mañana",
+		"dayAfterTomorrow": "Pasado",
+		"schedule": "Programar",
+		"whenLeaving": "¿Cuándo salís?",
+		"notifyFrom": "Notificarme desde",
+		"reportFrequency": "Frecuencia de informes",
+		"every1h": "Cada 1h",
+		"every2h": "Cada 2h",
+		"every3h": "Cada 3h",
+		"notifyDescription": "Recibirás informes del clima {{hours}} horas antes de salir",
+		"summaryAt": "a las",
+		"summaryReports": "Informes cada {{frequency}}h desde {{hours}}h antes",
+		"scheduleTrip": "Programar viaje",
+		"tripIn": "Tu viaje en {{hours}}h",
+		"timeToLeave": "¡Es hora de salir!",
+		"notificationBody": "{{origin}} → {{destination}}. Tocá para ver el clima."
 	}
 }
