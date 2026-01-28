@@ -11,6 +11,7 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/components/icons";
 import { useThemeColors } from "@/hooks/use-theme-colors";
+import { useTranslation } from "@/lib/i18n";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -21,11 +22,11 @@ const TAB_ITEM_WIDTH = TAB_WIDTH / TAB_COUNT;
 const CIRCLE_SIZE = 48;
 
 const tabs = [
-	{ name: "Mapa", icon: "map", route: "(tabs)" },
-	{ name: "Alertas", icon: "alert", route: "alerts" },
-	{ name: "Rutas", icon: "route", route: "routes" },
-	{ name: "Perfil", icon: "user", route: "profile" },
-];
+	{ nameKey: "tabs.map", icon: "map", route: "(tabs)" },
+	{ nameKey: "tabs.alerts", icon: "alert", route: "alerts" },
+	{ nameKey: "tabs.routes", icon: "route", route: "routes" },
+	{ nameKey: "tabs.profile", icon: "user", route: "profile" },
+] as const;
 
 type FloatingTabBarProps = {
 	activeRoute: string;
@@ -38,8 +39,10 @@ export function FloatingTabBar({
 }: FloatingTabBarProps) {
 	const colors = useThemeColors();
 	const insets = useSafeAreaInsets();
+	const { t } = useTranslation();
 
-	const activeIndex = tabs.findIndex((tab) => tab.route === activeRoute) ?? 0;
+	const foundIndex = tabs.findIndex((tab) => tab.route === activeRoute);
+	const activeIndex = foundIndex === -1 ? 0 : foundIndex;
 
 	// Animated value for the indicator position
 	const indicatorX = useSharedValue(activeIndex * TAB_ITEM_WIDTH);
@@ -61,7 +64,7 @@ export function FloatingTabBar({
 	}));
 
 	return (
-		<View style={[styles.container, { paddingBottom: insets.bottom + 16 }]}>
+		<View style={[styles.container, { paddingBottom: insets.bottom }]}>
 			<View style={[styles.tabBar, { backgroundColor: colors.card }]}>
 				{/* Animated indicator circle */}
 				<Animated.View

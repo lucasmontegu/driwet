@@ -18,7 +18,7 @@ export default function PromiseRoute() {
 
 	const handleNext = () => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		router.push("/onboarding/personalization");
+		router.push("./personalization");
 	};
 
 	return (
@@ -36,7 +36,7 @@ export default function PromiseRoute() {
 
 				<TouchableOpacity onPress={handleNext} activeOpacity={0.8}>
 					<LinearGradient
-						colors={[colors.primary, "#4F46E5"]}
+						colors={[colors.primary, "#1D4ED8"]}
 						start={{ x: 0, y: 0 }}
 						end={{ x: 1, y: 1 }}
 						style={styles.nextButton}

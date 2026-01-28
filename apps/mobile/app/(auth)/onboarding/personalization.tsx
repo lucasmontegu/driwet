@@ -34,7 +34,7 @@ export default function PersonalizationRoute() {
 		}
 
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		router.push("/(auth)/onboarding/demo" as any);
+		router.push("./demo");
 	};
 
 	return (
@@ -55,7 +55,7 @@ export default function PersonalizationRoute() {
 
 				<TouchableOpacity onPress={handleNext} activeOpacity={0.8}>
 					<LinearGradient
-						colors={[colors.primary, "#4F46E5"]}
+						colors={[colors.primary, "#1D4ED8"]}
 						start={{ x: 0, y: 0 }}
 						end={{ x: 1, y: 1 }}
 						style={styles.nextButton}

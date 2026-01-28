@@ -11,7 +11,7 @@ export default function HookRoute() {
 
 	const handleComplete = () => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		router.push("/onboarding/promise");
+		router.push("./promise");
 	};
 
 	return (
