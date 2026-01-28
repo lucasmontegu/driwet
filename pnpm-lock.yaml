@@ -12,13 +12,7 @@ catalogs:
     '@orpc/client':
       specifier: ^1.12.2
       version: 1.13.4
-    '@orpc/openapi':
-      specifier: ^1.12.2
-      version: 1.13.4
     '@orpc/server':
-      specifier: ^1.12.2
-      version: 1.13.4
-    '@orpc/zod':
       specifier: ^1.12.2
       version: 1.13.4
     better-auth:
@@ -27,15 +21,12 @@ catalogs:
     dotenv:
       specifier: ^17.2.2
       version: 17.2.3
-    next:
-      specifier: ^16.1.4
-      version: 16.1.4
     typescript:
       specifier: ^5
       version: 5.9.3
     zod:
       specifier: 4.1.13
-      version: 4.1.13
+      version: 4.3.5
 
 importers:
 

@@ -352,13 +352,17 @@ export function setUserProperties(properties: {
 	region?: string;
 }): void {
 	if (posthogClient) {
-		posthogClient.identify(undefined, {
-			trip_types: properties.tripTypes?.join(","),
-			is_premium: properties.isPremium,
-			trial_days_remaining: properties.trialDaysRemaining,
-			routes_completed: properties.routesCompleted,
-			region: properties.region,
-		});
+		const props: Record<string, string | number | boolean> = {};
+		if (properties.tripTypes !== undefined)
+			props.trip_types = properties.tripTypes.join(",");
+		if (properties.isPremium !== undefined)
+			props.is_premium = properties.isPremium;
+		if (properties.trialDaysRemaining !== undefined)
+			props.trial_days_remaining = properties.trialDaysRemaining;
+		if (properties.routesCompleted !== undefined)
+			props.routes_completed = properties.routesCompleted;
+		if (properties.region !== undefined) props.region = properties.region;
+		posthogClient.identify(undefined, props);
 	}
 }
 

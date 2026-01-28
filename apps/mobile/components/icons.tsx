@@ -16,6 +16,7 @@ import {
 	Copy01Icon,
 	Delete02Icon,
 	DollarCircleIcon,
+	Flag01Icon,
 	FuelStationIcon,
 	HelpCircleIcon,
 	InformationCircleIcon,
@@ -92,7 +93,9 @@ export type IconName =
 	| "rain"
 	| "mute"
 	| "pin"
-	| "history";
+	| "history"
+	| "swap"
+	| "flag";
 
 const iconMap = {
 	map: MapsIcon,
@@ -140,6 +143,8 @@ const iconMap = {
 	mute: MicOff01Icon,
 	pin: PinLocation01Icon,
 	history: Clock01Icon,
+	swap: Refresh01Icon,
+	flag: Flag01Icon,
 } as const;
 
 interface IconProps {

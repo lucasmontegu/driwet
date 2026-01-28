@@ -11,7 +11,7 @@ import type {
 } from "./types";
 
 // All available providers
-const providers: Map<ApiProvider, IWeatherProvider> = new Map([
+const providers = new Map<ApiProvider, IWeatherProvider>([
 	["tomorrow", tomorrowIoProvider],
 	["openweather", openWeatherProvider],
 ]);
@@ -293,13 +293,19 @@ export const weatherFactory = {
 		segments.sort((a, b) => a.km - b.km);
 
 		// Calculate overall risk
-		const riskPriority = { low: 0, moderate: 1, high: 2, extreme: 3 };
-		const overallRisk = segments.reduce(
+		const riskPriority: Record<string, number> = {
+			low: 0,
+			moderate: 1,
+			high: 2,
+			extreme: 3,
+		};
+		type Risk = "low" | "moderate" | "high" | "extreme";
+		const overallRisk = segments.reduce<Risk>(
 			(highest, s) =>
 				riskPriority[s.weather.roadRisk] > riskPriority[highest]
 					? s.weather.roadRisk
 					: highest,
-			"low" as const,
+			"low",
 		);
 
 		return {

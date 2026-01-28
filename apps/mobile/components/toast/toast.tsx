@@ -82,7 +82,7 @@ export function Toast({
 	const config = TOAST_CONFIG[type];
 	const translateX = useSharedValue(0);
 	const opacity = useSharedValue(1);
-	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	// Auto-dismiss after duration
 	useEffect(() => {

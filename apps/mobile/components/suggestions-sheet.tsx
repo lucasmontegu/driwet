@@ -245,7 +245,7 @@ export function SuggestionsSheet({
 			snapPoints={snapPoints}
 			backgroundStyle={{ backgroundColor: colors.card }}
 			handleIndicatorStyle={{ backgroundColor: colors.mutedForeground }}
-			enablePanDownToClose={false}
+			enablePanDownToClose={true}
 			onChange={(index) => {
 				if (index === -1 && onClose) {
 					onClose();
@@ -253,6 +253,22 @@ export function SuggestionsSheet({
 			}}
 		>
 			<BottomSheetScrollView style={styles.container}>
+				{/* Header with Close Button */}
+				<View style={styles.header}>
+					<Text style={[styles.headerTitle, { color: colors.foreground }]}>
+						Información de ruta
+					</Text>
+					{onClose && (
+						<TouchableOpacity
+							style={styles.closeButton}
+							onPress={onClose}
+							hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+						>
+							<Icon name="close" size={24} color={colors.foreground} />
+						</TouchableOpacity>
+					)}
+				</View>
+
 				{/* Route Summary */}
 				<View style={styles.summaryContainer}>
 					<Text style={[styles.routeTitle, { color: colors.foreground }]}>
@@ -492,35 +508,92 @@ export function SuggestionsSheet({
 					</CollapsibleSection>
 				)}
 
-				{/* Navigation Buttons */}
-				<View style={styles.navigationButtons}>
+				{/* Action Buttons */}
+				<View style={styles.actionButtons}>
+					{/* Primary Action: Navigate in App */}
 					<TouchableOpacity
-						style={[
-							styles.navButton,
-							{ backgroundColor: colors.card, borderColor: colors.border },
-						]}
-						onPress={openInGoogleMaps}
+						style={[styles.actionButton, { backgroundColor: colors.primary }]}
+						onPress={() => {
+							// TODO: Start in-app navigation
+							Alert.alert(
+								"Navegación",
+								"Navegación dentro de Driwet estará disponible pronto. Usa Google Maps o Waze por ahora.",
+							);
+						}}
 						activeOpacity={0.7}
 					>
-						<Icon name="map" size={20} color={colors.foreground} />
-						<Text style={[styles.navButtonText, { color: colors.foreground }]}>
-							Abrir en Google Maps
+						<Icon
+							name="navigation"
+							size={20}
+							color={colors.primaryForeground}
+						/>
+						<Text
+							style={[
+								styles.actionButtonText,
+								{ color: colors.primaryForeground },
+							]}
+						>
+							Navegar en Driwet
 						</Text>
 					</TouchableOpacity>
 
-					<TouchableOpacity
-						style={[
-							styles.navButton,
-							{ backgroundColor: "#33ccff", borderColor: "#33ccff" },
-						]}
-						onPress={openInWaze}
-						activeOpacity={0.7}
-					>
-						<Icon name="route" size={20} color="#ffffff" />
-						<Text style={[styles.navButtonText, { color: "#ffffff" }]}>
-							Abrir en Waze
-						</Text>
-					</TouchableOpacity>
+					{/* Secondary Actions */}
+					<View style={styles.secondaryActions}>
+						<TouchableOpacity
+							style={[
+								styles.secondaryButton,
+								{ backgroundColor: colors.card, borderColor: colors.border },
+							]}
+							onPress={openInGoogleMaps}
+							activeOpacity={0.7}
+						>
+							<Icon name="map" size={18} color={colors.foreground} />
+							<Text
+								style={[
+									styles.secondaryButtonText,
+									{ color: colors.foreground },
+								]}
+							>
+								Google Maps
+							</Text>
+						</TouchableOpacity>
+
+						<TouchableOpacity
+							style={[
+								styles.secondaryButton,
+								{ backgroundColor: "#33ccff", borderColor: "#33ccff" },
+							]}
+							onPress={openInWaze}
+							activeOpacity={0.7}
+						>
+							<Icon name="route" size={18} color="#ffffff" />
+							<Text style={[styles.secondaryButtonText, { color: "#ffffff" }]}>
+								Waze
+							</Text>
+						</TouchableOpacity>
+					</View>
+
+					{/* Edit Route Button */}
+					{onClose && (
+						<TouchableOpacity
+							style={styles.editRouteButton}
+							onPress={() => {
+								onClose();
+								// Allow user to edit route
+							}}
+							activeOpacity={0.7}
+						>
+							<Icon name="route" size={16} color={colors.mutedForeground} />
+							<Text
+								style={[
+									styles.editRouteText,
+									{ color: colors.mutedForeground },
+								]}
+							>
+								Editar ruta
+							</Text>
+						</TouchableOpacity>
+					)}
 				</View>
 
 				{/* Bottom padding */}
@@ -702,21 +775,72 @@ const styles = StyleSheet.create({
 		fontFamily: "Inter_400Regular",
 		fontSize: 12,
 	},
-	navigationButtons: {
+	// Header styles
+	header: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		paddingVertical: 16,
+		paddingHorizontal: 4,
+	},
+	headerTitle: {
+		fontFamily: "Inter_700Bold",
+		fontSize: 18,
+	},
+	closeButton: {
+		padding: 4,
+	},
+
+	// Action buttons styles
+	actionButtons: {
 		gap: 12,
 		marginTop: 16,
+		marginBottom: 8,
 	},
-	navButton: {
+	actionButton: {
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "center",
-		paddingVertical: 14,
-		borderRadius: 12,
-		borderWidth: 1,
+		paddingVertical: 16,
+		borderRadius: 14,
 		gap: 10,
 	},
-	navButtonText: {
+	actionButtonText: {
 		fontFamily: "Inter_600SemiBold",
-		fontSize: 15,
+		fontSize: 16,
+	},
+
+	// Secondary actions
+	secondaryActions: {
+		flexDirection: "row",
+		gap: 12,
+	},
+	secondaryButton: {
+		flex: 1,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		paddingVertical: 12,
+		borderRadius: 12,
+		borderWidth: 1,
+		gap: 8,
+	},
+	secondaryButtonText: {
+		fontFamily: "Inter_500Medium",
+		fontSize: 14,
+	},
+
+	// Edit route button
+	editRouteButton: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		paddingVertical: 12,
+		gap: 6,
+	},
+	editRouteText: {
+		fontFamily: "Inter_500Medium",
+		fontSize: 14,
+		textDecorationLine: "underline",
 	},
 });

@@ -14,4 +14,19 @@ const sql = neon(env.DATABASE_URL);
 export const db = drizzle(sql, { schema });
 
 // Re-export drizzle-orm operators for convenience
-export { eq, ne, gt, gte, lt, lte, and, or, not, isNull, isNotNull, inArray, notInArray, sql as sqlOperator } from "drizzle-orm";
+export {
+	and,
+	eq,
+	gt,
+	gte,
+	inArray,
+	isNotNull,
+	isNull,
+	lt,
+	lte,
+	ne,
+	not,
+	notInArray,
+	or,
+	sql as sqlOperator,
+} from "drizzle-orm";

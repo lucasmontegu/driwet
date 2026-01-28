@@ -31,7 +31,8 @@ export const asyncStoragePersister = createAsyncStoragePersister({
 // oRPC link with auth cookie forwarding
 const link = new RPCLink({
 	url: `${env.EXPO_PUBLIC_SERVER_URL}/api/rpc`,
-	credentials: "omit", // Required when manually setting Cookie header
+	fetch: (url, options) =>
+		fetch(url, { ...options, credentials: "omit" as RequestCredentials }),
 	headers: async () => {
 		let cookies = authClient.getCookie();
 		if (__DEV__) {

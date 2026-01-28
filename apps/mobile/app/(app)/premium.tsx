@@ -1,5 +1,6 @@
 // apps/mobile/app/(app)/premium.tsx
-// Premium screen with psychology-based pricing design
+// Premium benefits screen - Informational only
+// Uses RevenueCat native paywall for actual purchase flow
 
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -14,11 +15,9 @@ import {
 	View,
 } from "react-native";
 import Animated, {
-	Easing,
 	FadeIn,
 	FadeInDown,
 	FadeInUp,
-	interpolate,
 	useAnimatedStyle,
 	useSharedValue,
 	withDelay,
@@ -32,10 +31,9 @@ import {
 	useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { Icon } from "@/components/icons";
+import { PaywallModal } from "@/components/subscription/paywall-modal";
 import {
 	useIsPremium,
-	useSubscriptionCheckout,
-	useSubscriptionDetails,
 	useSubscriptionManagement,
 } from "@/hooks/use-subscription";
 import { useThemeColors } from "@/hooks/use-theme-colors";
@@ -43,55 +41,17 @@ import { useTranslation } from "@/lib/i18n";
 
 const { width } = Dimensions.get("window");
 
-type PlanType = "monthly" | "annual" | "lifetime";
-
-// Pricing data with psychology-based structure
-const PLANS = {
-	monthly: {
-		id: "monthly",
-		name: "Monthly",
-		price: 9.99,
-		priceDisplay: "$9.99",
-		period: "/month",
-		savings: null,
-		popular: false,
-	},
-	annual: {
-		id: "annual",
-		name: "Annual",
-		price: 59.99,
-		priceDisplay: "$59.99",
-		period: "/year",
-		monthlyEquivalent: "$4.99/mo",
-		savings: "Save 50%",
-		popular: true,
-	},
-	lifetime: {
-		id: "lifetime",
-		name: "Lifetime",
-		price: 99.99,
-		priceDisplay: "$99.99",
-		period: "one-time",
-		savings: "Best Value",
-		popular: false,
-	},
-};
-
 export default function PremiumScreen() {
 	const colors = useThemeColors();
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	const { t } = useTranslation();
-	const { checkout, isLoading: isCheckoutLoading } = useSubscriptionCheckout();
-	const {
-		openManagement,
-		restore,
-		isLoading: isManagementLoading,
-	} = useSubscriptionManagement();
-	const { isSubscribed } = useIsPremium();
-	const { expirationDate } = useSubscriptionDetails();
+	const { isSubscribed, isPremium } = useIsPremium();
+	const { restore, isLoading: isManagementLoading } =
+		useSubscriptionManagement();
 
-	const [selectedPlan, setSelectedPlan] = useState<PlanType>("annual");
+	// State for paywall modal
+	const [showPaywall, setShowPaywall] = useState(false);
 	const [isRestoring, setIsRestoring] = useState(false);
 
 	// Animation values
@@ -161,12 +121,13 @@ export default function PremiumScreen() {
 		},
 	];
 
-	const handleSubscribe = async () => {
-		await checkout();
+	const handleUpgrade = () => {
+		setShowPaywall(true);
 	};
 
 	const handleManageSubscription = async () => {
-		await openManagement();
+		// For subscribed users, show customer center
+		// For non-subscribed, this shouldn't be called
 	};
 
 	const handleRestorePurchases = async () => {
@@ -178,16 +139,7 @@ export default function PremiumScreen() {
 		}
 	};
 
-	const isLoading = isCheckoutLoading || isManagementLoading || isRestoring;
-
-	const formatExpirationDate = (dateStr: string | null) => {
-		if (!dateStr) return null;
-		try {
-			return new Date(dateStr).toLocaleDateString();
-		} catch {
-			return null;
-		}
-	};
+	const isLoading = isManagementLoading || isRestoring;
 
 	// If already subscribed, show management view
 	if (isSubscribed) {
@@ -223,18 +175,6 @@ export default function PremiumScreen() {
 						>
 							You have full access to all features
 						</Text>
-						{expirationDate && (
-							<View
-								style={[
-									styles.renewBadge,
-									{ backgroundColor: colors.safe + "15" },
-								]}
-							>
-								<Text style={[styles.renewText, { color: colors.safe }]}>
-									Renews on {formatExpirationDate(expirationDate)}
-								</Text>
-							</View>
-						)}
 					</Animated.View>
 
 					<View style={styles.subscribedFeatures}>
@@ -331,7 +271,7 @@ export default function PremiumScreen() {
 					<View style={styles.socialProofAvatars}>
 						{["👨", "👩", "🧑", "👨‍🦱"].map((emoji, i) => (
 							<View
-								key={i}
+								key={emoji}
 								style={[
 									styles.avatar,
 									{
@@ -357,48 +297,15 @@ export default function PremiumScreen() {
 					</Text>
 				</Animated.View>
 
-				{/* Pricing plans */}
-				<Animated.View
-					entering={FadeInUp.delay(300).duration(500)}
-					style={styles.plansContainer}
-				>
-					{/* Annual plan - highlighted (anchor pricing) */}
-					<PlanCard
-						plan={PLANS.annual}
-						isSelected={selectedPlan === "annual"}
-						onSelect={() => setSelectedPlan("annual")}
-						colors={colors}
-						delay={0}
-					/>
-
-					{/* Monthly plan */}
-					<PlanCard
-						plan={PLANS.monthly}
-						isSelected={selectedPlan === "monthly"}
-						onSelect={() => setSelectedPlan("monthly")}
-						colors={colors}
-						delay={100}
-					/>
-
-					{/* Lifetime plan */}
-					<PlanCard
-						plan={PLANS.lifetime}
-						isSelected={selectedPlan === "lifetime"}
-						onSelect={() => setSelectedPlan("lifetime")}
-						colors={colors}
-						delay={200}
-					/>
-				</Animated.View>
-
 				{/* Features list */}
 				<Animated.View
-					entering={FadeInUp.delay(500).duration(400)}
+					entering={FadeInUp.delay(300).duration(500)}
 					style={styles.featuresContainer}
 				>
 					<Text style={[styles.featuresTitle, { color: colors.foreground }]}>
 						Everything you get:
 					</Text>
-					{features.map((feature, index) => (
+					{features.map((feature) => (
 						<View key={feature.text} style={styles.featureRow}>
 							<View
 								style={[
@@ -427,20 +334,18 @@ export default function PremiumScreen() {
 
 				{/* CTA Section */}
 				<Animated.View
-					entering={FadeInUp.delay(600).duration(400)}
+					entering={FadeInUp.delay(400).duration(400)}
 					style={styles.ctaContainer}
 				>
 					<Animated.View style={ctaStyle}>
 						<Button
-							onPress={handleSubscribe}
+							onPress={handleUpgrade}
 							size="lg"
 							className="w-full"
 							isDisabled={isLoading}
 						>
 							<Button.Label>
-								{isCheckoutLoading
-									? "Loading..."
-									: `Start with ${PLANS[selectedPlan].name} - ${PLANS[selectedPlan].priceDisplay}`}
+								{isLoading ? "Loading..." : "Start Free Trial"}
 							</Button.Label>
 						</Button>
 					</Animated.View>
@@ -473,7 +378,7 @@ export default function PremiumScreen() {
 
 				{/* Trust badges */}
 				<Animated.View
-					entering={FadeInUp.delay(700).duration(400)}
+					entering={FadeInUp.delay(500).duration(400)}
 					style={styles.trustBadges}
 				>
 					<View style={styles.trustBadge}>
@@ -490,107 +395,14 @@ export default function PremiumScreen() {
 					</View>
 				</Animated.View>
 			</ScrollView>
+
+			{/* RevenueCat Native Paywall Modal */}
+			<PaywallModal
+				visible={showPaywall}
+				onDismiss={() => setShowPaywall(false)}
+				allowDismiss={true}
+			/>
 		</SafeAreaView>
-	);
-}
-
-// Plan card component with selection animation
-function PlanCard({
-	plan,
-	isSelected,
-	onSelect,
-	colors,
-	delay,
-}: {
-	plan: (typeof PLANS)["annual"];
-	isSelected: boolean;
-	onSelect: () => void;
-	colors: ReturnType<typeof useThemeColors>;
-	delay: number;
-}) {
-	const scale = useSharedValue(1);
-
-	useEffect(() => {
-		scale.value = withSpring(isSelected ? 1.02 : 1, { damping: 15 });
-	}, [isSelected]);
-
-	const animatedStyle = useAnimatedStyle(() => ({
-		transform: [{ scale: scale.value }],
-	}));
-
-	return (
-		<Animated.View entering={FadeInUp.delay(delay).duration(400)}>
-			<Pressable onPress={onSelect}>
-				<Animated.View
-					style={[
-						styles.planCard,
-						{
-							backgroundColor: isSelected ? colors.primary + "08" : colors.card,
-							borderColor: isSelected ? colors.primary : colors.border,
-							borderWidth: isSelected ? 2 : 1,
-						},
-						animatedStyle,
-					]}
-				>
-					{/* Popular/Savings badge */}
-					{plan.savings && (
-						<View
-							style={[
-								styles.planBadge,
-								{
-									backgroundColor: plan.popular ? colors.primary : colors.safe,
-								},
-							]}
-						>
-							<Text style={styles.planBadgeText}>{plan.savings}</Text>
-						</View>
-					)}
-
-					{/* Plan info */}
-					<View style={styles.planInfo}>
-						<Text style={[styles.planName, { color: colors.foreground }]}>
-							{plan.name}
-						</Text>
-						{"monthlyEquivalent" in plan && plan.monthlyEquivalent && (
-							<Text
-								style={[
-									styles.planEquivalent,
-									{ color: colors.mutedForeground },
-								]}
-							>
-								{plan.monthlyEquivalent}
-							</Text>
-						)}
-					</View>
-
-					{/* Price */}
-					<View style={styles.planPricing}>
-						<Text style={[styles.planPrice, { color: colors.foreground }]}>
-							{plan.priceDisplay}
-						</Text>
-						<Text
-							style={[styles.planPeriod, { color: colors.mutedForeground }]}
-						>
-							{plan.period}
-						</Text>
-					</View>
-
-					{/* Selection indicator */}
-					<View
-						style={[
-							styles.radioOuter,
-							{ borderColor: isSelected ? colors.primary : colors.border },
-						]}
-					>
-						{isSelected && (
-							<View
-								style={[styles.radioInner, { backgroundColor: colors.primary }]}
-							/>
-						)}
-					</View>
-				</Animated.View>
-			</Pressable>
-		</Animated.View>
 	);
 }
 
@@ -665,67 +477,6 @@ const styles = StyleSheet.create({
 		fontFamily: "Inter_400Regular",
 		fontSize: 13,
 		flex: 1,
-	},
-	plansContainer: {
-		gap: 12,
-		marginBottom: 24,
-	},
-	planCard: {
-		flexDirection: "row",
-		alignItems: "center",
-		padding: 16,
-		borderRadius: 14,
-		position: "relative",
-	},
-	planBadge: {
-		position: "absolute",
-		top: -10,
-		right: 16,
-		paddingHorizontal: 10,
-		paddingVertical: 4,
-		borderRadius: 10,
-	},
-	planBadgeText: {
-		fontFamily: "Inter_600SemiBold",
-		fontSize: 11,
-		color: "#FFFFFF",
-	},
-	planInfo: {
-		flex: 1,
-	},
-	planName: {
-		fontFamily: "Inter_600SemiBold",
-		fontSize: 17,
-	},
-	planEquivalent: {
-		fontFamily: "Inter_400Regular",
-		fontSize: 12,
-		marginTop: 2,
-	},
-	planPricing: {
-		alignItems: "flex-end",
-		marginRight: 16,
-	},
-	planPrice: {
-		fontFamily: "Inter_700Bold",
-		fontSize: 20,
-	},
-	planPeriod: {
-		fontFamily: "Inter_400Regular",
-		fontSize: 12,
-	},
-	radioOuter: {
-		width: 22,
-		height: 22,
-		borderRadius: 11,
-		borderWidth: 2,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	radioInner: {
-		width: 12,
-		height: 12,
-		borderRadius: 6,
 	},
 	featuresContainer: {
 		marginBottom: 24,
@@ -820,15 +571,6 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		textAlign: "center",
 		marginBottom: 16,
-	},
-	renewBadge: {
-		paddingHorizontal: 16,
-		paddingVertical: 8,
-		borderRadius: 20,
-	},
-	renewText: {
-		fontFamily: "Inter_500Medium",
-		fontSize: 13,
 	},
 	subscribedFeatures: {
 		width: "100%",

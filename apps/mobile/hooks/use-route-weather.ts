@@ -36,8 +36,8 @@ export type RouteWeatherAnalysis = {
 		title: string;
 		description: string;
 	}>;
-	validUntil: string;
-	analyzedAt: string;
+	validUntil: Date | string;
+	analyzedAt: Date | string;
 };
 
 // ============ Route Weather Hooks ============

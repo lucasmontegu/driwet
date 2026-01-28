@@ -102,6 +102,11 @@ export const colors = {
 	// Legacy shared colors (for backwards compatibility)
 	safe: "#10B981",
 	warning: "#F59E0B",
+	// Shadow colors
+	shadow: {
+		light: "rgba(0, 0, 0, 0.1)",
+		dark: "rgba(0, 0, 0, 0.3)",
+	},
 } as const;
 
 export type ThemeColors = typeof colors.light;

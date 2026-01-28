@@ -14,7 +14,7 @@ import { savedRoute } from "./routes";
 
 // Weather data types
 export type RoadRisk = "low" | "moderate" | "high" | "extreme";
-export type WeatherSource = "tomorrow" | "openweather" | "noaa";
+export type WeatherSource = "tomorrow" | "openweather";
 export type PlaceType = "gas_station" | "rest_area" | "town";
 
 export interface WeatherData {

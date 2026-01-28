@@ -15,6 +15,8 @@ interface TrialState {
 	checkTrialStatus: () => boolean;
 	setPremium: (value: boolean) => void;
 	getRemainingDays: () => number;
+	/** Computed: returns trial end date or null if trial hasn't started */
+	trialEndDate: Date | null;
 }
 
 export const useTrialStore = create<TrialState>()(
@@ -23,6 +25,14 @@ export const useTrialStore = create<TrialState>()(
 			trialStartDate: null,
 			isTrialActive: false,
 			isPremium: false,
+
+			get trialEndDate(): Date | null {
+				const { trialStartDate } = get();
+				if (!trialStartDate) return null;
+				const end = new Date(trialStartDate);
+				end.setDate(end.getDate() + TRIAL_DURATION_DAYS);
+				return end;
+			},
 
 			startTrial: () => {
 				const now = new Date().toISOString();

@@ -4,6 +4,7 @@ import {
 	alertHistory,
 	routeWeatherAnalysis,
 	type WeatherData,
+	type WeatherSource,
 	weatherCache,
 } from "@driwet/db/schema/index";
 import { and, eq, gt } from "drizzle-orm";
@@ -81,14 +82,14 @@ export const weatherRouter = {
 					latitude: gridLat,
 					longitude: gridLng,
 					data: current,
-					source: provider,
+					source: provider as WeatherSource,
 					expiresAt,
 				})
 				.onConflictDoUpdate({
 					target: weatherCache.id,
 					set: {
 						data: current,
-						source: provider,
+						source: provider as WeatherSource,
 						fetchedAt: new Date(),
 						expiresAt,
 					},

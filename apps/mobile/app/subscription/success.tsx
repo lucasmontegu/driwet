@@ -3,7 +3,7 @@ import { Spinner } from "heroui-native";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSubscriptionStatus } from "@/hooks/use-subscription";
+import { useSubscriptionDetails } from "@/hooks/use-subscription";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { useTranslation } from "@/lib/i18n";
 import { useTrialStore } from "@/stores/trial-store";
@@ -16,15 +16,13 @@ export default function SubscriptionSuccessScreen() {
 	const { t } = useTranslation();
 	const [status, setStatus] = useState<Status>("verifying");
 	const { setPremium } = useTrialStore();
-	const { refetch } = useSubscriptionStatus();
+	const { activeSubscription } = useSubscriptionDetails();
 
 	useEffect(() => {
 		async function verifySubscription() {
 			try {
 				// Refetch subscription status from API
-				const result = await refetch();
-
-				if (result.data?.isActive) {
+				if (activeSubscription) {
 					// Update local premium status
 					setPremium(true);
 					setStatus("success");
@@ -37,8 +35,7 @@ export default function SubscriptionSuccessScreen() {
 					// Subscription not yet active, might need a moment to process
 					// Retry after a short delay
 					setTimeout(async () => {
-						const retryResult = await refetch();
-						if (retryResult.data?.isActive) {
+						if (activeSubscription) {
 							setPremium(true);
 							setStatus("success");
 							setTimeout(() => {
@@ -56,7 +53,7 @@ export default function SubscriptionSuccessScreen() {
 		}
 
 		verifySubscription();
-	}, [refetch, setPremium, router]);
+	}, [activeSubscription, setPremium, router]);
 
 	return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>

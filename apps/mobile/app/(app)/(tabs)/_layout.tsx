@@ -1,70 +1,56 @@
-// apps/native/app/(app)/(tabs)/_layout.tsx
-import { Tabs } from "expo-router";
-import { Icon, type IconName } from "@/components/icons";
-import { useThemeColors } from "@/hooks/use-theme-colors";
-
-function TabIcon({ name, focused }: { name: IconName; focused: boolean }) {
-	const colors = useThemeColors();
-	return (
-		<Icon
-			name={name}
-			size={22}
-			color={focused ? colors.primary : colors.mutedForeground}
-		/>
-	);
-}
+// apps/mobile/app/(app)/(tabs)/_layout.tsx
+import { Tabs, usePathname, useRouter } from "expo-router";
+import { StyleSheet, View } from "react-native";
+import { FloatingTabBar } from "@/components/floating-tab-bar";
 
 export default function TabLayout() {
-	const colors = useThemeColors();
+	const router = useRouter();
+	const pathname = usePathname();
+
+	// Get current active route from pathname
+	const getActiveRoute = () => {
+		if (pathname.includes("/alerts")) return "alerts";
+		if (pathname.includes("/routes")) return "routes";
+		if (pathname.includes("/profile")) return "profile";
+		return "(tabs)";
+	};
+
+	const activeRoute = getActiveRoute();
+
+	const handleTabPress = (route: string) => {
+		if (route === "(tabs)") {
+			router.push("/");
+		} else if (route === "alerts") {
+			router.push("/alerts");
+		} else if (route === "routes") {
+			router.push("/routes");
+		} else if (route === "profile") {
+			router.push("/profile");
+		}
+	};
 
 	return (
-		<Tabs
-			screenOptions={{
-				headerShown: false,
-				tabBarStyle: {
-					backgroundColor: colors.card,
-					borderTopColor: colors.border,
-					borderTopWidth: 0,
-					height: 56,
-					paddingBottom: 8,
-					paddingTop: 6,
-					elevation: 0,
-					shadowOpacity: 0,
-				},
-				tabBarActiveTintColor: colors.primary,
-				tabBarInactiveTintColor: colors.mutedForeground,
-				tabBarLabelStyle: {
-					fontFamily: "Inter_600SemiBold",
-					fontSize: 10,
-					marginTop: -2,
-				},
-			}}
-		>
-			<Tabs.Screen
-				name="index"
-				options={{
-					title: "Mapa",
-					tabBarIcon: ({ focused }) => <TabIcon name="map" focused={focused} />,
+		<View style={styles.container}>
+			<Tabs
+				screenOptions={{
+					headerShown: false,
+					tabBarStyle: { display: "none" }, // Hide default tab bar
 				}}
-			/>
-			<Tabs.Screen
-				name="routes"
-				options={{
-					title: "Rutas",
-					tabBarIcon: ({ focused }) => (
-						<TabIcon name="route" focused={focused} />
-					),
-				}}
-			/>
-			<Tabs.Screen
-				name="profile"
-				options={{
-					title: "Perfil",
-					tabBarIcon: ({ focused }) => (
-						<TabIcon name="user" focused={focused} />
-					),
-				}}
-			/>
-		</Tabs>
+			>
+				<Tabs.Screen name="index" options={{ title: "Mapa" }} />
+				<Tabs.Screen name="alerts" options={{ title: "Alertas" }} />
+				<Tabs.Screen name="routes" options={{ title: "Rutas" }} />
+				<Tabs.Screen name="profile" options={{ title: "Perfil" }} />
+			</Tabs>
+
+			{/* Custom Floating Tab Bar */}
+			<FloatingTabBar activeRoute={activeRoute} onTabPress={handleTabPress} />
+		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
+});

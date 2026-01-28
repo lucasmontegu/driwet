@@ -59,7 +59,7 @@ export function useOAuthAuth(options: UseOAuthAuthOptions = {}) {
 				if (onSuccess) {
 					onSuccess();
 				} else if (navigateToHome) {
-					router.replace("/(app)");
+					router.replace("/");
 				}
 			});
 		}
