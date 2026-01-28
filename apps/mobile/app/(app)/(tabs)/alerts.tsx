@@ -38,14 +38,14 @@ export default function AlertsScreen() {
 				]}
 			>
 				<Text style={[styles.headerTitle, { color: colors.foreground }]}>
-					Alertas
+					{t("tabs.alerts")}
 				</Text>
 				<Text
 					style={[styles.headerSubtitle, { color: colors.mutedForeground }]}
 				>
 					{hasAlerts
-						? `${alerts.length} alertas activas`
-						: "No hay alertas activas"}
+						? `${alerts.length} ${t("alerts.activeNow")}`
+						: t("routes.noAlerts")}
 				</Text>
 			</View>
 
@@ -61,7 +61,7 @@ export default function AlertsScreen() {
 				{isLoading && (
 					<View style={styles.emptyState}>
 						<Text style={[styles.emptyText, { color: colors.mutedForeground }]}>
-							Cargando alertas...
+							{t("common.loading")}
 						</Text>
 					</View>
 				)}
@@ -78,10 +78,10 @@ export default function AlertsScreen() {
 								{ color: colors.foreground, marginTop: 24 },
 							]}
 						>
-							Todo despejado
+							{t("routes.clear")}
 						</Text>
 						<Text style={[styles.emptyText, { color: colors.mutedForeground }]}>
-							No hay alertas meteorológicas en tu zona
+							{t("safetyStatus.allClear")}
 						</Text>
 					</Animated.View>
 				)}
@@ -143,12 +143,12 @@ export default function AlertsScreen() {
 										]}
 									>
 										{alert.severity === "extreme"
-											? "Extremo"
+											? t("alerts.extreme")
 											: alert.severity === "severe"
-												? "Severo"
+												? t("alerts.severe")
 												: alert.severity === "moderate"
-													? "Moderado"
-													: "Menor"}
+													? t("alerts.moderate")
+													: t("alerts.minor")}
 									</Text>
 								</View>
 							</View>
@@ -159,7 +159,7 @@ export default function AlertsScreen() {
 									{ color: colors.mutedForeground },
 								]}
 							>
-								{alert.headline || "Alerta meteorológica activa"}
+								{alert.headline || t("alerts.activeWeatherAlert")}
 							</Text>
 
 							<View style={styles.alertFooter}>
@@ -171,7 +171,7 @@ export default function AlertsScreen() {
 											{ color: colors.mutedForeground },
 										]}
 									>
-										Activa ahora
+										{t("alerts.activeNow")}
 									</Text>
 								</View>
 							</View>

@@ -23,6 +23,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/components/icons";
 import { useLocation } from "@/hooks/use-location";
 import { useThemeColors } from "@/hooks/use-theme-colors";
+import { useTranslation } from "@/lib/i18n";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -56,6 +57,7 @@ export function LocationChips({
 	const colors = useThemeColors();
 	const insets = useSafeAreaInsets();
 	const { location: userLocation } = useLocation();
+	const { t } = useTranslation();
 
 	// Modal state
 	const [isModalVisible, setIsModalVisible] = useState(false);
@@ -251,7 +253,7 @@ export function LocationChips({
 				if (data.features?.[0]) {
 					const feature = data.features[0];
 					const location: RouteLocation = {
-						name: feature.place_name.split(",")[0] || "Mi ubicación",
+						name: feature.place_name.split(",")[0] || t("locations.myLocation"),
 						coordinates: userLocation,
 					};
 
@@ -272,7 +274,7 @@ export function LocationChips({
 				console.error("Reverse geocoding error:", error);
 				// Fallback to generic name
 				const location: RouteLocation = {
-					name: "Mi ubicación",
+					name: t("locations.myLocation"),
 					coordinates: userLocation,
 				};
 
@@ -292,6 +294,7 @@ export function LocationChips({
 		onRouteChange,
 		closeModal,
 		openModal,
+		t,
 	]);
 
 	const hasRoute = origin && destination;
@@ -452,7 +455,7 @@ export function LocationChips({
 						/>
 						<TextInput
 							style={[styles.searchInput, { color: colors.foreground }]}
-							placeholder="Buscar dirección..."
+							placeholder={t("locations.searchAddress")}
 							placeholderTextColor={colors.mutedForeground}
 							value={searchQuery}
 							onChangeText={handleSearchChange}
@@ -618,8 +621,8 @@ export function LocationChips({
 									style={[styles.emptyStateTitle, { color: colors.foreground }]}
 								>
 									{activeField === "origin"
-										? "¿Desde dónde sales?"
-										: "¿A dónde vas?"}
+										? t("locations.whereFrom")
+										: t("locations.whereTo")}
 								</Text>
 								<Text
 									style={[
@@ -627,7 +630,7 @@ export function LocationChips({
 										{ color: colors.mutedForeground },
 									]}
 								>
-									Escribe una dirección o lugar
+									{t("locations.typeAddress")}
 								</Text>
 							</View>
 						)}

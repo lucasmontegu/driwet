@@ -11,7 +11,6 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/components/icons";
 import { useThemeColors } from "@/hooks/use-theme-colors";
-import { useTranslation } from "@/lib/i18n";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -39,7 +38,6 @@ export function FloatingTabBar({
 }: FloatingTabBarProps) {
 	const colors = useThemeColors();
 	const insets = useSafeAreaInsets();
-	const { t } = useTranslation();
 
 	const foundIndex = tabs.findIndex((tab) => tab.route === activeRoute);
 	const activeIndex = foundIndex === -1 ? 0 : foundIndex;
@@ -64,7 +62,14 @@ export function FloatingTabBar({
 	}));
 
 	return (
-		<View style={[styles.container, { paddingBottom: insets.bottom }]}>
+		<View
+			style={[
+				styles.container,
+				{
+					paddingBottom: insets.bottom - 16,
+				},
+			]}
+		>
 			<View style={[styles.tabBar, { backgroundColor: colors.card }]}>
 				{/* Animated indicator circle */}
 				<Animated.View
@@ -112,9 +117,10 @@ const styles = StyleSheet.create({
 		paddingBottom: 12,
 	},
 	tabBar: {
-		width: TAB_WIDTH,
+		width: "90%",
+    backdropFilter: "blur(20px)",
 		height: TAB_HEIGHT,
-		borderRadius: 32,
+		borderRadius: 36,
 		flexDirection: "row",
 		alignItems: "center",
 		shadowColor: "#000",

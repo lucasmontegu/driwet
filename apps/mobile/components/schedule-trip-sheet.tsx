@@ -16,6 +16,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Icon } from "@/components/icons";
 import { useThemeColors } from "@/hooks/use-theme-colors";
+import { useTranslation } from "@/lib/i18n";
 import { useScheduledTripsStore } from "@/stores/scheduled-trips-store";
 
 type RouteData = {
@@ -34,11 +35,12 @@ type ScheduleTripSheetProps = {
 	onScheduled?: (tripId: string) => void;
 };
 
-const QUICK_DATES = [
-	{ label: "Hoy", days: 0 },
-	{ label: "Mañana", days: 1 },
-	{ label: "Pasado", days: 2 },
-];
+const QUICK_DATES_KEYS = [
+	"schedule.today",
+	"schedule.tomorrow",
+	"schedule.dayAfterTomorrow",
+] as const;
+const QUICK_DATES_DAYS = [0, 1, 2];
 
 const QUICK_TIMES = [
 	{ label: "06:00", hours: 6, minutes: 0 },
@@ -52,11 +54,12 @@ const QUICK_TIMES = [
 ];
 
 const NOTIFY_HOURS_OPTIONS = [2, 4, 6, 8, 12, 24];
-const FREQUENCY_OPTIONS = [
-	{ label: "Cada 1h", value: 1 },
-	{ label: "Cada 2h", value: 2 },
-	{ label: "Cada 3h", value: 3 },
-];
+const FREQUENCY_OPTIONS_KEYS = [
+	"schedule.every1h",
+	"schedule.every2h",
+	"schedule.every3h",
+] as const;
+const FREQUENCY_OPTIONS_VALUES = [1, 2, 3];
 
 export function ScheduleTripSheet({
 	route,
@@ -65,6 +68,7 @@ export function ScheduleTripSheet({
 	onScheduled,
 }: ScheduleTripSheetProps) {
 	const colors = useThemeColors();
+	const { t } = useTranslation();
 	const bottomSheetRef = useRef<BottomSheet>(null);
 	const snapPoints = useMemo(() => ["85%"], []);
 
@@ -90,7 +94,7 @@ export function ScheduleTripSheet({
 	const getDepartureDate = useCallback(() => {
 		const now = new Date();
 		const date = new Date(now);
-		date.setDate(date.getDate() + (QUICK_DATES[selectedDateIndex]?.days ?? 0));
+		date.setDate(date.getDate() + (QUICK_DATES_DAYS[selectedDateIndex] ?? 0));
 
 		const time = QUICK_TIMES[selectedTimeIndex];
 		if (time) {
@@ -102,16 +106,17 @@ export function ScheduleTripSheet({
 
 	const formatDepartureDate = useCallback(() => {
 		const date = getDepartureDate();
-		const dayLabel = QUICK_DATES[selectedDateIndex]?.label ?? "";
+		const dayLabelKey = QUICK_DATES_KEYS[selectedDateIndex] ?? "schedule.today";
+		const dayLabel = t(dayLabelKey);
 		const timeLabel = QUICK_TIMES[selectedTimeIndex]?.label ?? "";
 
-		const dateStr = date.toLocaleDateString("es", {
+		const dateStr = date.toLocaleDateString(undefined, {
 			weekday: "short",
 			day: "numeric",
 			month: "short",
 		});
-		return `${dayLabel} (${dateStr}) a las ${timeLabel}`;
-	}, [getDepartureDate, selectedDateIndex, selectedTimeIndex]);
+		return `${dayLabel} (${dateStr}) ${t("schedule.summaryAt")} ${timeLabel}`;
+	}, [getDepartureDate, selectedDateIndex, selectedTimeIndex, t]);
 
 	const handleSchedule = useCallback(async () => {
 		const departureDate = getDepartureDate();
@@ -168,9 +173,12 @@ export function ScheduleTripSheet({
 						content: {
 							title:
 								hoursUntilDeparture > 0
-									? `🚗 Tu viaje en ${hoursUntilDeparture}h`
-									: "🚗 ¡Es hora de salir!",
-							body: `${route.originName} → ${route.destinationName}. Tocá para ver el clima.`,
+									? `🚗 ${t("schedule.tripIn", { hours: hoursUntilDeparture })}`
+									: `🚗 ${t("schedule.timeToLeave")}`,
+							body: t("schedule.notificationBody", {
+								origin: route.originName,
+								destination: route.destinationName,
+							}),
 							data: { tripId, routeId: route.id, type: "scheduled_trip" },
 						},
 						trigger: {
@@ -198,6 +206,7 @@ export function ScheduleTripSheet({
 		notifyFrequency,
 		onScheduled,
 		onClose,
+		t,
 	]);
 
 	if (!isVisible) return null;
@@ -216,7 +225,7 @@ export function ScheduleTripSheet({
 				{/* Header */}
 				<View style={styles.header}>
 					<Text style={[styles.title, { color: colors.foreground }]}>
-						Programar viaje
+						{t("schedule.title")}
 					</Text>
 					<Text style={[styles.routeName, { color: colors.mutedForeground }]}>
 						{route.originName} → {route.destinationName}
@@ -228,15 +237,15 @@ export function ScheduleTripSheet({
 					<View style={styles.sectionHeader}>
 						<Icon name="clock" size={20} color={colors.primary} />
 						<Text style={[styles.sectionTitle, { color: colors.foreground }]}>
-							¿Cuándo salís?
+							{t("schedule.whenLeaving")}
 						</Text>
 					</View>
 
 					{/* Quick date buttons */}
 					<View style={styles.optionsRow}>
-						{QUICK_DATES.map((date, index) => (
+						{QUICK_DATES_KEYS.map((key, index) => (
 							<TouchableOpacity
-								key={date.label}
+								key={key}
 								style={[
 									styles.optionButton,
 									{
@@ -263,7 +272,7 @@ export function ScheduleTripSheet({
 										},
 									]}
 								>
-									{date.label}
+									{t(key)}
 								</Text>
 							</TouchableOpacity>
 						))}
@@ -312,7 +321,7 @@ export function ScheduleTripSheet({
 					<View style={styles.sectionHeader}>
 						<Icon name="notification" size={20} color={colors.primary} />
 						<Text style={[styles.sectionTitle, { color: colors.foreground }]}>
-							Notificarme desde
+							{t("schedule.notifyFrom")}
 						</Text>
 					</View>
 
@@ -364,8 +373,7 @@ export function ScheduleTripSheet({
 							{ color: colors.mutedForeground },
 						]}
 					>
-						Recibirás informes del clima {notifyHoursBefore} horas antes de
-						salir
+						{t("schedule.notifyDescription", { hours: notifyHoursBefore })}
 					</Text>
 				</View>
 
@@ -374,41 +382,43 @@ export function ScheduleTripSheet({
 					<View style={styles.sectionHeader}>
 						<Icon name="refresh" size={20} color={colors.primary} />
 						<Text style={[styles.sectionTitle, { color: colors.foreground }]}>
-							Frecuencia de informes
+							{t("schedule.reportFrequency")}
 						</Text>
 					</View>
 
 					<View style={styles.optionsRow}>
-						{FREQUENCY_OPTIONS.map((freq) => (
+						{FREQUENCY_OPTIONS_KEYS.map((key, index) => (
 							<TouchableOpacity
-								key={freq.value}
+								key={key}
 								style={[
 									styles.optionButton,
 									{
 										backgroundColor:
-											notifyFrequency === freq.value
+											notifyFrequency === FREQUENCY_OPTIONS_VALUES[index]
 												? colors.primary
 												: colors.muted,
 										borderColor:
-											notifyFrequency === freq.value
+											notifyFrequency === FREQUENCY_OPTIONS_VALUES[index]
 												? colors.primary
 												: colors.border,
 									},
 								]}
-								onPress={() => setNotifyFrequency(freq.value)}
+								onPress={() =>
+									setNotifyFrequency(FREQUENCY_OPTIONS_VALUES[index] ?? 1)
+								}
 							>
 								<Text
 									style={[
 										styles.optionText,
 										{
 											color:
-												notifyFrequency === freq.value
+												notifyFrequency === FREQUENCY_OPTIONS_VALUES[index]
 													? colors.primaryForeground
 													: colors.foreground,
 										},
 									]}
 								>
-									{freq.label}
+									{t(key)}
 								</Text>
 							</TouchableOpacity>
 						))}
@@ -428,7 +438,10 @@ export function ScheduleTripSheet({
 								{ color: colors.mutedForeground },
 							]}
 						>
-							Informes cada {notifyFrequency}h desde {notifyHoursBefore}h antes
+							{t("schedule.summaryReports", {
+								frequency: notifyFrequency,
+								hours: notifyHoursBefore,
+							})}
 						</Text>
 					</View>
 				</View>
@@ -446,7 +459,7 @@ export function ScheduleTripSheet({
 							{ color: colors.primaryForeground },
 						]}
 					>
-						Programar viaje
+						{t("schedule.scheduleTrip")}
 					</Text>
 				</TouchableOpacity>
 			</BottomSheetView>

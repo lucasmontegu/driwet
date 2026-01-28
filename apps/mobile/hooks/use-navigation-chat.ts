@@ -86,26 +86,38 @@ export function useNavigationChat() {
 
 				// Collect streaming response - handle both iterator and direct response
 				let responseText = "";
-				if (
-					response &&
-					typeof response === "object" &&
-					Symbol.asyncIterator in response
-				) {
-					// It's an async iterator (streaming)
-					for await (const chunk of response) {
-						if (typeof chunk === "string") {
-							responseText += chunk;
-						} else if (chunk && typeof chunk === "object" && "data" in chunk) {
-							// SSE event format
-							responseText += String(chunk.data);
+				try {
+					if (
+						response &&
+						typeof response === "object" &&
+						Symbol.asyncIterator in response
+					) {
+						// It's an async iterator (streaming)
+						for await (const chunk of response) {
+							if (typeof chunk === "string") {
+								responseText += chunk;
+							} else if (
+								chunk &&
+								typeof chunk === "object" &&
+								"data" in chunk
+							) {
+								// SSE event format
+								responseText += String(chunk.data);
+							}
 						}
+					} else if (typeof response === "string") {
+						// Direct string response
+						responseText = response;
+					} else {
+						// Fallback - try to extract text
+						responseText = String(response ?? "");
 					}
-				} else if (typeof response === "string") {
-					// Direct string response
-					responseText = response;
-				} else {
-					// Fallback - try to extract text
-					responseText = String(response ?? "");
+				} catch (streamError) {
+					console.error("Error reading stream:", streamError);
+					// Use partial response if available, otherwise show error
+					if (!responseText) {
+						throw streamError;
+					}
 				}
 
 				// Add assistant message

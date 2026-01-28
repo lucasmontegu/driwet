@@ -102,7 +102,7 @@ export function TrialBanner() {
 				-1,
 			);
 		}
-	}, [isLastDay, isLastHours]);
+	}, [isLastDay, isLastHours, pulseScale, glowOpacity]);
 
 	const pulseStyle = useAnimatedStyle(() => ({
 		transform: [{ scale: pulseScale.value }],
@@ -163,7 +163,7 @@ export function TrialBanner() {
 		return {
 			type: "normal" as const,
 			backgroundColor: colors.primary,
-			gradientColors: [colors.primary, "#4F46E5"] as const,
+			gradientColors: [colors.primary, "#1D4ED8"] as const,
 			textColor: "#FFFFFF",
 			icon: "star" as const,
 			showCountdown: false,
