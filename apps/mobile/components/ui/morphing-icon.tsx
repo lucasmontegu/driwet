@@ -1,40 +1,34 @@
 import {
 	Alert01Icon,
-	Alert01SolidIcon,
 	Home01Icon,
-	Home01SolidIcon,
-	Route01Icon,
-	Route01SolidIcon,
-	UserIcon,
-	UserSolidIcon,
 	Location01Icon,
-	Location01SolidIcon,
-	Star01Icon,
-	Star01SolidIcon,
+	Route01Icon,
+	StarIcon,
+	UserIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useEffect } from "react";
 import Animated, {
+	interpolate,
 	useAnimatedStyle,
 	useSharedValue,
 	withSpring,
-	interpolate,
 } from "react-native-reanimated";
-import { useThemeColors } from "@/hooks/use-theme-colors";
 import { springs } from "@/hooks/use-animation-tokens";
 import { useReduceMotion } from "@/hooks/use-reduce-motion";
+import { useThemeColors } from "@/hooks/use-theme-colors";
 
-// Icon pairs: stroke and solid versions
-const iconPairs = {
-	home: { stroke: Home01Icon, solid: Home01SolidIcon },
-	alert: { stroke: Alert01Icon, solid: Alert01SolidIcon },
-	route: { stroke: Route01Icon, solid: Route01SolidIcon },
-	user: { stroke: UserIcon, solid: UserSolidIcon },
-	location: { stroke: Location01Icon, solid: Location01SolidIcon },
-	star: { stroke: Star01Icon, solid: Star01SolidIcon },
+// Icon map (free icons only have stroke versions)
+const iconMap = {
+	home: Home01Icon,
+	alert: Alert01Icon,
+	route: Route01Icon,
+	user: UserIcon,
+	location: Location01Icon,
+	star: StarIcon,
 } as const;
 
-export type MorphingIconName = keyof typeof iconPairs;
+export type MorphingIconName = keyof typeof iconMap;
 
 type MorphingIconProps = {
 	name: MorphingIconName;
@@ -48,8 +42,8 @@ type MorphingIconProps = {
 export function MorphingIcon({
 	name,
 	isActive,
-	size = 26,
-	activeSize = 28,
+	size = 24,
+	activeSize = 26,
 	color,
 	activeColor,
 }: MorphingIconProps) {
@@ -57,8 +51,8 @@ export function MorphingIcon({
 	const reduceMotion = useReduceMotion();
 	const progress = useSharedValue(isActive ? 1 : 0);
 
-	const strokeColor = color || colors.mutedForeground;
-	const solidColor = activeColor || colors.primary;
+	const inactiveColor = color || colors.mutedForeground;
+	const activeIconColor = activeColor || colors.primary;
 
 	useEffect(() => {
 		if (reduceMotion) {
@@ -68,20 +62,22 @@ export function MorphingIcon({
 		}
 	}, [isActive, reduceMotion]);
 
-	const strokeStyle = useAnimatedStyle(() => ({
+	// Inactive state: smaller, thinner stroke, muted color
+	const inactiveStyle = useAnimatedStyle(() => ({
 		opacity: interpolate(progress.value, [0, 0.5], [1, 0]),
 		transform: [{ scale: interpolate(progress.value, [0, 1], [1, 0.8]) }],
 		position: "absolute" as const,
 	}));
 
-	const solidStyle = useAnimatedStyle(() => ({
+	// Active state: larger, thicker stroke, primary color with bounce
+	const activeStyle = useAnimatedStyle(() => ({
 		opacity: interpolate(progress.value, [0.5, 1], [0, 1]),
 		transform: [
 			{ scale: interpolate(progress.value, [0, 0.5, 1], [0.8, 1.15, 1.05]) },
 		],
 	}));
 
-	const iconPair = iconPairs[name];
+	const IconComponent = iconMap[name];
 
 	return (
 		<Animated.View
@@ -92,20 +88,22 @@ export function MorphingIcon({
 				alignItems: "center",
 			}}
 		>
-			<Animated.View style={strokeStyle}>
+			{/* Inactive icon: thinner stroke */}
+			<Animated.View style={inactiveStyle}>
 				<HugeiconsIcon
-					icon={iconPair.stroke}
+					icon={IconComponent}
 					size={size}
-					color={strokeColor}
+					color={inactiveColor}
 					strokeWidth={1.5}
 				/>
 			</Animated.View>
-			<Animated.View style={solidStyle}>
+			{/* Active icon: thicker stroke for bolder look */}
+			<Animated.View style={activeStyle}>
 				<HugeiconsIcon
-					icon={iconPair.solid}
+					icon={IconComponent}
 					size={activeSize}
-					color={solidColor}
-					strokeWidth={1.5}
+					color={activeIconColor}
+					strokeWidth={2.5}
 				/>
 			</Animated.View>
 		</Animated.View>
