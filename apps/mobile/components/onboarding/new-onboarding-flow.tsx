@@ -8,12 +8,12 @@ import {
 	Pressable,
 	StyleSheet,
 	Text,
-	TouchableOpacity,
 	View,
 } from "react-native";
 import Animated, {
 	FadeIn,
 	FadeInDown,
+	FadeInUp,
 	SlideInRight,
 	useAnimatedStyle,
 	useSharedValue,
@@ -22,11 +22,13 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/components/icons";
+import { AnimatedPressable } from "@/components/ui/animated-pressable";
 import { useCompleteOnboarding } from "@/hooks/use-api";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { authClient } from "@/lib/auth-client";
 import { useTranslation } from "@/lib/i18n";
 import { DemoScreen } from "./demo-screen";
+import { DrivingProgress } from "./driving-progress";
 import { HookScreen } from "./hook-screen";
 import { PersonalizationScreen, type TripType } from "./personalization-screen";
 import { PromiseScreen } from "./promise-screen";
@@ -269,33 +271,18 @@ export function NewOnboardingFlow({
 			{/* Screen content */}
 			{renderScreen()}
 
-			{/* Animated Progress Bar - shows on all screens except hook */}
+			{/* Animated Progress Bar with Driving Car - shows on all screens except hook */}
 			{showProgressBar && (
 				<Animated.View
 					entering={FadeInDown.delay(100).duration(400)}
 					style={[styles.progressContainer, { paddingTop: insets.top + 8 }]}
 					pointerEvents="none"
 				>
-					<View
-						style={[styles.progressTrack, { backgroundColor: colors.muted }]}
-					>
-						<Animated.View style={[styles.progressFill, progressStyle]}>
-							<LinearGradient
-								colors={[colors.primary, "#4F46E5"]}
-								start={{ x: 0, y: 0 }}
-								end={{ x: 1, y: 0 }}
-								style={StyleSheet.absoluteFillObject}
-							/>
-							{/* Glow effect at the end */}
-							<Animated.View
-								style={[
-									styles.progressGlow,
-									{ backgroundColor: colors.primary },
-									progressGlowStyle,
-								]}
-							/>
-						</Animated.View>
-					</View>
+					{/* Driving Progress - Car animation */}
+					<DrivingProgress
+						progress={(currentIndex / (activeSteps.length - 1)) * 100}
+						isComplete={isLastStep}
+					/>
 
 					{/* Step indicators */}
 					<View style={styles.stepIndicators}>
@@ -364,10 +351,9 @@ export function NewOnboardingFlow({
 					{/* Top bar with back/skip */}
 					<View style={[styles.topBar, { paddingTop: insets.top + 80 }]}>
 						{canGoBack ? (
-							<TouchableOpacity
+							<AnimatedPressable
 								onPress={handleBack}
 								style={styles.backButton}
-								activeOpacity={0.7}
 							>
 								<View
 									style={[
@@ -377,16 +363,15 @@ export function NewOnboardingFlow({
 								>
 									<Icon name="close" size={16} color={colors.mutedForeground} />
 								</View>
-							</TouchableOpacity>
+							</AnimatedPressable>
 						) : (
 							<View style={styles.backButton} />
 						)}
 
 						{canSkip && !showFinishButton && (
-							<TouchableOpacity
+							<AnimatedPressable
 								onPress={handleSkip}
 								style={styles.skipButton}
-								activeOpacity={0.7}
 							>
 								<Text
 									style={[
@@ -396,12 +381,15 @@ export function NewOnboardingFlow({
 								>
 									{t("onboarding.skip")}
 								</Text>
-							</TouchableOpacity>
+							</AnimatedPressable>
 						)}
 					</View>
 
 					{/* Bottom bar with next/finish button */}
-					<View style={styles.bottomBar}>
+					<Animated.View
+						entering={FadeInUp.delay(300).springify()}
+						style={styles.bottomBar}
+					>
 						{/* Progress text */}
 						<Text
 							style={[styles.progressText, { color: colors.mutedForeground }]}
@@ -410,12 +398,12 @@ export function NewOnboardingFlow({
 						</Text>
 
 						{/* Next/Finish button */}
-						<TouchableOpacity
+						<AnimatedPressable
 							onPress={showFinishButton ? handleFinishOnboarding : handleNext}
-							activeOpacity={0.8}
+							scaleDown={0.97}
 						>
 							<LinearGradient
-								colors={[colors.primary, "#4F46E5"]}
+								colors={[colors.primary, "#1D4ED8"]}
 								start={{ x: 0, y: 0 }}
 								end={{ x: 1, y: 1 }}
 								style={styles.nextButton}
@@ -439,8 +427,8 @@ export function NewOnboardingFlow({
 									{showFinishButton ? "✓" : "→"}
 								</Text>
 							</LinearGradient>
-						</TouchableOpacity>
-					</View>
+						</AnimatedPressable>
+					</Animated.View>
 				</Animated.View>
 			)}
 		</View>
