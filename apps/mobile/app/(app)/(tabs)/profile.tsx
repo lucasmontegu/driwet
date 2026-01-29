@@ -1,17 +1,20 @@
-// apps/native/app/(app)/(tabs)/profile.tsx
+// apps/mobile/app/(app)/(tabs)/profile.tsx
 
 import { type Href, useRouter } from "expo-router";
 import { useState } from "react";
 import {
 	ActivityIndicator,
 	Modal,
-	Pressable,
 	ScrollView,
+	StyleSheet,
 	Text,
 	View,
 } from "react-native";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Icon, type IconName } from "@/components/icons";
+import { StatCard } from "@/components/profile/stat-card";
+import { AnimatedPressable } from "@/components/ui/animated-pressable";
 import { useAppTheme } from "@/contexts/app-theme-context";
 import { useLanguage } from "@/contexts/language-context";
 import { useUserProfile, useUserStats } from "@/hooks/use-api";
@@ -71,92 +74,69 @@ function SettingsModal({
 			animationType="fade"
 			onRequestClose={onClose}
 		>
-			<Pressable
-				style={{
-					flex: 1,
-					backgroundColor: "rgba(0,0,0,0.5)",
-					justifyContent: "center",
-					alignItems: "center",
-				}}
+			<AnimatedPressable
+				style={styles.modalOverlay}
 				onPress={onClose}
+				enableHaptics={false}
 			>
-				<Pressable
-					style={{
-						backgroundColor: colors.card,
-						borderRadius: 16,
-						padding: 20,
-						width: "80%",
-						maxWidth: 320,
-					}}
+				<AnimatedPressable
+					style={[styles.modalContent, { backgroundColor: colors.card }]}
 					onPress={(e) => e.stopPropagation()}
+					enableHaptics={false}
 				>
 					<Text
-						style={{
-							fontFamily: "NunitoSans_600SemiBold",
-							fontSize: 18,
-							color: colors.foreground,
-							marginBottom: 16,
-							textAlign: "center",
-						}}
+						style={[styles.modalTitle, { color: colors.foreground }]}
 					>
 						{title}
 					</Text>
-					{options.map((option) => (
-						<Pressable
+					{options.map((option, index) => (
+						<Animated.View
 							key={option.value}
-							onPress={() => {
-								onSelect(option.value);
-								onClose();
-							}}
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								padding: 14,
-								borderRadius: 10,
-								backgroundColor:
-									currentValue === option.value
-										? colors.primary + "20"
-										: "transparent",
-								marginBottom: 8,
-							}}
+							entering={FadeInDown.delay(index * 50).springify()}
 						>
-							<Text
-								style={{
-									flex: 1,
-									fontFamily: "NunitoSans_400Regular",
-									fontSize: 16,
-									color:
-										currentValue === option.value
-											? colors.primary
-											: colors.foreground,
+							<AnimatedPressable
+								onPress={() => {
+									onSelect(option.value);
+									onClose();
 								}}
+								style={[
+									styles.modalOption,
+									{
+										backgroundColor:
+											currentValue === option.value
+												? colors.primary + "20"
+												: "transparent",
+									},
+								]}
 							>
-								{t(option.labelKey)}
-							</Text>
-							{currentValue === option.value && (
-								<Icon name="check" size={20} color={colors.primary} />
-							)}
-						</Pressable>
+								<Text
+									style={[
+										styles.modalOptionText,
+										{
+											color:
+												currentValue === option.value
+													? colors.primary
+													: colors.foreground,
+										},
+									]}
+								>
+									{t(option.labelKey)}
+								</Text>
+								{currentValue === option.value && (
+									<Icon name="check" size={20} color={colors.primary} />
+								)}
+							</AnimatedPressable>
+						</Animated.View>
 					))}
-					<Pressable
-						onPress={onClose}
-						style={{
-							marginTop: 8,
-							padding: 12,
-							alignItems: "center",
-						}}
-					>
+					<AnimatedPressable onPress={onClose} style={styles.modalCancel}>
 						<Text
-							style={{
-								fontFamily: "NunitoSans_400Regular",
-								color: colors.mutedForeground,
-							}}
+							style={[styles.modalCancelText, { color: colors.mutedForeground }]}
 						>
 							{t("common.cancel")}
 						</Text>
-					</Pressable>
-				</Pressable>
-			</Pressable>
+					</AnimatedPressable>
+				</AnimatedPressable>
+			</AnimatedPressable>
 		</Modal>
 	);
 }
@@ -165,24 +145,19 @@ export default function ProfileScreen() {
 	const colors = useThemeColors();
 	const router = useRouter();
 	const { t } = useTranslation();
-	// Use useIsPremium hook which combines RevenueCat subscription + trial state
 	const { isPremium, isSubscribed, plan } = useIsPremium();
 	const { getRemainingDays } = useTrialStore();
 	const remainingDays = getRemainingDays();
 
-	// Get theme and language from contexts
 	const { themeMode, setThemeMode } = useAppTheme();
 	const { language, setLanguage } = useLanguage();
 
-	// Modal states
 	const [showThemeModal, setShowThemeModal] = useState(false);
 	const [showLanguageModal, setShowLanguageModal] = useState(false);
 
-	// Fetch real data from API
 	const { data: profile, isLoading: profileLoading } = useUserProfile();
 	const { data: stats, isLoading: statsLoading } = useUserStats();
 
-	// Get display values for current settings
 	const getThemeLabel = () => {
 		switch (themeMode) {
 			case "light":
@@ -245,228 +220,160 @@ export default function ProfileScreen() {
 		}
 	};
 
-	// Format stats for display
 	const formattedStats = [
 		{
 			icon: "storm" as IconName,
-			labelKey: "profile.stormsAvoided",
+			label: t("profile.stormsAvoided"),
 			value: stats?.stormsAvoided ?? 0,
 		},
 		{
 			icon: "money" as IconName,
-			labelKey: "profile.moneySaved",
-			value: stats?.moneySaved?.toLocaleString() ?? "0",
+			label: t("profile.moneySavedShort"),
+			value: `$${stats?.moneySaved?.toLocaleString() ?? "0"}`,
 		},
 		{
 			icon: "road" as IconName,
-			labelKey: "profile.kmTraveled",
+			label: t("profile.kmTraveledShort"),
 			value: stats?.kmTraveled ?? 0,
 		},
 	];
 
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-			<ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
+		<SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
 				{/* Header */}
-				<Text
-					style={{
-						fontFamily: "NunitoSans_700Bold",
-						fontSize: 28,
-						color: colors.foreground,
-						marginBottom: 24,
-					}}
+				<Animated.Text
+					entering={FadeInDown.delay(0).springify()}
+					style={[styles.title, { color: colors.foreground }]}
 				>
 					{t("profile.title")}
-				</Text>
+				</Animated.Text>
 
 				{/* User Card */}
-				<Pressable
-					style={{
-						backgroundColor: colors.card,
-						borderRadius: 12,
-						padding: 16,
-						borderWidth: 1,
-						borderColor: colors.border,
-						marginBottom: 24,
-					}}
-				>
-					<View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
-						<View
-							style={{
-								width: 48,
-								height: 48,
-								borderRadius: 24,
-								backgroundColor: colors.primary,
-								justifyContent: "center",
-								alignItems: "center",
-							}}
-						>
-							<Icon name="user" size={24} color={colors.primaryForeground} />
-						</View>
-						<View style={{ flex: 1 }}>
-							{profileLoading ? (
-								<ActivityIndicator
-									size="small"
-									color={colors.mutedForeground}
-								/>
-							) : (
-								<>
-									<Text
-										style={{
-											fontFamily: "NunitoSans_600SemiBold",
-											color: colors.foreground,
-											fontSize: 16,
-										}}
-									>
-										{profile?.email ?? t("common.loading")}
+				<Animated.View entering={FadeInDown.delay(100).springify()}>
+					<AnimatedPressable
+						style={[
+							styles.userCard,
+							{
+								backgroundColor: colors.card,
+								borderColor: colors.border,
+							},
+						]}
+					>
+						<View style={styles.userCardContent}>
+							<View
+								style={[styles.avatar, { backgroundColor: colors.primary }]}
+							>
+								<Icon name="user" size={24} color={colors.primaryForeground} />
+							</View>
+							<View style={styles.userInfo}>
+								{profileLoading ? (
+									<ActivityIndicator
+										size="small"
+										color={colors.mutedForeground}
+									/>
+								) : (
+									<>
+										<Text style={[styles.userEmail, { color: colors.foreground }]}>
+											{profile?.email ?? t("common.loading")}
+										</Text>
+										<Text
+											style={[
+												styles.userPlan,
+												{
+													color: isSubscribed
+														? colors.primary
+														: colors.mutedForeground,
+												},
+											]}
+										>
+											{isSubscribed
+												? t("profile.planPremium")
+												: t("profile.trialRemaining", { days: remainingDays })}
+										</Text>
+									</>
+								)}
+							</View>
+							{!isSubscribed && (
+								<AnimatedPressable onPress={handleUpgrade}>
+									<Text style={[styles.upgradeText, { color: colors.primary }]}>
+										{t("profile.upgrade")}
 									</Text>
-									<Text
-										style={{
-											fontFamily: "NunitoSans_400Regular",
-											color: isSubscribed
-												? colors.primary
-												: colors.mutedForeground,
-											fontSize: 14,
-										}}
-									>
-										{isSubscribed
-											? t("profile.planPremium")
-											: t("profile.trialRemaining", { days: remainingDays })}
-									</Text>
-								</>
+								</AnimatedPressable>
 							)}
 						</View>
-						{!isSubscribed && (
-							<Pressable onPress={handleUpgrade}>
-								<Text
-									style={{
-										color: colors.primary,
-										fontFamily: "NunitoSans_600SemiBold",
-									}}
-								>
-									{t("profile.upgrade")}
-								</Text>
-							</Pressable>
-						)}
-					</View>
-				</Pressable>
+					</AnimatedPressable>
+				</Animated.View>
 
-				{/* Stats */}
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						gap: 8,
-						marginBottom: 12,
-					}}
+				{/* Stats Section */}
+				<Animated.View
+					entering={FadeInDown.delay(200).springify()}
+					style={styles.sectionHeader}
 				>
 					<Icon name="stats" size={18} color={colors.mutedForeground} />
-					<Text
-						style={{
-							fontFamily: "NunitoSans_600SemiBold",
-							fontSize: 16,
-							color: colors.mutedForeground,
-						}}
-					>
+					<Text style={[styles.sectionTitle, { color: colors.mutedForeground }]}>
 						{t("profile.stats")}
 					</Text>
-				</View>
-				<View
-					style={{
-						backgroundColor: colors.card,
-						borderRadius: 12,
-						padding: 16,
-						borderWidth: 1,
-						borderColor: colors.border,
-						marginBottom: 24,
-						gap: 12,
-					}}
-				>
-					{statsLoading ? (
-						<ActivityIndicator size="small" color={colors.mutedForeground} />
-					) : (
-						formattedStats.map((stat, index) => (
-							<View
-								key={index}
-								style={{ flexDirection: "row", alignItems: "center", gap: 12 }}
-							>
-								<Icon name={stat.icon} size={20} color={colors.primary} />
-								<Text
-									style={{
-										fontFamily: "NunitoSans_400Regular",
-										color: colors.foreground,
-									}}
-								>
-									{t(stat.labelKey, {
-										count: Number(stat.value),
-										amount: stat.value,
-										km: stat.value,
-									})}
-								</Text>
-							</View>
-						))
-					)}
-				</View>
+				</Animated.View>
 
-				{/* Settings */}
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						gap: 8,
-						marginBottom: 12,
-					}}
+				{statsLoading ? (
+					<View style={styles.statsLoading}>
+						<ActivityIndicator size="small" color={colors.mutedForeground} />
+					</View>
+				) : (
+					<View style={styles.statsGrid}>
+						{formattedStats.map((stat, index) => (
+							<StatCard
+								key={stat.icon}
+								icon={stat.icon}
+								value={stat.value}
+								label={stat.label}
+								index={index}
+							/>
+						))}
+					</View>
+				)}
+
+				{/* Settings Section */}
+				<Animated.View
+					entering={FadeInDown.delay(400).springify()}
+					style={styles.sectionHeader}
 				>
 					<Icon name="settings" size={18} color={colors.mutedForeground} />
-					<Text
-						style={{
-							fontFamily: "NunitoSans_600SemiBold",
-							fontSize: 16,
-							color: colors.mutedForeground,
-						}}
-					>
+					<Text style={[styles.sectionTitle, { color: colors.mutedForeground }]}>
 						{t("profile.settings")}
 					</Text>
-				</View>
-				<View
-					style={{
-						backgroundColor: colors.card,
-						borderRadius: 12,
-						borderWidth: 1,
-						borderColor: colors.border,
-						marginBottom: 24,
-					}}
+				</Animated.View>
+
+				<Animated.View
+					entering={FadeInDown.delay(500).springify()}
+					style={[
+						styles.settingsCard,
+						{
+							backgroundColor: colors.card,
+							borderColor: colors.border,
+						},
+					]}
 				>
 					{settings.map((setting, index) => (
-						<Pressable
-							key={index}
+						<AnimatedPressable
+							key={setting.labelKey}
 							onPress={() => handleSettingPress(setting)}
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								padding: 16,
-								borderBottomWidth: index < settings.length - 1 ? 1 : 0,
-								borderBottomColor: colors.border,
-							}}
+							style={[
+								styles.settingRow,
+								index < settings.length - 1 && {
+									borderBottomWidth: 1,
+									borderBottomColor: colors.border,
+								},
+							]}
 						>
 							<Icon name={setting.icon} size={20} color={colors.foreground} />
-							<Text
-								style={{
-									flex: 1,
-									marginLeft: 12,
-									fontFamily: "NunitoSans_400Regular",
-									color: colors.foreground,
-								}}
-							>
+							<Text style={[styles.settingLabel, { color: colors.foreground }]}>
 								{t(setting.labelKey)}
 							</Text>
 							{setting.value && (
 								<Text
-									style={{
-										fontFamily: "NunitoSans_400Regular",
-										color: colors.mutedForeground,
-										marginRight: 8,
-									}}
+									style={[styles.settingValue, { color: colors.mutedForeground }]}
 								>
 									{setting.value}
 								</Text>
@@ -476,30 +383,22 @@ export default function ProfileScreen() {
 								size={16}
 								color={colors.mutedForeground}
 							/>
-						</Pressable>
+						</AnimatedPressable>
 					))}
-				</View>
+				</Animated.View>
 
 				{/* Logout */}
-				<Pressable
-					onPress={handleLogout}
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						gap: 12,
-						padding: 16,
-					}}
-				>
-					<Icon name="logout" size={20} color={colors.destructive} />
-					<Text
-						style={{
-							fontFamily: "NunitoSans_400Regular",
-							color: colors.destructive,
-						}}
+				<Animated.View entering={FadeInUp.delay(600).springify()}>
+					<AnimatedPressable
+						onPress={handleLogout}
+						style={styles.logoutButton}
 					>
-						{t("profile.logout")}
-					</Text>
-				</Pressable>
+						<Icon name="logout" size={20} color={colors.destructive} />
+						<Text style={[styles.logoutText, { color: colors.destructive }]}>
+							{t("profile.logout")}
+						</Text>
+					</AnimatedPressable>
+				</Animated.View>
 			</ScrollView>
 
 			{/* Theme Selection Modal */}
@@ -524,3 +423,137 @@ export default function ProfileScreen() {
 		</SafeAreaView>
 	);
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
+	scrollView: {
+		flex: 1,
+	},
+	scrollContent: {
+		padding: 16,
+	},
+	title: {
+		fontFamily: "NunitoSans_700Bold",
+		fontSize: 28,
+		marginBottom: 24,
+	},
+	userCard: {
+		borderRadius: 12,
+		padding: 16,
+		borderWidth: 1,
+		marginBottom: 24,
+	},
+	userCardContent: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 12,
+	},
+	avatar: {
+		width: 48,
+		height: 48,
+		borderRadius: 24,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	userInfo: {
+		flex: 1,
+	},
+	userEmail: {
+		fontFamily: "NunitoSans_600SemiBold",
+		fontSize: 16,
+	},
+	userPlan: {
+		fontFamily: "NunitoSans_400Regular",
+		fontSize: 14,
+	},
+	upgradeText: {
+		fontFamily: "NunitoSans_600SemiBold",
+	},
+	sectionHeader: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 8,
+		marginBottom: 12,
+	},
+	sectionTitle: {
+		fontFamily: "NunitoSans_600SemiBold",
+		fontSize: 16,
+	},
+	statsLoading: {
+		padding: 40,
+		alignItems: "center",
+	},
+	statsGrid: {
+		flexDirection: "row",
+		gap: 12,
+		marginBottom: 24,
+	},
+	settingsCard: {
+		borderRadius: 12,
+		borderWidth: 1,
+		marginBottom: 24,
+	},
+	settingRow: {
+		flexDirection: "row",
+		alignItems: "center",
+		padding: 16,
+	},
+	settingLabel: {
+		flex: 1,
+		marginLeft: 12,
+		fontFamily: "NunitoSans_400Regular",
+	},
+	settingValue: {
+		fontFamily: "NunitoSans_400Regular",
+		marginRight: 8,
+	},
+	logoutButton: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 12,
+		padding: 16,
+	},
+	logoutText: {
+		fontFamily: "NunitoSans_400Regular",
+	},
+	modalOverlay: {
+		flex: 1,
+		backgroundColor: "rgba(0,0,0,0.5)",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	modalContent: {
+		borderRadius: 16,
+		padding: 20,
+		width: "80%",
+		maxWidth: 320,
+	},
+	modalTitle: {
+		fontFamily: "NunitoSans_600SemiBold",
+		fontSize: 18,
+		marginBottom: 16,
+		textAlign: "center",
+	},
+	modalOption: {
+		flexDirection: "row",
+		alignItems: "center",
+		padding: 14,
+		borderRadius: 10,
+		marginBottom: 8,
+	},
+	modalOptionText: {
+		flex: 1,
+		fontFamily: "NunitoSans_400Regular",
+		fontSize: 16,
+	},
+	modalCancel: {
+		marginTop: 8,
+		padding: 12,
+		alignItems: "center",
+	},
+	modalCancelText: {
+		fontFamily: "NunitoSans_400Regular",
+	},
+});
