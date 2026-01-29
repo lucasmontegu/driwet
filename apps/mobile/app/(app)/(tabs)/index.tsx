@@ -2,16 +2,18 @@
 
 import * as Haptics from "expo-haptics";
 import { useCallback, useMemo, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, {
-	FadeInDown,
+	Easing,
+	FadeIn,
 	SlideInDown,
 	SlideOutDown,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LocationChips, type RouteLocation } from "@/components/location-chips";
 import { MapViewComponent, type WeatherAlert } from "@/components/map-view";
+import { useProvidersReady } from "@/components/provider-guard";
 import { RouteChips as RouteInfoChips } from "@/components/route-chips";
 import { PaywallModal } from "@/components/subscription";
 import { SuggestionsSheet } from "@/components/suggestions-sheet";
@@ -21,7 +23,17 @@ import { usePaywall } from "@/hooks/use-paywall";
 import { useRouteDirections } from "@/hooks/use-route-directions";
 import { useTranslation } from "@/lib/i18n";
 
-export default function MapScreen() {
+// Loading screen while providers initialize
+function LoadingScreen() {
+	return (
+		<View style={styles.loadingContainer}>
+			<ActivityIndicator size="large" color="#0936d6" />
+		</View>
+	);
+}
+
+// Main map screen content
+function MapScreenContent() {
 	const insets = useSafeAreaInsets();
 	const { t } = useTranslation();
 	const { location, isLoading: locationLoading } = useLocation();
@@ -133,7 +145,7 @@ export default function MapScreen() {
 
 				{/* Top overlay - Location Chips */}
 				<Animated.View
-					entering={FadeInDown.duration(400).delay(100)}
+					entering={FadeIn.duration(300).easing(Easing.out(Easing.quad))}
 					style={[styles.topOverlay, { paddingTop: insets.top + 12 }]}
 					pointerEvents="box-none"
 				>
@@ -149,8 +161,12 @@ export default function MapScreen() {
 				{/* Route Info Chips - shown when route is active */}
 				{hasRoute && !showSuggestions && (
 					<Animated.View
-						entering={SlideInDown.duration(400)}
-						exiting={SlideOutDown.duration(300)}
+						entering={SlideInDown.duration(250).easing(
+							Easing.bezier(0.2, 0, 0, 1),
+						)}
+						exiting={SlideOutDown.duration(200).easing(
+							Easing.bezier(0.4, 0, 1, 1),
+						)}
 						style={styles.routeChipsContainer}
 					>
 						<RouteInfoChips
@@ -192,9 +208,26 @@ export default function MapScreen() {
 	);
 }
 
+// Main export - checks providers before rendering
+export default function MapScreen() {
+	const isReady = useProvidersReady();
+
+	if (!isReady) {
+		return <LoadingScreen />;
+	}
+
+	return <MapScreenContent />;
+}
+
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+	},
+	loadingContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "#000",
 	},
 	topOverlay: {
 		position: "absolute",

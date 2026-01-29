@@ -2,11 +2,11 @@ import * as Haptics from "expo-haptics";
 import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Animated, {
+	interpolate,
 	useAnimatedStyle,
 	useSharedValue,
-	withSpring,
 	withDelay,
-	interpolate,
+	withSpring,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AnimatedPressable } from "@/components/ui/animated-pressable";

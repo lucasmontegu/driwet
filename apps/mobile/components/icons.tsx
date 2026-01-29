@@ -4,6 +4,7 @@ import {
 	Alert01Icon,
 	AlertDiamondIcon,
 	AnalyticsUpIcon,
+	ArrangeIcon,
 	ArrowDown01Icon,
 	ArrowLeft01Icon,
 	ArrowRight01Icon,
@@ -143,7 +144,7 @@ const iconMap = {
 	mute: MicOff01Icon,
 	pin: PinLocation01Icon,
 	history: Clock01Icon,
-	swap: Refresh01Icon,
+	swap: ArrangeIcon,
 	flag: Flag01Icon,
 } as const;
 

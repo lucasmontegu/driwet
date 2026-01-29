@@ -16,7 +16,8 @@ import { HeroUINativeProvider } from "heroui-native";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
-
+import { ProviderCheckProvider } from "@/components/provider-guard";
+import { UpdateBanner } from "@/components/update-banner";
 import { AppThemeProvider } from "@/contexts/app-theme-context";
 import { LanguageProvider } from "@/contexts/language-context";
 import { NotificationsProvider } from "@/contexts/notifications-context";
@@ -82,7 +83,10 @@ export default function Layout() {
 								<HeroUINativeProvider>
 									<RevenueCatProvider>
 										<NotificationsProvider>
-											<StackLayout />
+											<ProviderCheckProvider>
+												<UpdateBanner />
+												<StackLayout />
+											</ProviderCheckProvider>
 										</NotificationsProvider>
 									</RevenueCatProvider>
 								</HeroUINativeProvider>

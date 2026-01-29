@@ -25,6 +25,7 @@ import { useNavigation } from "@/hooks/use-navigation";
 import { useNavigationCopilot } from "@/hooks/use-navigation-copilot";
 import { useRouteWeather } from "@/hooks/use-route-weather";
 import { useThemeColors } from "@/hooks/use-theme-colors";
+import { useTranslation } from "@/lib/i18n";
 
 type NavigationParams = {
 	originLat: string;
@@ -60,6 +61,7 @@ export default function NavigationScreen() {
 
 	// Navigation state management
 	const navigation = useNavigation();
+	const { t } = useTranslation();
 
 	// Weather-aware copilot
 	const copilot = useNavigationCopilot({
@@ -142,15 +144,15 @@ export default function NavigationScreen() {
 	// Handle cancel navigation
 	const handleCancel = useCallback(() => {
 		Alert.alert(
-			"¿Cancelar navegación?",
-			"¿Estás seguro de que querés cancelar la navegación?",
+			t("navigation.cancelNavigation"),
+			t("navigation.cancelMessage"),
 			[
 				{
-					text: "Continuar",
+					text: t("navigation.continue"),
 					style: "cancel",
 				},
 				{
-					text: "Cancelar",
+					text: t("common.cancel"),
 					style: "destructive",
 					onPress: () => {
 						copilot.stop();
@@ -159,7 +161,7 @@ export default function NavigationScreen() {
 				},
 			],
 		);
-	}, [copilot, router]);
+	}, [copilot, router, t]);
 
 	// Toggle controls visibility
 	const handleMapTap = useCallback(() => {

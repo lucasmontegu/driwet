@@ -16,6 +16,7 @@ import { Icon } from "@/components/icons";
 import { useNavigationChat } from "@/hooks/use-navigation-chat";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { Analytics } from "@/lib/analytics";
+import { useTranslation } from "@/lib/i18n";
 
 type ChatPanelProps = {
 	origin?: {
@@ -33,6 +34,7 @@ export function ChatPanel({ origin, destination, onClose }: ChatPanelProps) {
 	const [input, setInput] = useState("");
 	const insets = useSafeAreaInsets();
 	const colors = useThemeColors();
+	const { t } = useTranslation();
 	const { messages, isLoading, sendMessage, clearMessages } =
 		useNavigationChat();
 
@@ -56,8 +58,7 @@ export function ChatPanel({ origin, destination, onClose }: ChatPanelProps) {
 					{
 						id: "welcome",
 						role: "assistant" as const,
-						content:
-							"Hola, soy Driwet Copilot. Pregúntame sobre el clima en tu ruta, alertas meteorológicas, o dónde parar si hay tormentas.",
+						content: t("chat.welcomeMessage"),
 						timestamp: new Date(),
 					},
 				];
@@ -80,7 +81,7 @@ export function ChatPanel({ origin, destination, onClose }: ChatPanelProps) {
 				<View style={styles.header}>
 					<View style={styles.headerInfo}>
 						<Text style={[styles.headerTitle, { color: colors.foreground }]}>
-							Driwet Copilot
+							{t("chat.title")}
 						</Text>
 						{(origin || destination) && (
 							<Text
@@ -89,8 +90,8 @@ export function ChatPanel({ origin, destination, onClose }: ChatPanelProps) {
 									{ color: colors.mutedForeground },
 								]}
 							>
-								{origin?.name || "Mi ubicación"} →{" "}
-								{destination?.name || "Destino"}
+								{origin?.name || t("chat.myLocation")} →{" "}
+								{destination?.name || t("chat.destination")}
 							</Text>
 						)}
 					</View>
@@ -197,7 +198,7 @@ export function ChatPanel({ origin, destination, onClose }: ChatPanelProps) {
 								color: colors.foreground,
 							},
 						]}
-						placeholder="Pregunta sobre el clima o tu ruta..."
+						placeholder={t("chat.inputPlaceholder")}
 						placeholderTextColor={colors.mutedForeground}
 						value={input}
 						onChangeText={setInput}
@@ -219,33 +220,33 @@ export function ChatPanel({ origin, destination, onClose }: ChatPanelProps) {
 				{/* Quick Actions */}
 				<View style={styles.quickActions}>
 					<TouchableOpacity
-						onPress={() => setInput("¿Cómo está el clima para mi ruta?")}
+						onPress={() => setInput(t("chat.askRouteWeather"))}
 						style={[styles.quickAction, { backgroundColor: colors.muted }]}
 					>
 						<Text
 							style={[styles.quickActionText, { color: colors.foreground }]}
 						>
-							🌤️ Clima ruta
+							🌤️ {t("chat.quickRouteWeather")}
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						onPress={() => setInput("¿Hay alertas de granizo?")}
+						onPress={() => setInput(t("chat.askHailAlerts"))}
 						style={[styles.quickAction, { backgroundColor: colors.muted }]}
 					>
 						<Text
 							style={[styles.quickActionText, { color: colors.foreground }]}
 						>
-							⚠️ Alertas
+							⚠️ {t("chat.quickAlerts")}
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						onPress={() => setInput("¿Dónde puedo parar si hay tormenta?")}
+						onPress={() => setInput(t("chat.askStops"))}
 						style={[styles.quickAction, { backgroundColor: colors.muted }]}
 					>
 						<Text
 							style={[styles.quickActionText, { color: colors.foreground }]}
 						>
-							⛽ Paradas
+							⛽ {t("chat.quickStops")}
 						</Text>
 					</TouchableOpacity>
 				</View>

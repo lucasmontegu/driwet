@@ -396,7 +396,10 @@ export default function RoutesScreen() {
 										{trip.estimatedSavings &&
 											Number(trip.estimatedSavings) > 0 && (
 												<Text
-													style={[styles.historySavings, { color: colors.safe }]}
+													style={[
+														styles.historySavings,
+														{ color: colors.safe },
+													]}
 												>
 													{t("routes.estimatedSavings", {
 														amount: `$${Number(trip.estimatedSavings).toLocaleString()}`,

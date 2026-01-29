@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
+	cancelAnimation,
 	useAnimatedStyle,
 	useSharedValue,
 	withDelay,
 	withRepeat,
 	withSequence,
 	withTiming,
-	cancelAnimation,
 } from "react-native-reanimated";
-import { useThemeColors } from "@/hooks/use-theme-colors";
 import { useReduceMotion } from "@/hooks/use-reduce-motion";
+import { useThemeColors } from "@/hooks/use-theme-colors";
 
 type ConnectorDotsProps = {
 	state: "idle" | "calculating" | "ready";
@@ -77,9 +77,7 @@ export function ConnectorDots({ state }: ConnectorDotsProps) {
 		// Show mini route line instead of dots
 		return (
 			<View style={styles.container}>
-				<View
-					style={[styles.routeLine, { backgroundColor: colors.primary }]}
-				/>
+				<View style={[styles.routeLine, { backgroundColor: colors.primary }]} />
 			</View>
 		);
 	}

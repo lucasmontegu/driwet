@@ -173,7 +173,7 @@ export default function AddRouteScreen() {
 					style={{
 						fontFamily: "NunitoSans_700Bold",
 						fontSize: 20,
-						color: colors.foreground,
+						color: colors.muted,
 						flex: 1,
 					}}
 				>
@@ -187,7 +187,9 @@ export default function AddRouteScreen() {
 							style={{
 								fontFamily: "NunitoSans_600SemiBold",
 								fontSize: 16,
-								color: canSave ? colors.primary : colors.mutedForeground,
+								color: canSave
+									? colors.primaryForeground
+									: colors.mutedForeground,
 							}}
 						>
 							{t("common.save")}

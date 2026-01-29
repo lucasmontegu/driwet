@@ -1,23 +1,23 @@
-// components/navigation/navigation-view.tsx
-import Mapbox from "@rnmapbox/maps";
+// apps/mobile/components/navigation/navigation-view.tsx
+// Turn-by-turn navigation map component using Mapbox
+
+import { env } from "@driwet/env/mobile";
+import Mapbox, {
+	Camera,
+	LocationPuck,
+	PointAnnotation,
+	MapView as RNMapView,
+	UserTrackingMode,
+} from "@rnmapbox/maps";
 import * as Location from "expo-location";
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	View,
-	type ViewStyle,
-} from "react-native";
-import {
-	type Route,
-	type RouteStep,
-	useMapboxDirections,
-} from "../../hooks/use-mapbox-directions";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { useThemeColors } from "@/hooks/use-theme-colors";
 
 // Initialize Mapbox
-Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN || "");
+Mapbox.setAccessToken(env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN);
 
+// Exported types for use in hooks and screens
 export type NavigationCoordinate = {
 	latitude: number;
 	longitude: number;
@@ -33,93 +33,257 @@ export type RouteProgress = {
 	distanceTraveled: number; // meters
 	fractionTraveled: number; // 0-1
 	currentStepIndex: number;
-	currentStep: RouteStep | null;
+	currentInstruction?: string;
+	nextInstruction?: string;
+	distanceToNextStep: number; // meters
 };
 
-export type NavigationViewProps = {
-	/** Starting point for navigation */
+type NavigationViewProps = {
 	origin: NavigationCoordinate;
-	/** Final destination */
 	destination: NavigationCoordinate;
-	/** Optional intermediate waypoints */
 	waypoints?: NavigationWaypoint[];
-	/** Whether to simulate the route (for testing) */
-	simulateRoute?: boolean;
-	/** Language for instructions (default: "es" for Spanish) */
 	locale?: string;
-	/** Show cancel button overlay */
 	showCancelButton?: boolean;
-	/** Container style */
-	style?: ViewStyle;
-	/** Callback when user arrives at final destination */
 	onArrival?: () => void;
-	/** Callback when navigation is cancelled */
 	onCancelNavigation?: () => void;
-	/** Callback for route progress updates */
 	onRouteProgress?: (progress: RouteProgress) => void;
-	/** Callback for navigation errors */
+	onRouteReady?: () => void;
 	onError?: (error: string) => void;
-	/** Callback when route is ready/loaded */
-	onRouteReady?: (route: Route) => void;
 };
+
+type RouteStep = {
+	instruction: string;
+	distance: number; // meters
+	duration: number; // seconds
+	coordinates: [number, number][];
+};
+
+type RouteData = {
+	geometry: [number, number][];
+	distance: number;
+	duration: number;
+	steps: RouteStep[];
+};
+
+// Calculate distance between two coordinates using Haversine formula
+function calculateDistance(
+	lat1: number,
+	lon1: number,
+	lat2: number,
+	lon2: number,
+): number {
+	const R = 6371000; // Earth's radius in meters
+	const dLat = ((lat2 - lat1) * Math.PI) / 180;
+	const dLon = ((lon2 - lon1) * Math.PI) / 180;
+	const a =
+		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+		Math.cos((lat1 * Math.PI) / 180) *
+			Math.cos((lat2 * Math.PI) / 180) *
+			Math.sin(dLon / 2) *
+			Math.sin(dLon / 2);
+	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	return R * c;
+}
+
+// Find closest point on route to current location
+function findClosestPointOnRoute(
+	location: NavigationCoordinate,
+	routeCoordinates: [number, number][],
+): { index: number; distance: number; fractionAlongRoute: number } {
+	let closestIndex = 0;
+	let minDistance = Number.POSITIVE_INFINITY;
+
+	for (let i = 0; i < routeCoordinates.length; i++) {
+		const [lng, lat] = routeCoordinates[i];
+		const distance = calculateDistance(
+			location.latitude,
+			location.longitude,
+			lat,
+			lng,
+		);
+		if (distance < minDistance) {
+			minDistance = distance;
+			closestIndex = i;
+		}
+	}
+
+	const fractionAlongRoute = closestIndex / (routeCoordinates.length - 1);
+	return { index: closestIndex, distance: minDistance, fractionAlongRoute };
+}
 
 export function NavigationView({
 	origin,
 	destination,
 	waypoints = [],
-	simulateRoute = false,
 	locale = "es",
 	showCancelButton = true,
-	style,
 	onArrival,
 	onCancelNavigation,
 	onRouteProgress,
-	onError,
 	onRouteReady,
+	onError,
 }: NavigationViewProps) {
-	const cameraRef = useRef<Mapbox.Camera>(null);
+	const colors = useThemeColors();
+	const [routeData, setRouteData] = useState<RouteData | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 	const [userLocation, setUserLocation] = useState<NavigationCoordinate | null>(
 		null,
 	);
-	const [currentStepIndex, setCurrentStepIndex] = useState(0);
-	const [isNavigating, setIsNavigating] = useState(false);
+	const [hasArrived, setHasArrived] = useState(false);
 
-	const { route, loading, error, getDirections } = useMapboxDirections({
-		profile: "driving-traffic",
-		language: locale,
-		steps: true,
-		voice_instructions: true,
-		banner_instructions: true,
-	});
+	const locationSubscription = useRef<Location.LocationSubscription | null>(
+		null,
+	);
+	const mapRef = useRef<RNMapView>(null);
+
+	// Fetch route from Mapbox Directions API
+	const fetchRoute = useCallback(async () => {
+		try {
+			setIsLoading(true);
+
+			// Build coordinates string: origin, waypoints, destination
+			const coords = [
+				`${origin.longitude},${origin.latitude}`,
+				...waypoints.map((wp) => `${wp.longitude},${wp.latitude}`),
+				`${destination.longitude},${destination.latitude}`,
+			].join(";");
+
+			const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${coords}?access_token=${env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN}&geometries=geojson&steps=true&overview=full&language=${locale}`;
+
+			const response = await fetch(url);
+			const data = await response.json();
+
+			if (data.code !== "Ok" || !data.routes?.length) {
+				throw new Error(data.message || "No route found");
+			}
+
+			const route = data.routes[0];
+			const steps: RouteStep[] = route.legs.flatMap(
+				(leg: {
+					steps: Array<{
+						maneuver: { instruction: string };
+						distance: number;
+						duration: number;
+						geometry: { coordinates: [number, number][] };
+					}>;
+				}) =>
+					leg.steps.map(
+						(step: {
+							maneuver: { instruction: string };
+							distance: number;
+							duration: number;
+							geometry: { coordinates: [number, number][] };
+						}) => ({
+							instruction: step.maneuver.instruction,
+							distance: step.distance,
+							duration: step.duration,
+							coordinates: step.geometry.coordinates,
+						}),
+					),
+			);
+
+			setRouteData({
+				geometry: route.geometry.coordinates,
+				distance: route.distance,
+				duration: route.duration,
+				steps,
+			});
+
+			onRouteReady?.();
+		} catch (err) {
+			console.error("[NavigationView] Route fetch error:", err);
+			onError?.(err instanceof Error ? err.message : "Failed to fetch route");
+		} finally {
+			setIsLoading(false);
+		}
+	}, [origin, destination, waypoints, locale, onRouteReady, onError]);
+
+	// Start location tracking
+	const startLocationTracking = useCallback(async () => {
+		try {
+			const { status } = await Location.requestForegroundPermissionsAsync();
+			if (status !== "granted") {
+				onError?.("Location permission denied");
+				return;
+			}
+
+			locationSubscription.current = await Location.watchPositionAsync(
+				{
+					accuracy: Location.Accuracy.BestForNavigation,
+					timeInterval: 1000,
+					distanceInterval: 5,
+				},
+				(location) => {
+					setUserLocation({
+						latitude: location.coords.latitude,
+						longitude: location.coords.longitude,
+					});
+				},
+			);
+		} catch (err) {
+			console.error("[NavigationView] Location tracking error:", err);
+			onError?.(
+				err instanceof Error ? err.message : "Failed to track location",
+			);
+		}
+	}, [onError]);
 
 	// Fetch route on mount
 	useEffect(() => {
-		const fetchRoute = async () => {
-			const fetchedRoute = await getDirections(origin, destination, waypoints);
-			if (fetchedRoute) {
-				setIsNavigating(true);
-				onRouteReady?.(fetchedRoute);
-			}
-		};
 		fetchRoute();
-	}, [origin, destination, waypoints, getDirections, onRouteReady]);
+	}, [fetchRoute]);
 
-	// Handle error
+	// Start location tracking on mount
 	useEffect(() => {
-		if (error) {
-			onError?.(error);
-		}
-	}, [error, onError]);
+		startLocationTracking();
+		return () => {
+			locationSubscription.current?.remove();
+		};
+	}, [startLocationTracking]);
 
 	// Update progress based on user location
 	useEffect(() => {
-		if (!route || !userLocation || !isNavigating) return;
+		if (!userLocation || !routeData || hasArrived) return;
 
-		const totalDistance = route.distance;
-		const totalDuration = route.duration;
-		const steps = route.legs[0]?.steps || [];
+		// Find closest point on route
+		const { index, fractionAlongRoute } = findClosestPointOnRoute(
+			userLocation,
+			routeData.geometry,
+		);
 
-		// Calculate distance to destination (simplified - in production use proper geolocation math)
+		// Calculate remaining distance and duration
+		const distanceTraveled = routeData.distance * fractionAlongRoute;
+		const distanceRemaining = routeData.distance - distanceTraveled;
+		const durationRemaining = routeData.duration * (1 - fractionAlongRoute);
+
+		// Find current step
+		let accumulatedDistance = 0;
+		let currentStepIndex = 0;
+		let distanceToNextStep = 0;
+
+		for (let i = 0; i < routeData.steps.length; i++) {
+			accumulatedDistance += routeData.steps[i].distance;
+			if (distanceTraveled < accumulatedDistance) {
+				currentStepIndex = i;
+				distanceToNextStep = accumulatedDistance - distanceTraveled;
+				break;
+			}
+		}
+
+		const progress: RouteProgress = {
+			distanceRemaining,
+			durationRemaining,
+			distanceTraveled,
+			fractionTraveled: fractionAlongRoute,
+			currentStepIndex,
+			currentInstruction: routeData.steps[currentStepIndex]?.instruction,
+			nextInstruction: routeData.steps[currentStepIndex + 1]?.instruction,
+			distanceToNextStep,
+		};
+
+		onRouteProgress?.(progress);
+
+		// Check for arrival (within 50 meters of destination)
 		const distanceToDestination = calculateDistance(
 			userLocation.latitude,
 			userLocation.longitude,
@@ -127,122 +291,126 @@ export function NavigationView({
 			destination.longitude,
 		);
 
-		const distanceTraveled = Math.max(0, totalDistance - distanceToDestination);
-		const fractionTraveled = Math.min(1, distanceTraveled / totalDistance);
-		const durationRemaining = totalDuration * (1 - fractionTraveled);
-
-		// Find current step
-		let accumulatedDistance = 0;
-		let stepIndex = 0;
-		for (let i = 0; i < steps.length; i++) {
-			accumulatedDistance += steps[i].distance;
-			if (distanceTraveled < accumulatedDistance) {
-				stepIndex = i;
-				break;
-			}
-		}
-
-		setCurrentStepIndex(stepIndex);
-
-		onRouteProgress?.({
-			distanceRemaining: distanceToDestination,
-			durationRemaining,
-			distanceTraveled,
-			fractionTraveled,
-			currentStepIndex: stepIndex,
-			currentStep: steps[stepIndex] || null,
-		});
-
-		// Check arrival (within 50 meters)
-		if (distanceToDestination < 50) {
-			setIsNavigating(false);
+		if (distanceToDestination < 50 && !hasArrived) {
+			setHasArrived(true);
 			onArrival?.();
 		}
 	}, [
 		userLocation,
-		route,
-		isNavigating,
+		routeData,
 		destination,
-		onRouteProgress,
+		hasArrived,
 		onArrival,
+		onRouteProgress,
 	]);
 
-	const handleUserLocationUpdate = useCallback((location: Mapbox.Location) => {
-		if (location.coords) {
-			setUserLocation({
-				latitude: location.coords.latitude,
-				longitude: location.coords.longitude,
-			});
+	// Calculate camera bounds
+	const bounds = useCallback(() => {
+		if (!routeData?.geometry?.length) return null;
+
+		let minLng = Number.POSITIVE_INFINITY;
+		let maxLng = Number.NEGATIVE_INFINITY;
+		let minLat = Number.POSITIVE_INFINITY;
+		let maxLat = Number.NEGATIVE_INFINITY;
+
+		for (const [lng, lat] of routeData.geometry) {
+			minLng = Math.min(minLng, lng);
+			maxLng = Math.max(maxLng, lng);
+			minLat = Math.min(minLat, lat);
+			maxLat = Math.max(maxLat, lat);
 		}
-	}, []);
 
-	const handleCancel = useCallback(() => {
-		setIsNavigating(false);
-		onCancelNavigation?.();
-	}, [onCancelNavigation]);
+		const padding = 0.01;
+		return {
+			ne: [maxLng + padding, maxLat + padding] as [number, number],
+			sw: [minLng - padding, minLat - padding] as [number, number],
+		};
+	}, [routeData]);
 
-	const currentStep = route?.legs[0]?.steps[currentStepIndex];
-	const routeCoordinates = route?.geometry.coordinates || [];
+	if (isLoading) {
+		return (
+			<View style={[styles.container, { backgroundColor: colors.background }]}>
+				<ActivityIndicator size="large" color={colors.primary} />
+			</View>
+		);
+	}
+
+	const cameraBounds = bounds();
 
 	return (
-		<View style={[styles.container, style]}>
-			<Mapbox.MapView
+		<View style={styles.container}>
+			<RNMapView
+				ref={mapRef}
 				style={styles.map}
-				styleURL={Mapbox.StyleURL.Street}
+				styleURL={Mapbox.StyleURL.Dark}
 				logoEnabled={false}
 				attributionEnabled={false}
-				compassEnabled={true}
 				scaleBarEnabled={false}
+				zoomEnabled={true}
+				scrollEnabled={true}
+				rotateEnabled={true}
+				pitchEnabled={true}
 			>
-				<Mapbox.Camera
-					ref={cameraRef}
-					followUserLocation={isNavigating}
-					followUserMode={Mapbox.UserTrackingMode.FollowWithCourse}
-					followZoomLevel={16}
-					followPitch={60}
-					animationMode="flyTo"
-					animationDuration={1000}
-					defaultSettings={{
-						centerCoordinate: [origin.longitude, origin.latitude],
-						zoomLevel: 14,
-					}}
+				{/* Camera follows user during navigation */}
+				{userLocation ? (
+					<Camera
+						zoomLevel={16}
+						centerCoordinate={[userLocation.longitude, userLocation.latitude]}
+						followUserLocation={true}
+						followUserMode={UserTrackingMode.FollowWithHeading}
+						followPitch={60}
+						animationMode="flyTo"
+						animationDuration={500}
+					/>
+				) : cameraBounds ? (
+					<Camera
+						bounds={cameraBounds}
+						padding={{
+							paddingTop: 100,
+							paddingBottom: 200,
+							paddingLeft: 50,
+							paddingRight: 50,
+						}}
+						animationMode="flyTo"
+						animationDuration={1500}
+					/>
+				) : null}
+
+				{/* User location puck */}
+				<LocationPuck
+					puckBearing="heading"
+					puckBearingEnabled
+					pulsing={{ isEnabled: true, color: colors.primary, radius: 50 }}
 				/>
 
-				<Mapbox.UserLocation
-					visible={true}
-					onUpdate={handleUserLocationUpdate}
-					showsUserHeadingIndicator={true}
-				/>
-
-				{/* Route Line */}
-				{routeCoordinates.length > 0 && (
+				{/* Route line */}
+				{routeData?.geometry && (
 					<Mapbox.ShapeSource
-						id="routeSource"
+						id="navigation-route-source"
 						shape={{
 							type: "Feature",
-							properties: {},
 							geometry: {
 								type: "LineString",
-								coordinates: routeCoordinates,
+								coordinates: routeData.geometry,
 							},
+							properties: {},
 						}}
 					>
-						{/* Route casing (border) */}
+						{/* Route outline */}
 						<Mapbox.LineLayer
-							id="routeCasing"
+							id="navigation-route-outline"
 							style={{
-								lineColor: "#1a73e8",
+								lineColor: "#1e40af",
 								lineWidth: 10,
-								lineOpacity: 0.3,
 								lineCap: "round",
 								lineJoin: "round",
 							}}
 						/>
-						{/* Route line */}
+						{/* Route main line */}
 						<Mapbox.LineLayer
-							id="routeLine"
+							id="navigation-route-line"
 							style={{
-								lineColor: "#4285f4",
+								lineColor: "#3b82f6",
 								lineWidth: 6,
 								lineCap: "round",
 								lineJoin: "round",
@@ -252,161 +420,40 @@ export function NavigationView({
 				)}
 
 				{/* Origin marker */}
-				<Mapbox.PointAnnotation
-					id="origin"
+				<PointAnnotation
+					id="navigation-origin"
 					coordinate={[origin.longitude, origin.latitude]}
 				>
 					<View style={styles.originMarker}>
 						<View style={styles.originMarkerInner} />
 					</View>
-				</Mapbox.PointAnnotation>
+				</PointAnnotation>
 
 				{/* Destination marker */}
-				<Mapbox.PointAnnotation
-					id="destination"
+				<PointAnnotation
+					id="navigation-destination"
 					coordinate={[destination.longitude, destination.latitude]}
 				>
 					<View style={styles.destinationMarker}>
 						<View style={styles.destinationMarkerInner} />
 					</View>
-				</Mapbox.PointAnnotation>
+				</PointAnnotation>
 
 				{/* Waypoint markers */}
-				{waypoints.map((waypoint, index) => (
-					<Mapbox.PointAnnotation
+				{waypoints.map((wp, index) => (
+					<PointAnnotation
 						key={`waypoint-${index}`}
 						id={`waypoint-${index}`}
-						coordinate={[waypoint.longitude, waypoint.latitude]}
+						coordinate={[wp.longitude, wp.latitude]}
 					>
 						<View style={styles.waypointMarker}>
-							<Text style={styles.waypointText}>{index + 1}</Text>
+							<View style={styles.waypointMarkerInner} />
 						</View>
-					</Mapbox.PointAnnotation>
+					</PointAnnotation>
 				))}
-			</Mapbox.MapView>
-
-			{/* Navigation Instructions Panel */}
-			{isNavigating && currentStep && (
-				<View style={styles.instructionPanel}>
-					<View style={styles.maneuverIcon}>
-						<Text style={styles.maneuverText}>
-							{getManeuverEmoji(
-								currentStep.maneuver.type,
-								currentStep.maneuver.modifier,
-							)}
-						</Text>
-					</View>
-					<View style={styles.instructionContent}>
-						<Text style={styles.instructionDistance}>
-							{formatDistance(currentStep.distance)}
-						</Text>
-						<Text style={styles.instructionText} numberOfLines={2}>
-							{currentStep.instruction}
-						</Text>
-					</View>
-				</View>
-			)}
-
-			{/* Bottom Info Panel */}
-			{route && isNavigating && (
-				<View style={styles.infoPanel}>
-					<View style={styles.infoItem}>
-						<Text style={styles.infoValue}>
-							{formatDuration(route.duration)}
-						</Text>
-						<Text style={styles.infoLabel}>Tiempo restante</Text>
-					</View>
-					<View style={styles.infoDivider} />
-					<View style={styles.infoItem}>
-						<Text style={styles.infoValue}>
-							{formatDistance(route.distance)}
-						</Text>
-						<Text style={styles.infoLabel}>Distancia</Text>
-					</View>
-				</View>
-			)}
-
-			{/* Cancel Button */}
-			{showCancelButton && isNavigating && (
-				<TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
-					<Text style={styles.cancelButtonText}>Cancelar</Text>
-				</TouchableOpacity>
-			)}
-
-			{/* Loading Indicator */}
-			{loading && (
-				<View style={styles.loadingOverlay}>
-					<Text style={styles.loadingText}>Calculando ruta...</Text>
-				</View>
-			)}
+			</RNMapView>
 		</View>
 	);
-}
-
-// Helper functions
-function calculateDistance(
-	lat1: number,
-	lon1: number,
-	lat2: number,
-	lon2: number,
-): number {
-	const R = 6371000; // Earth's radius in meters
-	const dLat = toRad(lat2 - lat1);
-	const dLon = toRad(lon2 - lon1);
-	const a =
-		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-		Math.cos(toRad(lat1)) *
-			Math.cos(toRad(lat2)) *
-			Math.sin(dLon / 2) *
-			Math.sin(dLon / 2);
-	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	return R * c;
-}
-
-function toRad(deg: number): number {
-	return deg * (Math.PI / 180);
-}
-
-function formatDistance(meters: number): string {
-	if (meters < 1000) {
-		return `${Math.round(meters)} m`;
-	}
-	return `${(meters / 1000).toFixed(1)} km`;
-}
-
-function formatDuration(seconds: number): string {
-	const hours = Math.floor(seconds / 3600);
-	const minutes = Math.ceil((seconds % 3600) / 60);
-
-	if (hours > 0) {
-		return `${hours}h ${minutes}min`;
-	}
-	return `${minutes} min`;
-}
-
-function getManeuverEmoji(type: string, modifier?: string): string {
-	const maneuvers: Record<string, string> = {
-		"turn-left": "⬅️",
-		"turn-right": "➡️",
-		"turn-sharp-left": "↩️",
-		"turn-sharp-right": "↪️",
-		"turn-slight-left": "↖️",
-		"turn-slight-right": "↗️",
-		uturn: "🔄",
-		straight: "⬆️",
-		merge: "↗️",
-		"fork-left": "↖️",
-		"fork-right": "↗️",
-		"ramp-left": "↖️",
-		"ramp-right": "↗️",
-		roundabout: "🔄",
-		rotary: "🔄",
-		arrive: "🏁",
-		depart: "🚗",
-	};
-
-	const key = modifier ? `${type}-${modifier}` : type;
-	return maneuvers[key] || maneuvers[type] || "📍";
 }
 
 const styles = StyleSheet.create({
@@ -416,151 +463,67 @@ const styles = StyleSheet.create({
 	map: {
 		flex: 1,
 	},
-	instructionPanel: {
-		position: "absolute",
-		top: 60,
-		left: 16,
-		right: 16,
-		backgroundColor: "#1a73e8",
+	originMarker: {
+		width: 24,
+		height: 24,
 		borderRadius: 12,
-		padding: 16,
-		flexDirection: "row",
-		alignItems: "center",
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 4 },
-		shadowOpacity: 0.3,
-		shadowRadius: 8,
-		elevation: 8,
-	},
-	maneuverIcon: {
-		width: 48,
-		height: 48,
-		backgroundColor: "rgba(255,255,255,0.2)",
-		borderRadius: 24,
+		backgroundColor: "#22c55e",
+		borderColor: "#ffffff",
+		borderWidth: 3,
 		justifyContent: "center",
 		alignItems: "center",
-		marginRight: 12,
-	},
-	maneuverText: {
-		fontSize: 24,
-	},
-	instructionContent: {
-		flex: 1,
-	},
-	instructionDistance: {
-		color: "#fff",
-		fontSize: 24,
-		fontWeight: "700",
-	},
-	instructionText: {
-		color: "rgba(255,255,255,0.9)",
-		fontSize: 14,
-		marginTop: 4,
-	},
-	infoPanel: {
-		position: "absolute",
-		bottom: 100,
-		left: 16,
-		right: 16,
-		backgroundColor: "#fff",
-		borderRadius: 12,
-		padding: 16,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-around",
 		shadowColor: "#000",
 		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.1,
-		shadowRadius: 4,
-		elevation: 4,
-	},
-	infoItem: {
-		alignItems: "center",
-	},
-	infoValue: {
-		fontSize: 20,
-		fontWeight: "700",
-		color: "#1a73e8",
-	},
-	infoLabel: {
-		fontSize: 12,
-		color: "#666",
-		marginTop: 2,
-	},
-	infoDivider: {
-		width: 1,
-		height: 40,
-		backgroundColor: "#e0e0e0",
-	},
-	cancelButton: {
-		position: "absolute",
-		bottom: 40,
-		left: 16,
-		right: 16,
-		backgroundColor: "#f44336",
-		borderRadius: 12,
-		padding: 16,
-		alignItems: "center",
-	},
-	cancelButtonText: {
-		color: "#fff",
-		fontSize: 16,
-		fontWeight: "600",
-	},
-	loadingOverlay: {
-		...StyleSheet.absoluteFillObject,
-		backgroundColor: "rgba(0,0,0,0.5)",
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	loadingText: {
-		color: "#fff",
-		fontSize: 18,
-		fontWeight: "600",
-	},
-	originMarker: {
-		width: 20,
-		height: 20,
-		borderRadius: 10,
-		backgroundColor: "#fff",
-		borderWidth: 3,
-		borderColor: "#4285f4",
-		justifyContent: "center",
-		alignItems: "center",
+		shadowOpacity: 0.25,
+		shadowRadius: 3.84,
+		elevation: 5,
 	},
 	originMarkerInner: {
 		width: 8,
 		height: 8,
 		borderRadius: 4,
-		backgroundColor: "#4285f4",
+		backgroundColor: "#ffffff",
 	},
 	destinationMarker: {
-		width: 24,
-		height: 24,
-		borderRadius: 12,
-		backgroundColor: "#ea4335",
+		width: 28,
+		height: 28,
+		borderRadius: 14,
+		backgroundColor: "#ef4444",
+		borderColor: "#ffffff",
+		borderWidth: 3,
 		justifyContent: "center",
 		alignItems: "center",
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.25,
+		shadowRadius: 3.84,
+		elevation: 5,
 	},
 	destinationMarkerInner: {
 		width: 10,
 		height: 10,
 		borderRadius: 5,
-		backgroundColor: "#fff",
+		backgroundColor: "#ffffff",
 	},
 	waypointMarker: {
-		width: 28,
-		height: 28,
-		borderRadius: 14,
-		backgroundColor: "#fbbc04",
+		width: 20,
+		height: 20,
+		borderRadius: 10,
+		backgroundColor: "#f59e0b",
+		borderColor: "#ffffff",
+		borderWidth: 2,
 		justifyContent: "center",
 		alignItems: "center",
-		borderWidth: 2,
-		borderColor: "#fff",
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.25,
+		shadowRadius: 3.84,
+		elevation: 5,
 	},
-	waypointText: {
-		color: "#000",
-		fontSize: 14,
-		fontWeight: "700",
+	waypointMarkerInner: {
+		width: 6,
+		height: 6,
+		borderRadius: 3,
+		backgroundColor: "#ffffff",
 	},
 });

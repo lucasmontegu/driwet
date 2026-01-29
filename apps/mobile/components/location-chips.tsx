@@ -1,5 +1,5 @@
 // apps/mobile/components/location-chips.tsx
-// Premium location selector with chips for origin and destination
+// Clean, flat design location selector inspired by modern ride-sharing apps
 
 import { env } from "@driwet/env/mobile";
 import * as Haptics from "expo-haptics";
@@ -9,6 +9,7 @@ import {
 	Dimensions,
 	Keyboard,
 	Modal,
+	Pressable,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -16,22 +17,18 @@ import {
 	View,
 } from "react-native";
 import Animated, {
-	FadeInDown,
+	Easing,
+	FadeIn,
+	SlideInDown,
+	SlideOutDown,
 	useAnimatedStyle,
 	useSharedValue,
-	withRepeat,
-	withSequence,
-	withSpring,
 	withTiming,
-	Easing,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ConnectorDots } from "@/components/home/connector-dots";
 import { Icon } from "@/components/icons";
-import { AnimatedPressable } from "@/components/ui/animated-pressable";
-import { springs } from "@/hooks/use-animation-tokens";
+import { durations, easings } from "@/hooks/use-animation-tokens";
 import { useLocation } from "@/hooks/use-location";
-import { useReduceMotion } from "@/hooks/use-reduce-motion";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { useTranslation } from "@/lib/i18n";
 
@@ -70,7 +67,6 @@ export function LocationChips({
 	const insets = useSafeAreaInsets();
 	const { location: userLocation } = useLocation();
 	const { t } = useTranslation();
-	const reduceMotion = useReduceMotion();
 
 	// Modal state
 	const [isModalVisible, setIsModalVisible] = useState(false);
@@ -84,64 +80,8 @@ export function LocationChips({
 	const [isSearching, setIsSearching] = useState(false);
 
 	// Animation values
-	const modalY = useSharedValue(SCREEN_HEIGHT);
-	const backdropOpacity = useSharedValue(0);
-	const destinationBreathing = useSharedValue(1);
-	const placeholderOpacity = useSharedValue(0.5);
-
+	const modalOpacity = useSharedValue(0);
 	const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-	// Breathing animation for empty destination
-	useEffect(() => {
-		if (!destination && !reduceMotion) {
-			destinationBreathing.value = withRepeat(
-				withSequence(
-					withTiming(1.02, {
-						duration: 1000,
-						easing: Easing.inOut(Easing.ease),
-					}),
-					withTiming(1, {
-						duration: 1000,
-						easing: Easing.inOut(Easing.ease),
-					}),
-				),
-				-1,
-			);
-			placeholderOpacity.value = withRepeat(
-				withSequence(
-					withTiming(0.8, {
-						duration: 1000,
-						easing: Easing.inOut(Easing.ease),
-					}),
-					withTiming(0.5, {
-						duration: 1000,
-						easing: Easing.inOut(Easing.ease),
-					}),
-				),
-				-1,
-			);
-		} else {
-			destinationBreathing.value = 1;
-			placeholderOpacity.value = 0.5;
-		}
-	}, [destination, reduceMotion]);
-
-	const destinationStyle = useAnimatedStyle(() => ({
-		transform: [{ scale: destinationBreathing.value }],
-	}));
-
-	const placeholderStyle = useAnimatedStyle(() => ({
-		opacity: placeholderOpacity.value,
-	}));
-
-	// Modal animation styles
-	const modalStyle = useAnimatedStyle(() => ({
-		transform: [{ translateY: modalY.value }],
-	}));
-
-	const backdropStyle = useAnimatedStyle(() => ({
-		opacity: backdropOpacity.value,
-	}));
 
 	const openModal = useCallback(
 		(field: "origin" | "destination") => {
@@ -153,9 +93,10 @@ export function LocationChips({
 			setIsModalVisible(true);
 
 			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
-			modalY.value = withSpring(0, springs.smooth);
-			backdropOpacity.value = withTiming(1, { duration: 300 });
+			modalOpacity.value = withTiming(1, {
+				duration: durations.normal,
+				easing: easings.enter,
+			});
 		},
 		[isDisabled],
 	);
@@ -164,15 +105,17 @@ export function LocationChips({
 		Keyboard.dismiss();
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
-		modalY.value = withSpring(SCREEN_HEIGHT, springs.snappy);
-		backdropOpacity.value = withTiming(0, { duration: 250 });
+		modalOpacity.value = withTiming(0, {
+			duration: durations.fast,
+			easing: easings.exit,
+		});
 
 		setTimeout(() => {
 			setIsModalVisible(false);
 			setActiveField(null);
 			setSearchQuery("");
 			setSuggestions([]);
-		}, 300);
+		}, durations.fast);
 	}, []);
 
 	const searchPlaces = useCallback(
@@ -189,7 +132,7 @@ export function LocationChips({
 					`access_token=${env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN}&` +
 					"types=place,locality,region,country,address&" +
 					"language=es&" +
-					"limit=8";
+					"limit=6";
 
 				if (userLocation) {
 					url += `&proximity=${userLocation.longitude},${userLocation.latitude}`;
@@ -239,7 +182,7 @@ export function LocationChips({
 				onRouteChange(location, destination);
 				if (!destination) {
 					closeModal();
-					setTimeout(() => openModal("destination"), 350);
+					setTimeout(() => openModal("destination"), 200);
 				} else {
 					closeModal();
 				}
@@ -251,17 +194,11 @@ export function LocationChips({
 		[activeField, origin, destination, onRouteChange, closeModal, openModal],
 	);
 
-	const handleClearField = useCallback(
-		(field: "origin" | "destination") => {
-			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-			if (field === "origin") {
-				onRouteChange(null, destination);
-			} else {
-				onRouteChange(origin, null);
-			}
-		},
-		[origin, destination, onRouteChange],
-	);
+	const handleSwapLocations = useCallback(() => {
+		if (!origin && !destination) return;
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+		onRouteChange(destination, origin);
+	}, [origin, destination, onRouteChange]);
 
 	useEffect(() => {
 		return () => {
@@ -287,8 +224,7 @@ export function LocationChips({
 				if (data.features?.[0]) {
 					const feature = data.features[0];
 					const location: RouteLocation = {
-						name:
-							feature.place_name.split(",")[0] || t("locations.myLocation"),
+						name: feature.place_name.split(",")[0] || t("locations.myLocation"),
 						coordinates: userLocation,
 					};
 
@@ -298,7 +234,7 @@ export function LocationChips({
 						onRouteChange(location, destination);
 						if (!destination) {
 							closeModal();
-							setTimeout(() => openModal("destination"), 350);
+							setTimeout(() => openModal("destination"), 200);
 						} else {
 							closeModal();
 						}
@@ -333,106 +269,91 @@ export function LocationChips({
 		t,
 	]);
 
-	const hasRoute = origin && destination;
-	const connectorState = isCalculating ? "calculating" : hasRoute ? "ready" : "idle";
+	const backdropStyle = useAnimatedStyle(() => ({
+		opacity: modalOpacity.value,
+	}));
 
 	return (
 		<View style={styles.container}>
+			{/* Main card - white with subtle border */}
 			<View
 				style={[
-					styles.chipsContainer,
+					styles.card,
 					{
 						backgroundColor: colors.card,
-						shadowColor: "#000000",
+						borderColor: colors.border,
 					},
 				]}
 			>
-				{/* Origin Chip */}
-				<AnimatedPressable
-					style={[styles.chip, isDisabled && styles.chipDisabled]}
-					onPress={() => openModal("origin")}
-					disabled={isDisabled}
-				>
-					<View
-						style={[styles.chipIcon, { backgroundColor: colors.primary + "20" }]}
+				{/* Side-by-side From/To layout */}
+				<View style={styles.locationsRow}>
+					{/* From */}
+					<Pressable
+						style={[styles.locationBox, isDisabled && styles.locationDisabled]}
+						onPress={() => openModal("origin")}
+						disabled={isDisabled}
 					>
-						<Icon name="location" size={14} color={colors.primary} />
-					</View>
-					<View style={styles.chipContent}>
-						<Text style={[styles.chipLabel, { color: colors.mutedForeground }]}>
-							Desde
+						<Text style={[styles.locationLabel, { color: colors.mutedForeground }]}>
+							From
 						</Text>
 						<Text
-							style={[styles.chipValue, { color: colors.foreground }]}
+							style={[
+								styles.locationName,
+								{ color: colors.foreground },
+								!origin && { color: colors.mutedForeground },
+							]}
 							numberOfLines={1}
-							ellipsizeMode="tail"
 						>
-							{origin ? origin.name : "Seleccionar origen"}
+							{origin?.name || "Select origin"}
 						</Text>
-					</View>
-					{origin && (
-						<AnimatedPressable
-							style={styles.clearButton}
-							onPress={() => handleClearField("origin")}
-							hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-						>
-							<Icon name="close" size={14} color={colors.mutedForeground} />
-						</AnimatedPressable>
-					)}
-				</AnimatedPressable>
+						{origin && (
+							<Text
+								style={[styles.locationSubtext, { color: colors.mutedForeground }]}
+								numberOfLines={1}
+							>
+								Your location
+							</Text>
+						)}
+					</Pressable>
 
-				{/* Connector Dots */}
-				<ConnectorDots state={connectorState} />
+					{/* Swap button */}
+					<Pressable
+						style={[styles.swapButton, { borderColor: colors.border }]}
+						onPress={handleSwapLocations}
+						disabled={!origin && !destination}
+					>
+						<Icon name="swap" size={16} color={colors.mutedForeground} />
+					</Pressable>
 
-				{/* Destination Chip */}
-				<Animated.View style={!destination ? destinationStyle : undefined}>
-					<AnimatedPressable
-						style={[styles.chip, isDisabled && styles.chipDisabled]}
+					{/* To */}
+					<Pressable
+						style={[styles.locationBox, isDisabled && styles.locationDisabled]}
 						onPress={() => openModal("destination")}
 						disabled={isDisabled}
 					>
-						<View
-							style={[styles.chipIcon, { backgroundColor: colors.safe + "20" }]}
+						<Text style={[styles.locationLabel, { color: colors.mutedForeground }]}>
+							To
+						</Text>
+						<Text
+							style={[
+								styles.locationName,
+								{ color: colors.foreground },
+								!destination && { color: colors.mutedForeground },
+							]}
+							numberOfLines={1}
 						>
-							<Icon name="flag" size={14} color={colors.safe} />
-						</View>
-						<View style={styles.chipContent}>
-							<Text
-								style={[styles.chipLabel, { color: colors.mutedForeground }]}
-							>
-								Hasta
-							</Text>
-							{destination ? (
-								<Text
-									style={[styles.chipValue, { color: colors.foreground }]}
-									numberOfLines={1}
-									ellipsizeMode="tail"
-								>
-									{destination.name}
-								</Text>
-							) : (
-								<Animated.Text
-									style={[
-										styles.chipValue,
-										{ color: colors.foreground },
-										placeholderStyle,
-									]}
-								>
-									¿A dónde vas?
-								</Animated.Text>
-							)}
-						</View>
+							{destination?.name || "Where to?"}
+						</Text>
 						{destination && (
-							<AnimatedPressable
-								style={styles.clearButton}
-								onPress={() => handleClearField("destination")}
-								hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+							<Text
+								style={[styles.locationSubtext, { color: colors.mutedForeground }]}
+								numberOfLines={1}
 							>
-								<Icon name="close" size={14} color={colors.mutedForeground} />
-							</AnimatedPressable>
+								Destination
+							</Text>
 						)}
-					</AnimatedPressable>
-				</Animated.View>
+					</Pressable>
+				</View>
 			</View>
 
 			{/* Search Modal */}
@@ -444,32 +365,30 @@ export function LocationChips({
 				statusBarTranslucent
 			>
 				<Animated.View style={[styles.modalOverlay, backdropStyle]}>
-					<AnimatedPressable
-						style={styles.modalBackdrop}
-						onPress={closeModal}
-						enableHaptics={false}
-					/>
+					<Pressable style={styles.modalBackdrop} onPress={closeModal} />
 				</Animated.View>
 
 				<Animated.View
+					entering={SlideInDown.duration(250).easing(
+						Easing.bezier(0.2, 0, 0, 1),
+					)}
+					exiting={SlideOutDown.duration(200).easing(
+						Easing.bezier(0.4, 0, 1, 1),
+					)}
 					style={[
 						styles.modalContent,
 						{
 							backgroundColor: colors.background,
-							paddingBottom: insets.bottom,
+							paddingBottom: insets.bottom + 16,
 						},
-						modalStyle,
 					]}
 				>
 					{/* Modal Header */}
 					<View style={styles.modalHeader}>
-						<AnimatedPressable style={styles.closeButton} onPress={closeModal}>
-							<Icon name="close" size={24} color={colors.foreground} />
-						</AnimatedPressable>
+						<View style={[styles.modalHandle, { backgroundColor: colors.border }]} />
 						<Text style={[styles.modalTitle, { color: colors.foreground }]}>
-							{activeField === "origin" ? "Origen" : "Destino"}
+							{activeField === "origin" ? "Pick up location" : "Destination"}
 						</Text>
-						<View style={styles.closeButton} />
 					</View>
 
 					{/* Search Input */}
@@ -477,20 +396,15 @@ export function LocationChips({
 						style={[
 							styles.searchContainer,
 							{
-								backgroundColor: colors.card,
+								backgroundColor: colors.muted,
 								borderColor: colors.border,
 							},
 						]}
 					>
-						<Icon
-							name="search"
-							size={20}
-							color={colors.mutedForeground}
-							style={styles.searchIcon}
-						/>
+						<Icon name="search" size={18} color={colors.mutedForeground} />
 						<TextInput
 							style={[styles.searchInput, { color: colors.foreground }]}
-							placeholder={t("locations.searchAddress")}
+							placeholder="Search address..."
 							placeholderTextColor={colors.mutedForeground}
 							value={searchQuery}
 							onChangeText={handleSearchChange}
@@ -498,48 +412,45 @@ export function LocationChips({
 							returnKeyType="search"
 						/>
 						{searchQuery.length > 0 && (
-							<AnimatedPressable
+							<Pressable
 								onPress={() => {
 									setSearchQuery("");
 									setSuggestions([]);
 								}}
+								hitSlop={8}
 							>
-								<Icon name="close" size={18} color={colors.mutedForeground} />
-							</AnimatedPressable>
+								<Icon name="close" size={16} color={colors.mutedForeground} />
+							</Pressable>
 						)}
 					</View>
 
 					{/* Current Location Button */}
 					{activeField === "origin" && userLocation && (
-						<AnimatedPressable
+						<Pressable
 							style={[
-								styles.currentLocationButton,
-								{ backgroundColor: colors.card },
+								styles.currentLocationBtn,
+								{ backgroundColor: colors.muted },
 							]}
 							onPress={handleUseCurrentLocation}
 						>
 							<View
 								style={[
 									styles.currentLocationIcon,
-									{ backgroundColor: colors.primary + "20" },
+									{ backgroundColor: colors.primary + "15" },
 								]}
 							>
-								<Icon name="location" size={18} color={colors.primary} />
+								<Icon name="location" size={16} color={colors.primary} />
 							</View>
-							<Text
-								style={[
-									styles.currentLocationText,
-									{ color: colors.foreground },
-								]}
-							>
-								Usar mi ubicación actual
-							</Text>
-							<Icon
-								name="arrowRight"
-								size={16}
-								color={colors.mutedForeground}
-							/>
-						</AnimatedPressable>
+							<View style={styles.currentLocationText}>
+								<Text style={[styles.currentLocationTitle, { color: colors.foreground }]}>
+									Use current location
+								</Text>
+								<Text style={[styles.currentLocationSubtitle, { color: colors.mutedForeground }]}>
+									GPS location
+								</Text>
+							</View>
+							<Icon name="arrowRight" size={14} color={colors.mutedForeground} />
+						</Pressable>
 					)}
 
 					{/* Suggestions List */}
@@ -550,14 +461,9 @@ export function LocationChips({
 					>
 						{isSearching ? (
 							<View style={styles.loadingContainer}>
-								<ActivityIndicator size="large" color={colors.primary} />
-								<Text
-									style={[
-										styles.loadingText,
-										{ color: colors.mutedForeground },
-									]}
-								>
-									Buscando lugares...
+								<ActivityIndicator size="small" color={colors.primary} />
+								<Text style={[styles.loadingText, { color: colors.mutedForeground }]}>
+									Searching...
 								</Text>
 							</View>
 						) : suggestions.length > 0 ? (
@@ -565,13 +471,13 @@ export function LocationChips({
 								{suggestions.map((feature, index) => (
 									<Animated.View
 										key={feature.id}
-										entering={FadeInDown.delay(index * 50).springify()}
+										entering={FadeIn.delay(index * 30).duration(150)}
 									>
-										<AnimatedPressable
+										<Pressable
 											style={[
 												styles.suggestionItem,
 												index !== suggestions.length - 1 && {
-													borderBottomWidth: 1,
+													borderBottomWidth: StyleSheet.hairlineWidth,
 													borderBottomColor: colors.border,
 												},
 											]}
@@ -580,95 +486,39 @@ export function LocationChips({
 											<View
 												style={[
 													styles.suggestionIcon,
-													{
-														backgroundColor:
-															activeField === "origin"
-																? colors.primary + "20"
-																: colors.safe + "20",
-													},
+													{ backgroundColor: colors.muted },
 												]}
 											>
-												<Icon
-													name="location"
-													size={16}
-													color={
-														activeField === "origin"
-															? colors.primary
-															: colors.safe
-													}
-												/>
+												<Icon name="location" size={14} color={colors.mutedForeground} />
 											</View>
 											<View style={styles.suggestionContent}>
 												<Text
-													style={[
-														styles.suggestionTitle,
-														{ color: colors.foreground },
-													]}
+													style={[styles.suggestionTitle, { color: colors.foreground }]}
 													numberOfLines={1}
 												>
 													{feature.place_name.split(",")[0]}
 												</Text>
 												<Text
-													style={[
-														styles.suggestionSubtitle,
-														{ color: colors.mutedForeground },
-													]}
+													style={[styles.suggestionSubtitle, { color: colors.mutedForeground }]}
 													numberOfLines={1}
 												>
-													{feature.place_name
-														.split(",")
-														.slice(1)
-														.join(",")
-														.trim()}
+													{feature.place_name.split(",").slice(1).join(",").trim()}
 												</Text>
 											</View>
-											<Icon
-												name="arrowRight"
-												size={16}
-												color={colors.mutedForeground}
-											/>
-										</AnimatedPressable>
+										</Pressable>
 									</Animated.View>
 								))}
 							</View>
 						) : searchQuery.length >= 2 ? (
 							<View style={styles.emptyState}>
-								<Icon name="search" size={48} color={colors.mutedForeground} />
-								<Text
-									style={[styles.emptyStateTitle, { color: colors.foreground }]}
-								>
-									No se encontraron resultados
-								</Text>
-								<Text
-									style={[
-										styles.emptyStateSubtitle,
-										{ color: colors.mutedForeground },
-									]}
-								>
-									Intenta con otra búsqueda
+								<Text style={[styles.emptyStateText, { color: colors.mutedForeground }]}>
+									No results found
 								</Text>
 							</View>
 						) : (
 							<View style={styles.emptyState}>
-								<Icon
-									name="location"
-									size={48}
-									color={colors.mutedForeground}
-								/>
-								<Text
-									style={[styles.emptyStateTitle, { color: colors.foreground }]}
-								>
-									{activeField === "origin"
-										? t("locations.whereFrom")
-										: t("locations.whereTo")}
-								</Text>
-								<Text
-									style={[
-										styles.emptyStateSubtitle,
-										{ color: colors.mutedForeground },
-									]}
-								>
-									{t("locations.typeAddress")}
+								<Text style={[styles.emptyStateText, { color: colors.mutedForeground }]}>
+									Type to search for a location
 								</Text>
 							</View>
 						)}
@@ -682,52 +532,48 @@ export function LocationChips({
 const styles = StyleSheet.create({
 	container: {
 		paddingHorizontal: 16,
-		marginBottom: 8,
 	},
-	chipsContainer: {
+	card: {
 		borderRadius: 16,
-		padding: 12,
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.1,
-		shadowRadius: 8,
-		elevation: 3,
+		borderWidth: 1,
+		padding: 16,
 	},
-	chip: {
+	locationsRow: {
 		flexDirection: "row",
 		alignItems: "center",
-		paddingVertical: 8,
 	},
-	chipDisabled: {
-		opacity: 0.5,
-	},
-	chipIcon: {
-		width: 32,
-		height: 32,
-		borderRadius: 8,
-		justifyContent: "center",
-		alignItems: "center",
-		marginRight: 12,
-	},
-	chipContent: {
+	locationBox: {
 		flex: 1,
 	},
-	chipLabel: {
-		fontSize: 11,
+	locationDisabled: {
+		opacity: 0.5,
+	},
+	locationLabel: {
+		fontSize: 12,
 		fontWeight: "500",
-		textTransform: "uppercase",
-		letterSpacing: 0.5,
-		marginBottom: 2,
+		marginBottom: 4,
 	},
-	chipValue: {
-		fontSize: 15,
-		fontWeight: "600",
+	locationName: {
+		fontSize: 16,
+		fontWeight: "700",
 	},
-	clearButton: {
-		padding: 4,
+	locationSubtext: {
+		fontSize: 12,
+		marginTop: 2,
 	},
+	swapButton: {
+		width: 36,
+		height: 36,
+		borderRadius: 18,
+		borderWidth: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		marginHorizontal: 12,
+	},
+	// Modal styles
 	modalOverlay: {
 		...StyleSheet.absoluteFillObject,
-		backgroundColor: "rgba(0,0,0,0.5)",
+		backgroundColor: "rgba(0, 0, 0, 0.4)",
 	},
 	modalBackdrop: {
 		flex: 1,
@@ -743,86 +589,81 @@ const styles = StyleSheet.create({
 		minHeight: "50%",
 	},
 	modalHeader: {
-		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "space-between",
-		paddingHorizontal: 16,
-		paddingVertical: 16,
-		borderBottomWidth: 1,
-		borderBottomColor: "rgba(0,0,0,0.1)",
+		paddingTop: 8,
+		paddingBottom: 20,
+	},
+	modalHandle: {
+		width: 40,
+		height: 4,
+		borderRadius: 2,
+		marginBottom: 16,
 	},
 	modalTitle: {
-		fontSize: 17,
-		fontWeight: "600",
-	},
-	closeButton: {
-		width: 40,
-		height: 40,
-		justifyContent: "center",
-		alignItems: "center",
+		fontSize: 18,
+		fontWeight: "700",
 	},
 	searchContainer: {
 		flexDirection: "row",
 		alignItems: "center",
 		marginHorizontal: 16,
-		marginTop: 16,
 		marginBottom: 12,
-		paddingHorizontal: 12,
-		paddingVertical: 10,
+		paddingHorizontal: 14,
+		paddingVertical: 14,
 		borderRadius: 12,
 		borderWidth: 1,
-	},
-	searchIcon: {
-		marginRight: 8,
+		gap: 10,
 	},
 	searchInput: {
 		flex: 1,
 		fontSize: 16,
-		paddingVertical: 4,
+		paddingVertical: 0,
 	},
-	currentLocationButton: {
+	currentLocationBtn: {
 		flexDirection: "row",
 		alignItems: "center",
 		marginHorizontal: 16,
 		marginBottom: 12,
-		padding: 12,
+		padding: 14,
 		borderRadius: 12,
+		gap: 12,
 	},
 	currentLocationIcon: {
-		width: 36,
-		height: 36,
-		borderRadius: 18,
+		width: 40,
+		height: 40,
+		borderRadius: 20,
 		justifyContent: "center",
 		alignItems: "center",
-		marginRight: 12,
 	},
 	currentLocationText: {
 		flex: 1,
+	},
+	currentLocationTitle: {
 		fontSize: 15,
-		fontWeight: "500",
+		fontWeight: "600",
+	},
+	currentLocationSubtitle: {
+		fontSize: 13,
+		marginTop: 2,
 	},
 	suggestionsList: {
 		flex: 1,
 	},
 	suggestionsContainer: {
 		marginHorizontal: 16,
-		marginBottom: 16,
-		borderRadius: 12,
-		overflow: "hidden",
 	},
 	suggestionItem: {
 		flexDirection: "row",
 		alignItems: "center",
-		padding: 12,
-		backgroundColor: "transparent",
+		paddingVertical: 14,
+		gap: 12,
 	},
 	suggestionIcon: {
 		width: 36,
 		height: 36,
-		borderRadius: 8,
+		borderRadius: 18,
 		justifyContent: "center",
 		alignItems: "center",
-		marginRight: 12,
 	},
 	suggestionContent: {
 		flex: 1,
@@ -836,25 +677,20 @@ const styles = StyleSheet.create({
 		fontSize: 13,
 	},
 	loadingContainer: {
-		padding: 40,
+		flexDirection: "row",
 		alignItems: "center",
+		justifyContent: "center",
+		padding: 32,
+		gap: 10,
 	},
 	loadingText: {
-		marginTop: 12,
 		fontSize: 14,
 	},
 	emptyState: {
-		padding: 40,
+		padding: 32,
 		alignItems: "center",
 	},
-	emptyStateTitle: {
-		marginTop: 16,
-		fontSize: 17,
-		fontWeight: "600",
-		textAlign: "center",
-	},
-	emptyStateSubtitle: {
-		marginTop: 8,
+	emptyStateText: {
 		fontSize: 14,
 		textAlign: "center",
 	},

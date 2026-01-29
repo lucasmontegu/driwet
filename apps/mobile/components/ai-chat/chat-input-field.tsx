@@ -18,6 +18,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Icon } from "@/components/icons";
 import { useThemeColors } from "@/hooks/use-theme-colors";
+import { useTranslation } from "@/lib/i18n";
 
 const MIN_HEIGHT = 44;
 const MAX_HEIGHT = 120;
@@ -43,7 +44,7 @@ export function ChatInputField({
 	onSubmit,
 	onVoicePress,
 	onStopGeneration,
-	placeholder = "Escribe un mensaje...",
+	placeholder,
 	isLoading = false,
 	isGenerating = false,
 	isRecording = false,
@@ -52,6 +53,8 @@ export function ChatInputField({
 	autoFocus = false,
 }: ChatInputFieldProps) {
 	const colors = useThemeColors();
+	const { t } = useTranslation();
+	const placeholderText = placeholder ?? t("chat.placeholder");
 	const inputRef = useRef<TextInput>(null);
 	const [inputHeight, setInputHeight] = useState(MIN_HEIGHT);
 	const focusProgress = useSharedValue(0);
@@ -137,7 +140,7 @@ export function ChatInputField({
 					onBlur={handleBlur}
 					onSubmitEditing={handleSubmit}
 					onContentSizeChange={handleContentSizeChange}
-					placeholder={placeholder}
+					placeholder={placeholderText}
 					placeholderTextColor={colors.mutedForeground}
 					editable={!disabled}
 					maxLength={maxLength}

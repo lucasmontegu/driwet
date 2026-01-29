@@ -39,5 +39,15 @@
 	},
 	"submit": {
 		"production": {}
+	},
+	"update": {
+		"default": {
+			"branch": "main",
+			"channel": "production"
+		},
+		"preview": {
+			"branch": "preview",
+			"channel": "preview"
+		}
 	}
 }

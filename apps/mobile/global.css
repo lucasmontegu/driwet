@@ -5,10 +5,10 @@
 @source "./node_modules/heroui-native/lib";
 
 /*
- * HeroUI Theme Customization
- * Add this to your global.css after importing @heroui/styles
- * Only includes base variables from variables.css
- * @see https://v3.heroui.com/docs/react/getting-started/theming
+ * HeroUI Theme Customization for Driwet
+ * Design tokens optimized for weather/storm alert app
+ * Uses oklch color space for better perceptual uniformity
+ * @see https://v3.heroui.com/docs/native/getting-started/theming
  */
 
 :root,
@@ -17,70 +17,92 @@
 [data-theme="light"],
 [data-theme="default"] {
 	/* Theme Colors (Light Mode) */
-	--accent: oklch(52.82% 0.2628 262.87);
+	/* Blue accent (not purple/indigo) */
+	--accent: oklch(54.8% 0.195 245);
 	--accent-foreground: oklch(99.11% 0 0);
-	--background: oklch(97.02% 0.0131 262.87);
-	--border: oklch(90.00% 0.0131 262.87);
-	--danger: oklch(65.32% 0.2389 26.82);
+	--background: oklch(97.02% 0 245);
+	--border: oklch(90.00% 0 245);
+	--danger: oklch(65.32% 0.2328 26.77);
 	--danger-foreground: oklch(99.11% 0 0);
-	--default: oklch(94.00% 0.0131 262.87);
-	--default-foreground: oklch(21.03% 0.0059 262.87);
-	--field-background: oklch(100.00% 0.0066 262.87);
-	--field-foreground: oklch(21.03% 0.0059 262.87);
-	--field-placeholder: oklch(55.17% 0.0263 262.87);
-	--focus: oklch(52.82% 0.2628 262.87);
-	--foreground: oklch(21.03% 0.0059 262.87);
-	--muted: oklch(55.17% 0.0263 262.87);
-	--overlay: oklch(100.00% 0.0039 262.87);
-	--overlay-foreground: oklch(21.03% 0.0059 262.87);
-	--scrollbar: oklch(87.10% 0.0131 262.87);
-	--segment: oklch(100.00% 0.0131 262.87);
-	--segment-foreground: oklch(21.03% 0.0059 262.87);
-	--separator: oklch(92.00% 0.0131 262.87);
-	--success: oklch(73.29% 0.1986 151.89);
-	--success-foreground: oklch(21.03% 0.0059 151.89);
-	--surface: oklch(100.00% 0.0066 262.87);
-	--surface-foreground: oklch(21.03% 0.0059 262.87);
-	--warning: oklch(78.19% 0.1627 73.41);
-	--warning-foreground: oklch(21.03% 0.0059 73.41);
+	--default: oklch(94.00% 0 245);
+	--default-foreground: oklch(21.03% 0.0059 245);
+	--field-background: oklch(100.00% 0 245);
+	--field-foreground: oklch(21.03% 0.0059 245);
+	--field-placeholder: oklch(55.17% 0 245);
+	--focus: oklch(54.8% 0.195 245);
+	--foreground: oklch(21.03% 0.0059 245);
+	--muted: oklch(55.17% 0 245);
+	--overlay: oklch(100.00% 0 245);
+	--overlay-foreground: oklch(21.03% 0.0059 245);
+	--scrollbar: oklch(87.10% 0 245);
+	--segment: oklch(100.00% 0 245);
+	--segment-foreground: oklch(21.03% 0.0059 245);
+	--separator: oklch(92.00% 0 245);
+	--success: oklch(73.29% 0.1935 151.84);
+	--success-foreground: oklch(21.03% 0.0059 151.84);
+	--surface: oklch(100.00% 0 245);
+	--surface-foreground: oklch(21.03% 0.0059 245);
+	--warning: oklch(78.19% 0.1585 73.36);
+	--warning-foreground: oklch(21.03% 0.0059 73.36);
+
+	/* Brand Colors - Primary for CTA/main actions (Blue, not purple) */
+	--primary: oklch(54.8% 0.195 245);
+	--primary-foreground: oklch(99.11% 0 0);
+
+	/* Semantic Colors - Weather specific */
+	--safe: oklch(73.29% 0.1935 151.84);
+	--caution: oklch(78.19% 0.1585 73.36);
+	--alert-warning: oklch(78.19% 0.1585 42);
+	--alert-danger: oklch(65.32% 0.2328 26.77);
 
 	/* Border Radius */
 	--radius: 0.5rem;
 	--field-radius: 0.5rem;
 
-	/* Font Family */
-	/* Make sure to load Inter font in your app */
-	--font-sans: var(--font-inter);
+	/* Font Family - Inter loaded in app */
+	--font-sans: "Inter";
 }
 
 .dark,
 [data-theme="dark"] {
 	color-scheme: dark;
+
 	/* Theme Colors (Dark Mode) */
-	--accent: oklch(52.82% 0.2628 262.87);
+	/* Blue accent (brighter for dark mode visibility) */
+	--accent: oklch(65% 0.18 245);
 	--accent-foreground: oklch(99.11% 0 0);
-	--background: oklch(12.00% 0.0131 262.87);
-	--border: oklch(28.00% 0.0131 262.87);
-	--danger: oklch(59.40% 0.2019 25.71);
+	--background: oklch(12.00% 0 245);
+	--border: oklch(28.00% 0 245);
+	--danger: oklch(59.40% 0.1967 25.66);
 	--danger-foreground: oklch(99.11% 0 0);
-	--default: oklch(27.40% 0.0131 262.87);
+	--default: oklch(27.40% 0 245);
 	--default-foreground: oklch(99.11% 0 0);
-	--field-background: oklch(21.03% 0.0263 262.87);
+	--field-background: oklch(21.03% 0 245);
 	--field-foreground: oklch(99.11% 0 0);
-	--field-placeholder: oklch(70.50% 0.0263 262.87);
-	--focus: oklch(52.82% 0.2628 262.87);
+	--field-placeholder: oklch(70.50% 0 245);
+	--focus: oklch(65% 0.18 245);
 	--foreground: oklch(99.11% 0 0);
-	--muted: oklch(70.50% 0.0263 262.87);
-	--overlay: oklch(21.03% 0.0263 262.87);
+	--muted: oklch(70.50% 0 245);
+	--overlay: oklch(21.03% 0 245);
 	--overlay-foreground: oklch(99.11% 0 0);
-	--scrollbar: oklch(70.50% 0.0131 262.87);
-	--segment: oklch(39.64% 0.0131 262.87);
+	--scrollbar: oklch(70.50% 0 245);
+	--segment: oklch(39.64% 0 245);
 	--segment-foreground: oklch(99.11% 0 0);
-	--separator: oklch(25.00% 0.0131 262.87);
-	--success: oklch(73.29% 0.1986 151.89);
-	--success-foreground: oklch(21.03% 0.0059 151.89);
-	--surface: oklch(21.03% 0.0263 262.87);
+	--separator: oklch(25.00% 0 245);
+	--success: oklch(73.29% 0.1935 151.84);
+	--success-foreground: oklch(21.03% 0.0059 151.84);
+	--surface: oklch(21.03% 0 245);
 	--surface-foreground: oklch(99.11% 0 0);
-	--warning: oklch(82.03% 0.1424 77.42);
-	--warning-foreground: oklch(21.03% 0.0059 77.42);
+	--warning: oklch(82.03% 0.1388 77.37);
+	--warning-foreground: oklch(21.03% 0.0059 77.37);
+
+	/* Brand Colors - Brighter blue for dark mode */
+	--primary: oklch(65% 0.18 245);
+	--primary-foreground: oklch(99.11% 0 0);
+
+	/* Semantic Colors - Brighter for dark mode visibility */
+	--safe: oklch(76.00% 0.1935 151.84);
+	--caution: oklch(82.19% 0.1585 73.36);
+	--alert-warning: oklch(82.19% 0.1585 42);
+	--alert-danger: oklch(68.32% 0.2328 26.77);
 }

@@ -2,10 +2,13 @@
 
 import { Stack, useRootNavigationState, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ProviderGuard, useProvidersReady } from "@/components/provider-guard";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { authClient } from "@/lib/auth-client";
 
-export default function AppLayout() {
+// Inner component that uses hooks requiring providers
+function AppLayoutContent() {
 	const router = useRouter();
 	const colors = useThemeColors();
 	const { data: session, isPending, refetch } = authClient.useSession();
@@ -95,3 +98,32 @@ export default function AppLayout() {
 		</Stack>
 	);
 }
+
+// Loading fallback when providers aren't ready
+function LoadingFallback() {
+	return (
+		<View style={styles.loading}>
+			<ActivityIndicator size="large" color="#0936d6" />
+		</View>
+	);
+}
+
+// Main layout with provider guard
+export default function AppLayout() {
+	const isReady = useProvidersReady();
+
+	if (!isReady) {
+		return <LoadingFallback />;
+	}
+
+	return <AppLayoutContent />;
+}
+
+const styles = StyleSheet.create({
+	loading: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "#000",
+	},
+});

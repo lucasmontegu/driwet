@@ -101,7 +101,7 @@ export default function OnboardingLayout() {
 					>
 						<Animated.View style={[styles.progressFill, progressStyle]}>
 							<LinearGradient
-								colors={[colors.primary, "#4F46E5"]}
+								colors={[colors.primary, "#1D4ED8"]}
 								start={{ x: 0, y: 0 }}
 								end={{ x: 1, y: 0 }}
 								style={StyleSheet.absoluteFillObject}

@@ -11,7 +11,6 @@ import {
 	calculateOverallRisk,
 	calculateRoadRisk,
 	checkApiLimit,
-	getPrecipitationType,
 	PRECIPITATION_MAP,
 	trackApiUsage,
 } from "./utils";
@@ -154,50 +153,144 @@ class TomorrowIoProvider implements IWeatherProvider {
 			throw new Error("Tomorrow.io daily API limit exceeded");
 		}
 
-		const response = await fetch(
-			`${TOMORROW_API_BASE}/events?location=${lat},${lng}&insights=fires,wind,winter,floods,air`,
-			{
-				headers: {
-					apikey: env.TOMORROW_IO_API_KEY,
-				},
-			},
-		);
-
-		await trackApiUsage("tomorrow", "events");
-
-		if (!response.ok) {
-			// Events endpoint might not be available in free tier
-			if (response.status === 403) {
-				return [];
-			}
-			const error = await response.text();
-			throw new Error(`Tomorrow.io events API error: ${error}`);
+		// Get forecast data and derive alerts from severe conditions
+		// This is more efficient than the Events API which requires pre-configured insights
+		try {
+			const { hourly } = await this.getTimelines(lat, lng, { hours: 24 });
+			return this.deriveEventsFromForecast(hourly);
+		} catch (error) {
+			console.error("Failed to derive events from forecast:", error);
+			return [];
 		}
+	}
 
-		interface TomorrowEvent {
-			eventId: string;
-			insight: string;
+	// Derive weather events/alerts from forecast data
+	private deriveEventsFromForecast(
+		hourly: Array<{ time: string; weather: WeatherData }>,
+	): WeatherEvent[] {
+		const events: WeatherEvent[] = [];
+
+		// Group consecutive hours with severe conditions
+		let currentEvent: {
+			type: string;
 			severity: string;
-			headline: string;
+			title: string;
 			description: string;
 			startTime: string;
 			endTime: string;
+		} | null = null;
+
+		for (const { time, weather } of hourly) {
+			const severeCondition = this.detectSevereCondition(weather);
+
+			if (severeCondition) {
+				if (currentEvent && currentEvent.type === severeCondition.type) {
+					// Extend current event
+					currentEvent.endTime = time;
+				} else {
+					// Save previous event if exists
+					if (currentEvent) {
+						events.push({
+							id: `${currentEvent.type}-${currentEvent.startTime}`,
+							...currentEvent,
+						});
+					}
+					// Start new event
+					currentEvent = {
+						type: severeCondition.type,
+						severity: severeCondition.severity,
+						title: severeCondition.title,
+						description: severeCondition.description,
+						startTime: time,
+						endTime: time,
+					};
+				}
+			} else if (currentEvent) {
+				// End of severe condition period
+				events.push({
+					id: `${currentEvent.type}-${currentEvent.startTime}`,
+					...currentEvent,
+				});
+				currentEvent = null;
+			}
 		}
 
-		const data = (await response.json()) as {
-			data?: { events?: TomorrowEvent[] };
-		};
-		const events = data.data?.events || [];
+		// Don't forget last event
+		if (currentEvent) {
+			events.push({
+				id: `${currentEvent.type}-${currentEvent.startTime}`,
+				...currentEvent,
+			});
+		}
 
-		return events.map((event) => ({
-			id: event.eventId,
-			type: event.insight,
-			severity: event.severity || "moderate",
-			title: event.headline,
-			description: event.description,
-			startTime: event.startTime,
-			endTime: event.endTime,
-		}));
+		return events;
+	}
+
+	private detectSevereCondition(weather: WeatherData): {
+		type: string;
+		severity: string;
+		title: string;
+		description: string;
+	} | null {
+		const code = weather.weatherCode ?? 1000;
+
+		// Thunderstorm with hail (8xxx codes)
+		if (code >= 8000) {
+			return {
+				type: "thunderstorm",
+				severity: code >= 8001 ? "severe" : "moderate",
+				title: "Thunderstorm Alert",
+				description:
+					"Thunderstorm conditions expected. Seek shelter if driving.",
+			};
+		}
+
+		// Heavy precipitation (4xxx codes for rain, 5xxx for snow)
+		if (weather.precipitationIntensity > 10) {
+			return {
+				type: "heavy_precipitation",
+				severity: weather.precipitationIntensity > 20 ? "severe" : "moderate",
+				title:
+					weather.precipitationType === "snow"
+						? "Heavy Snow Alert"
+						: "Heavy Rain Alert",
+				description: `Heavy ${weather.precipitationType} expected. Reduced visibility and road hazards likely.`,
+			};
+		}
+
+		// High winds
+		if ((weather.windGust ?? 0) > 80 || weather.windSpeed > 60) {
+			const gust = weather.windGust ?? weather.windSpeed;
+			return {
+				type: "wind",
+				severity: gust > 100 ? "severe" : "moderate",
+				title: "High Wind Alert",
+				description: `Wind gusts up to ${Math.round(gust)} km/h expected. Exercise caution.`,
+			};
+		}
+
+		// Poor visibility
+		if (weather.visibility < 1) {
+			return {
+				type: "visibility",
+				severity: weather.visibility < 0.5 ? "severe" : "moderate",
+				title: "Low Visibility Alert",
+				description: `Visibility reduced to ${weather.visibility} km. Drive with caution.`,
+			};
+		}
+
+		// Freezing conditions with precipitation
+		if (weather.temperature < 0 && weather.precipitationIntensity > 0) {
+			return {
+				type: "ice",
+				severity: "moderate",
+				title: "Freezing Conditions Alert",
+				description:
+					"Freezing precipitation possible. Watch for icy road surfaces.",
+			};
+		}
+
+		return null;
 	}
 
 	async analyzeRoute(

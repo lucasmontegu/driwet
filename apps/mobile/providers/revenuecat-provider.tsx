@@ -326,11 +326,36 @@ export function RevenueCatProvider({ children }: RevenueCatProviderProps) {
 	);
 }
 
+// Default values for when context isn't available yet (during initialization)
+const defaultContextValue: RevenueCatContextValue = {
+	customerInfo: null,
+	offerings: null,
+	currentOffering: null,
+	isLoading: true,
+	isInitialized: false,
+	error: null,
+	isProUser: false,
+	activeSubscription: null,
+	expirationDate: null,
+	refreshCustomerInfo: async () => {},
+	identifyUser: async () => {},
+	logoutUser: async () => {},
+	restorePurchases: async () => false,
+	presentPaywall: async () => false,
+	presentPaywallIfNeeded: async () => false,
+	presentCustomerCenter: async () => {},
+};
+
 // Hook to use RevenueCat context
 export function useRevenueCat(): RevenueCatContextValue {
 	const context = useContext(RevenueCatContext);
+
+	// Return default values during initialization instead of throwing
+	// This handles race conditions with React Compiler and Fast Refresh
 	if (!context) {
-		throw new Error("useRevenueCat must be used within a RevenueCatProvider");
+		console.warn("[RevenueCat] Context not available yet, returning defaults");
+		return defaultContextValue;
 	}
+
 	return context;
 }

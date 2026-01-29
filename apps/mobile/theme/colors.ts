@@ -12,8 +12,8 @@ export const colors = {
 		cardForeground: "#171717",
 		surface: "#FFFFFF",
 		surfaceElevated: "#F5F5F5",
-		// Brand
-		primary: "#4F46E5",
+		// Brand - True Blue (matches HeroUI theme)
+		primary: "#0936d6",
 		primaryForeground: "#FFFFFF",
 		// Secondary
 		secondary: "#F5F5F5",
@@ -41,9 +41,9 @@ export const colors = {
 		cardForeground: "#FAFAFA",
 		surface: "#171717",
 		surfaceElevated: "#262626",
-		// Brand - lighter for dark mode
-		primary: "#818CF8",
-		primaryForeground: "#0A0A0A",
+		// Brand - Brighter Blue for dark mode (matches HeroUI theme)
+		primary: "#0936d6",
+		primaryForeground: "#FFFFFF",
 		// Secondary
 		secondary: "#262626",
 		secondaryForeground: "#FAFAFA",

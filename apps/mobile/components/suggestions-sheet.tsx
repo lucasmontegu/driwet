@@ -313,7 +313,7 @@ export function SuggestionsSheet({
 							<Text
 								style={[styles.statLabel, { color: colors.mutedForeground }]}
 							>
-								Clima
+								{t("weather.climate")}
 							</Text>
 						</View>
 					</View>
@@ -322,7 +322,7 @@ export function SuggestionsSheet({
 				{/* Alerts Section */}
 				{alerts.length > 0 && (
 					<CollapsibleSection
-						title="Alertas en ruta"
+						title={t("alerts.routeAlerts")}
 						icon="alert"
 						iconColor={colors.destructive}
 					>
@@ -455,7 +455,7 @@ export function SuggestionsSheet({
 						<View style={styles.destinationsGrid}>
 							{destinations.map((dest, index) => (
 								<View
-									key={index}
+									key={dest.name}
 									style={[
 										styles.destinationCard,
 										{ backgroundColor: colors.muted },

@@ -8,33 +8,33 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		3BAC4AB4ABAFBFE72B532DD7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 99ECBA4952D8C02CD1081473 /* PrivacyInfo.xcprivacy */; };
+		35145E719FFC690E05E1F9D7 /* Pods_Driwet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 751951673B9FFCA2F10B9CDD /* Pods_Driwet.framework */; };
+		3C3DF23C923EC7664BEBF894 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 51EBC104B7EBDFD7C09F54FF /* PrivacyInfo.xcprivacy */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		9EA74652290A42F284F880F4 /* Inter_300Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB39EED7DBFE4EBF98340F3F /* Inter_300Light.ttf */; };
-		AAAC25070F093068401A9C8D /* Pods_Driwet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 257CB35A1C360F5BCD4D9378 /* Pods_Driwet.framework */; };
+		555442AD161E421698BCB561 /* Inter_100Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 826262BF02D5431CAB7AC6EF /* Inter_100Thin.ttf */; };
+		86F1D5A9659BABC12E7CFDDE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2831158A162A621ED4E0FA0A /* ExpoModulesProvider.swift */; };
+		8DCFC83E74174CCAA960108E /* Inter_300Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C38695E8825947C4AC874A78 /* Inter_300Light.ttf */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		BEE03B2942BE4ABF8471BE96 /* Inter_100Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A297D17B0FC742B0ACA9C253 /* Inter_100Thin.ttf */; };
-		D0AF8A417D0644869A80A851 /* Inter_600SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A881F680970E401DA41087DA /* Inter_600SemiBold.ttf */; };
-		D65E999A20AD4C8FA2AC570C /* Inter_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0ED06EB92C834A31B539E0A1 /* Inter_400Regular.ttf */; };
+		BF5CA09A9EFE43AD8B39E9DA /* Inter_400Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4420DA9613AD4441BD7B98B9 /* Inter_400Regular.ttf */; };
+		E02A538C1D4C4959A54894A3 /* Inter_600SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5C77AF07A33D4F3ABCFFF912 /* Inter_600SemiBold.ttf */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
-		FC8C30EF173E746788315654 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473C99CF4218147640962CA6 /* ExpoModulesProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0ED06EB92C834A31B539E0A1 /* Inter_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_400Regular.ttf; path = "../node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Driwet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Driwet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Driwet/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Driwet/Info.plist; sourceTree = "<group>"; };
-		257CB35A1C360F5BCD4D9378 /* Pods_Driwet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Driwet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3E61B05F83091548B6EDA062 /* Pods-Driwet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Driwet.release.xcconfig"; path = "Target Support Files/Pods-Driwet/Pods-Driwet.release.xcconfig"; sourceTree = "<group>"; };
-		473C99CF4218147640962CA6 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Driwet/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		99ECBA4952D8C02CD1081473 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Driwet/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		A297D17B0FC742B0ACA9C253 /* Inter_100Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_100Thin.ttf; path = "../node_modules/@expo-google-fonts/inter/100Thin/Inter_100Thin.ttf"; sourceTree = "<group>"; };
-		A881F680970E401DA41087DA /* Inter_600SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_600SemiBold.ttf; path = "../node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf"; sourceTree = "<group>"; };
+		2831158A162A621ED4E0FA0A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Driwet/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		37EAE415E108274B89CE76A5 /* Pods-Driwet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Driwet.debug.xcconfig"; path = "Target Support Files/Pods-Driwet/Pods-Driwet.debug.xcconfig"; sourceTree = "<group>"; };
+		4420DA9613AD4441BD7B98B9 /* Inter_400Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_400Regular.ttf; path = "../node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf"; sourceTree = "<group>"; };
+		51EBC104B7EBDFD7C09F54FF /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Driwet/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		5C77AF07A33D4F3ABCFFF912 /* Inter_600SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_600SemiBold.ttf; path = "../node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf"; sourceTree = "<group>"; };
+		6811D9B1FBACF83C74CC4287 /* Pods-Driwet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Driwet.release.xcconfig"; path = "Target Support Files/Pods-Driwet/Pods-Driwet.release.xcconfig"; sourceTree = "<group>"; };
+		751951673B9FFCA2F10B9CDD /* Pods_Driwet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Driwet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		826262BF02D5431CAB7AC6EF /* Inter_100Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_100Thin.ttf; path = "../node_modules/@expo-google-fonts/inter/100Thin/Inter_100Thin.ttf"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Driwet/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		BB39EED7DBFE4EBF98340F3F /* Inter_300Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_300Light.ttf; path = "../node_modules/@expo-google-fonts/inter/300Light/Inter_300Light.ttf"; sourceTree = "<group>"; };
-		CD098F6BD58462A92465023F /* Pods-Driwet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Driwet.debug.xcconfig"; path = "Target Support Files/Pods-Driwet/Pods-Driwet.debug.xcconfig"; sourceTree = "<group>"; };
+		C38695E8825947C4AC874A78 /* Inter_300Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Inter_300Light.ttf; path = "../node_modules/@expo-google-fonts/inter/300Light/Inter_300Light.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Driwet/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* Driwet-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Driwet-Bridging-Header.h"; path = "Driwet/Driwet-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -45,23 +45,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AAAC25070F093068401A9C8D /* Pods_Driwet.framework in Frameworks */,
+				35145E719FFC690E05E1F9D7 /* Pods_Driwet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0445AE6F9AB45DF722A4A66F /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				CD098F6BD58462A92465023F /* Pods-Driwet.debug.xcconfig */,
-				3E61B05F83091548B6EDA062 /* Pods-Driwet.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		13B07FAE1A68108700A75B9A /* Driwet */ = {
 			isa = PBXGroup;
 			children = (
@@ -71,46 +61,28 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				99ECBA4952D8C02CD1081473 /* PrivacyInfo.xcprivacy */,
+				51EBC104B7EBDFD7C09F54FF /* PrivacyInfo.xcprivacy */,
 			);
 			name = Driwet;
-			sourceTree = "<group>";
-		};
-		1B1DE3B81C53FB5A0297CB33 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				5A7181B168F0C2BC41D93A67 /* Driwet */,
-			);
-			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				257CB35A1C360F5BCD4D9378 /* Pods_Driwet.framework */,
+				751951673B9FFCA2F10B9CDD /* Pods_Driwet.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		5A7181B168F0C2BC41D93A67 /* Driwet */ = {
+		43F8137E0A9FE68421658918 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				473C99CF4218147640962CA6 /* ExpoModulesProvider.swift */,
+				37EAE415E108274B89CE76A5 /* Pods-Driwet.debug.xcconfig */,
+				6811D9B1FBACF83C74CC4287 /* Pods-Driwet.release.xcconfig */,
 			);
-			name = Driwet;
-			sourceTree = "<group>";
-		};
-		6F6B422948844629B4369A90 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				A297D17B0FC742B0ACA9C253 /* Inter_100Thin.ttf */,
-				BB39EED7DBFE4EBF98340F3F /* Inter_300Light.ttf */,
-				0ED06EB92C834A31B539E0A1 /* Inter_400Regular.ttf */,
-				A881F680970E401DA41087DA /* Inter_600SemiBold.ttf */,
-			);
-			name = Resources;
-			path = "";
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -127,9 +99,9 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				6F6B422948844629B4369A90 /* Resources */,
-				0445AE6F9AB45DF722A4A66F /* Pods */,
-				1B1DE3B81C53FB5A0297CB33 /* ExpoModulesProviders */,
+				B6F81B531AF9405EB1EB3B85 /* Resources */,
+				43F8137E0A9FE68421658918 /* Pods */,
+				B2EB7E84C0DF7E248D97F60B /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -142,6 +114,34 @@
 				13B07F961A680F5B00A75B9A /* Driwet.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		AF3520E8FDB53C4B06E5D8FD /* Driwet */ = {
+			isa = PBXGroup;
+			children = (
+				2831158A162A621ED4E0FA0A /* ExpoModulesProvider.swift */,
+			);
+			name = Driwet;
+			sourceTree = "<group>";
+		};
+		B2EB7E84C0DF7E248D97F60B /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				AF3520E8FDB53C4B06E5D8FD /* Driwet */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
+		B6F81B531AF9405EB1EB3B85 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				826262BF02D5431CAB7AC6EF /* Inter_100Thin.ttf */,
+				C38695E8825947C4AC874A78 /* Inter_300Light.ttf */,
+				4420DA9613AD4441BD7B98B9 /* Inter_400Regular.ttf */,
+				5C77AF07A33D4F3ABCFFF912 /* Inter_600SemiBold.ttf */,
+			);
+			name = Resources;
+			path = "";
 			sourceTree = "<group>";
 		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
@@ -161,13 +161,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Driwet" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				F5253E7A7552E940DDAE320F /* [Expo] Configure project */,
+				FB1F8847CD9A392C17F9C764 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				CE535B52946D26595753175A /* [CP] Embed Pods Frameworks */,
+				8C3D8BAA34956876E3049E8A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -217,11 +217,11 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				BEE03B2942BE4ABF8471BE96 /* Inter_100Thin.ttf in Resources */,
-				9EA74652290A42F284F880F4 /* Inter_300Light.ttf in Resources */,
-				D65E999A20AD4C8FA2AC570C /* Inter_400Regular.ttf in Resources */,
-				D0AF8A417D0644869A80A851 /* Inter_600SemiBold.ttf in Resources */,
-				3BAC4AB4ABAFBFE72B532DD7 /* PrivacyInfo.xcprivacy in Resources */,
+				555442AD161E421698BCB561 /* Inter_100Thin.ttf in Resources */,
+				8DCFC83E74174CCAA960108E /* Inter_300Light.ttf in Resources */,
+				BF5CA09A9EFE43AD8B39E9DA /* Inter_400Regular.ttf in Resources */,
+				E02A538C1D4C4959A54894A3 /* Inter_600SemiBold.ttf in Resources */,
+				3C3DF23C923EC7664BEBF894 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,6 +279,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/ExpoConstants_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXNotifications/ExpoNotifications_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXTaskManager/ExpoTaskManager_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXUpdates/EXUpdates.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoDevice/ExpoDevice_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem/ExpoFileSystem_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoLocalization/ExpoLocalization_privacy.bundle",
@@ -286,6 +287,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/PurchasesHybridCommon/PurchasesHybridCommon.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage_resources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNSVG/RNSVGFilters.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/ReachabilitySwift/ReachabilitySwift.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RevenueCat/RevenueCat.bundle",
@@ -300,6 +302,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoConstants_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoNotifications_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoTaskManager_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXUpdates.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoDevice_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoFileSystem_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoLocalization_privacy.bundle",
@@ -307,6 +310,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/PurchasesHybridCommon.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNCAsyncStorage_resources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNSVGFilters.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ReachabilitySwift.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RevenueCat.bundle",
@@ -319,7 +323,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Driwet/Pods-Driwet-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CE535B52946D26595753175A /* [CP] Embed Pods Frameworks */ = {
+		8C3D8BAA34956876E3049E8A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -349,7 +353,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Driwet/Pods-Driwet-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F5253E7A7552E940DDAE320F /* [Expo] Configure project */ = {
+		FB1F8847CD9A392C17F9C764 /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -381,7 +385,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				FC8C30EF173E746788315654 /* ExpoModulesProvider.swift in Sources */,
+				86F1D5A9659BABC12E7CFDDE /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,7 +394,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CD098F6BD58462A92465023F /* Pods-Driwet.debug.xcconfig */;
+			baseConfigurationReference = 37EAE415E108274B89CE76A5 /* Pods-Driwet.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -427,7 +431,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3E61B05F83091548B6EDA062 /* Pods-Driwet.release.xcconfig */;
+			baseConfigurationReference = 6811D9B1FBACF83C74CC4287 /* Pods-Driwet.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

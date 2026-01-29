@@ -1,19 +1,19 @@
+import { Car01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
+	Easing,
 	useAnimatedStyle,
 	useSharedValue,
 	withRepeat,
 	withSequence,
 	withSpring,
 	withTiming,
-	Easing,
 } from "react-native-reanimated";
-import { Car01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react-native";
-import { useThemeColors } from "@/hooks/use-theme-colors";
 import { springs } from "@/hooks/use-animation-tokens";
 import { useReduceMotion } from "@/hooks/use-reduce-motion";
+import { useThemeColors } from "@/hooks/use-theme-colors";
 
 type DrivingProgressProps = {
 	progress: number; // 0-100

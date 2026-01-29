@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { Text, type TextStyle } from "react-native";
 import Animated, {
+	Easing,
 	useAnimatedProps,
 	useSharedValue,
 	withTiming,
-	Easing,
 } from "react-native-reanimated";
 import { useReduceMotion } from "@/hooks/use-reduce-motion";
 

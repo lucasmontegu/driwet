@@ -84,9 +84,7 @@ function SettingsModal({
 					onPress={(e) => e.stopPropagation()}
 					enableHaptics={false}
 				>
-					<Text
-						style={[styles.modalTitle, { color: colors.foreground }]}
-					>
+					<Text style={[styles.modalTitle, { color: colors.foreground }]}>
 						{title}
 					</Text>
 					{options.map((option, index) => (
@@ -130,7 +128,10 @@ function SettingsModal({
 					))}
 					<AnimatedPressable onPress={onClose} style={styles.modalCancel}>
 						<Text
-							style={[styles.modalCancelText, { color: colors.mutedForeground }]}
+							style={[
+								styles.modalCancelText,
+								{ color: colors.mutedForeground },
+							]}
 						>
 							{t("common.cancel")}
 						</Text>
@@ -239,8 +240,13 @@ export default function ProfileScreen() {
 	];
 
 	return (
-		<SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+		<SafeAreaView
+			style={[styles.container, { backgroundColor: colors.background }]}
+		>
+			<ScrollView
+				style={styles.scrollView}
+				contentContainerStyle={styles.scrollContent}
+			>
 				{/* Header */}
 				<Animated.Text
 					entering={FadeInDown.delay(0).springify()}
@@ -274,7 +280,9 @@ export default function ProfileScreen() {
 									/>
 								) : (
 									<>
-										<Text style={[styles.userEmail, { color: colors.foreground }]}>
+										<Text
+											style={[styles.userEmail, { color: colors.foreground }]}
+										>
 											{profile?.email ?? t("common.loading")}
 										</Text>
 										<Text
@@ -311,7 +319,9 @@ export default function ProfileScreen() {
 					style={styles.sectionHeader}
 				>
 					<Icon name="stats" size={18} color={colors.mutedForeground} />
-					<Text style={[styles.sectionTitle, { color: colors.mutedForeground }]}>
+					<Text
+						style={[styles.sectionTitle, { color: colors.mutedForeground }]}
+					>
 						{t("profile.stats")}
 					</Text>
 				</Animated.View>
@@ -340,7 +350,9 @@ export default function ProfileScreen() {
 					style={styles.sectionHeader}
 				>
 					<Icon name="settings" size={18} color={colors.mutedForeground} />
-					<Text style={[styles.sectionTitle, { color: colors.mutedForeground }]}>
+					<Text
+						style={[styles.sectionTitle, { color: colors.mutedForeground }]}
+					>
 						{t("profile.settings")}
 					</Text>
 				</Animated.View>
@@ -359,13 +371,12 @@ export default function ProfileScreen() {
 						<AnimatedPressable
 							key={setting.labelKey}
 							onPress={() => handleSettingPress(setting)}
-							style={[
+							style={StyleSheet.flatten([
 								styles.settingRow,
-								index < settings.length - 1 && {
-									borderBottomWidth: 1,
-									borderBottomColor: colors.border,
-								},
-							]}
+								index < settings.length - 1
+									? { borderBottomWidth: 1, borderBottomColor: colors.border }
+									: {},
+							])}
 						>
 							<Icon name={setting.icon} size={20} color={colors.foreground} />
 							<Text style={[styles.settingLabel, { color: colors.foreground }]}>
@@ -373,7 +384,10 @@ export default function ProfileScreen() {
 							</Text>
 							{setting.value && (
 								<Text
-									style={[styles.settingValue, { color: colors.mutedForeground }]}
+									style={[
+										styles.settingValue,
+										{ color: colors.mutedForeground },
+									]}
 								>
 									{setting.value}
 								</Text>
@@ -389,10 +403,7 @@ export default function ProfileScreen() {
 
 				{/* Logout */}
 				<Animated.View entering={FadeInUp.delay(600).springify()}>
-					<AnimatedPressable
-						onPress={handleLogout}
-						style={styles.logoutButton}
-					>
+					<AnimatedPressable onPress={handleLogout} style={styles.logoutButton}>
 						<Icon name="logout" size={20} color={colors.destructive} />
 						<Text style={[styles.logoutText, { color: colors.destructive }]}>
 							{t("profile.logout")}

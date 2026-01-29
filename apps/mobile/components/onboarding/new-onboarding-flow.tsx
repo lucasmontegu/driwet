@@ -3,13 +3,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { useCallback, useEffect, useState } from "react";
-import {
-	Dimensions,
-	Pressable,
-	StyleSheet,
-	Text,
-	View,
-} from "react-native";
+import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
 	FadeIn,
 	FadeInDown,
@@ -351,10 +345,7 @@ export function NewOnboardingFlow({
 					{/* Top bar with back/skip */}
 					<View style={[styles.topBar, { paddingTop: insets.top + 80 }]}>
 						{canGoBack ? (
-							<AnimatedPressable
-								onPress={handleBack}
-								style={styles.backButton}
-							>
+							<AnimatedPressable onPress={handleBack} style={styles.backButton}>
 								<View
 									style={[
 										styles.backButtonInner,
@@ -369,10 +360,7 @@ export function NewOnboardingFlow({
 						)}
 
 						{canSkip && !showFinishButton && (
-							<AnimatedPressable
-								onPress={handleSkip}
-								style={styles.skipButton}
-							>
+							<AnimatedPressable onPress={handleSkip} style={styles.skipButton}>
 								<Text
 									style={[
 										styles.skipButtonText,
