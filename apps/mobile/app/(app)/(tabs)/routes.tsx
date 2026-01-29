@@ -1,18 +1,20 @@
-// apps/native/app/(app)/(tabs)/routes.tsx
+// apps/mobile/app/(app)/(tabs)/routes.tsx
 
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import {
 	ActivityIndicator,
-	Pressable,
 	ScrollView,
+	StyleSheet,
 	Text,
 	View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Icon } from "@/components/icons";
 import { ScheduleTripSheet } from "@/components/schedule-trip-sheet";
+import { AnimatedPressable } from "@/components/ui/animated-pressable";
 import {
 	useDeleteRoute,
 	useSavedRoutes,
@@ -69,7 +71,6 @@ export default function RoutesScreen() {
 	}, []);
 
 	const handleTripScheduled = useCallback((tripId: string) => {
-		// Could show a toast or feedback here
 		console.log("Trip scheduled:", tripId);
 	}, []);
 
@@ -80,9 +81,12 @@ export default function RoutesScreen() {
 			(now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24),
 		);
 
-		if (diffDays === 0) return "Hoy";
-		if (diffDays === 1) return "Ayer";
-		return d.toLocaleDateString("es", { weekday: "short", day: "numeric" });
+		if (diffDays === 0) return t("routes.today");
+		if (diffDays === 1) return t("routes.yesterday");
+		return d.toLocaleDateString(undefined, {
+			weekday: "short",
+			day: "numeric",
+		});
 	};
 
 	const getOutcomeText = (outcome: string) => {
@@ -97,32 +101,33 @@ export default function RoutesScreen() {
 	};
 
 	return (
-		<GestureHandlerRootView style={{ flex: 1 }}>
-			<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-				<ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
+		<GestureHandlerRootView style={styles.root}>
+			<SafeAreaView
+				style={[styles.container, { backgroundColor: colors.background }]}
+			>
+				<ScrollView
+					style={styles.scrollView}
+					contentContainerStyle={styles.scrollContent}
+				>
 					{/* Header */}
-					<Text
-						style={{
-							fontFamily: "Inter_700Bold",
-							fontSize: 28,
-							color: colors.foreground,
-							marginBottom: 24,
-						}}
+					<Animated.Text
+						entering={FadeInDown.delay(0).springify()}
+						style={[styles.title, { color: colors.foreground }]}
 						accessibilityRole="header"
 					>
 						{t("routes.title")}
-					</Text>
+					</Animated.Text>
 
 					{/* Saved Routes */}
 					{routesLoading ? (
 						<ActivityIndicator
 							size="large"
 							color={colors.primary}
-							style={{ marginVertical: 40 }}
+							style={styles.loader}
 						/>
 					) : (
-						<View style={{ gap: 12, marginBottom: 24 }}>
-							{savedRoutes?.map((route) => {
+						<View style={styles.routesContainer}>
+							{savedRoutes?.map((route, index) => {
 								const scheduledTrips = getTripsByRouteId(route.id);
 								const hasScheduledTrip = scheduledTrips.length > 0;
 								const nextScheduled = hasScheduledTrip
@@ -130,33 +135,29 @@ export default function RoutesScreen() {
 									: null;
 
 								return (
-									<View key={route.id}>
+									<Animated.View
+										key={route.id}
+										entering={FadeInDown.delay(100 + index * 100).springify()}
+									>
 										{/* Scheduled trip badge */}
 										{hasScheduledTrip && nextScheduled && (
 											<View
-												style={{
-													backgroundColor: colors.primary + "15",
-													paddingHorizontal: 12,
-													paddingVertical: 8,
-													borderTopLeftRadius: 12,
-													borderTopRightRadius: 12,
-													flexDirection: "row",
-													alignItems: "center",
-													gap: 8,
-												}}
+												style={[
+													styles.scheduledBadge,
+													{ backgroundColor: colors.primary + "15" },
+												]}
 											>
 												<Icon name="clock" size={14} color={colors.primary} />
 												<Text
-													style={{
-														fontFamily: "Inter_500Medium",
-														fontSize: 12,
-														color: colors.primary,
-													}}
+													style={[
+														styles.scheduledText,
+														{ color: colors.primary },
+													]}
 												>
-													Programado:{" "}
+													{t("routes.scheduled")}{" "}
 													{new Date(
 														nextScheduled.departureTime,
-													).toLocaleDateString("es", {
+													).toLocaleDateString(undefined, {
 														weekday: "short",
 														day: "numeric",
 														hour: "2-digit",
@@ -166,62 +167,56 @@ export default function RoutesScreen() {
 											</View>
 										)}
 
-										<Pressable
+										<AnimatedPressable
 											onPress={() =>
 												router.push(`/route-detail?id=${route.id}`)
 											}
-											style={{
-												backgroundColor: colors.card,
-												borderRadius: hasScheduledTrip ? 0 : 12,
-												borderBottomLeftRadius: 12,
-												borderBottomRightRadius: 12,
-												borderTopLeftRadius: hasScheduledTrip ? 0 : 12,
-												borderTopRightRadius: hasScheduledTrip ? 0 : 12,
-												padding: 16,
-												borderWidth: 1,
-												borderColor: hasScheduledTrip
-													? colors.primary
-													: route.isFavorite
+											style={[
+												styles.routeCard,
+												{
+													backgroundColor: colors.card,
+													borderColor: hasScheduledTrip
 														? colors.primary
-														: colors.border,
-												borderTopWidth: hasScheduledTrip ? 0 : 1,
-											}}
+														: route.isFavorite
+															? colors.primary
+															: colors.border,
+													borderRadius: hasScheduledTrip ? 0 : 12,
+													borderBottomLeftRadius: 12,
+													borderBottomRightRadius: 12,
+													borderTopLeftRadius: hasScheduledTrip ? 0 : 12,
+													borderTopRightRadius: hasScheduledTrip ? 0 : 12,
+													borderTopWidth: hasScheduledTrip ? 0 : 1,
+												},
+											]}
 											accessibilityRole="button"
 											accessibilityLabel={`${route.name}: ${route.originName} ${t("common.to")} ${route.destinationName}`}
 											accessibilityHint={t("routes.tapToViewDetails")}
 										>
-											<View
-												style={{
-													flexDirection: "row",
-													alignItems: "center",
-													marginBottom: 8,
-												}}
-											>
+											<View style={styles.routeHeader}>
 												<Icon
 													name="location"
 													size={18}
 													color={colors.foreground}
 												/>
 												<Text
-													style={{
-														marginLeft: 8,
-														fontFamily: "Inter_600SemiBold",
-														color: colors.foreground,
-														flex: 1,
-													}}
+													style={[
+														styles.routeName,
+														{ color: colors.foreground },
+													]}
 													numberOfLines={1}
 												>
 													{route.name}
 												</Text>
-												<Pressable
+												<AnimatedPressable
 													onPress={() => toggleFavorite.mutate(route.id)}
-													style={{ padding: 4 }}
+													style={styles.favoriteButton}
 													accessibilityRole="button"
 													accessibilityLabel={
 														route.isFavorite
 															? t("routes.removeFavorite")
 															: t("routes.addFavorite")
 													}
+													scaleDown={0.8}
 												>
 													<Icon
 														name="star"
@@ -232,22 +227,14 @@ export default function RoutesScreen() {
 																: colors.mutedForeground
 														}
 													/>
-												</Pressable>
+												</AnimatedPressable>
 											</View>
-											<View
-												style={{
-													flexDirection: "row",
-													justifyContent: "space-between",
-													alignItems: "center",
-												}}
-											>
+											<View style={styles.routeDetails}>
 												<Text
-													style={{
-														fontFamily: "Inter_400Regular",
-														fontSize: 13,
-														color: colors.mutedForeground,
-														flex: 1,
-													}}
+													style={[
+														styles.routeSubtitle,
+														{ color: colors.mutedForeground },
+													]}
 													numberOfLines={1}
 												>
 													{route.originName} → {route.destinationName}
@@ -255,10 +242,8 @@ export default function RoutesScreen() {
 											</View>
 
 											{/* Action buttons */}
-											<View
-												style={{ flexDirection: "row", gap: 8, marginTop: 12 }}
-											>
-												<Pressable
+											<View style={styles.routeActions}>
+												<AnimatedPressable
 													onPress={(e) => {
 														e.stopPropagation();
 														handleScheduleTrip({
@@ -284,106 +269,89 @@ export default function RoutesScreen() {
 															},
 														});
 													}}
-													style={{
-														flexDirection: "row",
-														alignItems: "center",
-														gap: 6,
-														backgroundColor: colors.muted,
-														paddingHorizontal: 12,
-														paddingVertical: 8,
-														borderRadius: 20,
-													}}
+													style={[
+														styles.scheduleButton,
+														{ backgroundColor: colors.muted },
+													]}
 												>
 													<Icon name="clock" size={14} color={colors.primary} />
 													<Text
-														style={{
-															fontFamily: "Inter_500Medium",
-															fontSize: 12,
-															color: colors.primary,
-														}}
+														style={[
+															styles.scheduleButtonText,
+															{ color: colors.primary },
+														]}
 													>
-														Programar
+														{t("schedule.schedule")}
 													</Text>
-												</Pressable>
+												</AnimatedPressable>
 											</View>
-										</Pressable>
-									</View>
+										</AnimatedPressable>
+									</Animated.View>
 								);
 							})}
 
 							{/* Add new route */}
-							<Pressable
-								onPress={handleAddRoute}
-								style={{
-									backgroundColor: colors.muted,
-									borderRadius: 12,
-									padding: 16,
-									borderWidth: 1,
-									borderColor: colors.border,
-									borderStyle: "dashed",
-									alignItems: "center",
-									flexDirection: "row",
-									justifyContent: "center",
-									gap: 8,
-								}}
-								accessibilityRole="button"
-								accessibilityLabel={t("routes.addNew")}
-								accessibilityHint={t("routes.addNewHint")}
+							<Animated.View
+								entering={FadeInUp.delay(
+									100 + (savedRoutes?.length ?? 0) * 100,
+								).springify()}
 							>
-								<Icon name="route" size={18} color={colors.primary} />
-								<Text
-									style={{
-										fontFamily: "Inter_600SemiBold",
-										color: colors.primary,
-									}}
+								<AnimatedPressable
+									onPress={handleAddRoute}
+									style={[
+										styles.addRouteButton,
+										{
+											backgroundColor: colors.muted,
+											borderColor: colors.border,
+										},
+									]}
+									accessibilityRole="button"
+									accessibilityLabel={t("routes.addNew")}
+									accessibilityHint={t("routes.addNewHint")}
 								>
-									{t("routes.addNew")}
-								</Text>
-							</Pressable>
+									<Icon name="route" size={18} color={colors.primary} />
+									<Text
+										style={[styles.addRouteText, { color: colors.primary }]}
+									>
+										{t("routes.addNew")}
+									</Text>
+								</AnimatedPressable>
+							</Animated.View>
 						</View>
 					)}
 
 					{/* History */}
-					<Text
-						style={{
-							fontFamily: "Inter_600SemiBold",
-							fontSize: 18,
-							color: colors.foreground,
-							marginBottom: 16,
-						}}
+					<Animated.Text
+						entering={FadeInDown.delay(400).springify()}
+						style={[styles.sectionTitle, { color: colors.foreground }]}
 						accessibilityRole="header"
 					>
 						{t("routes.history")}
-					</Text>
+					</Animated.Text>
 
 					{historyLoading ? (
 						<ActivityIndicator size="small" color={colors.mutedForeground} />
 					) : tripHistory && tripHistory.length > 0 ? (
-						<View style={{ gap: 12 }}>
-							{tripHistory.map((trip) => (
-								<View
+						<View style={styles.historyContainer}>
+							{tripHistory.map((trip, index) => (
+								<Animated.View
 									key={trip.id}
-									style={{
-										flexDirection: "row",
-										alignItems: "flex-start",
-										gap: 12,
-									}}
+									entering={FadeInDown.delay(450 + index * 50).springify()}
+									style={styles.historyItem}
 									accessible={true}
 									accessibilityRole="text"
 									accessibilityLabel={`${formatDate(trip.startedAt)}: ${getOutcomeText(trip.outcome)}, ${trip.originName} ${t("common.to")} ${trip.destinationName}`}
 								>
 									<View
-										style={{
-											width: 32,
-											height: 32,
-											borderRadius: 16,
-											backgroundColor:
-												trip.outcome === "avoided_storm"
-													? colors.safe
-													: colors.muted,
-											justifyContent: "center",
-											alignItems: "center",
-										}}
+										style={[
+											styles.historyIcon,
+											{
+												backgroundColor:
+													trip.outcome === "avoided_storm"
+														? colors.safe
+														: colors.muted,
+											},
+										]}
 									>
 										<Icon
 											name={
@@ -399,30 +367,28 @@ export default function RoutesScreen() {
 											}
 										/>
 									</View>
-									<View style={{ flex: 1 }}>
+									<View style={styles.historyContent}>
 										<Text
-											style={{
-												fontFamily: "Inter_400Regular",
-												color: colors.mutedForeground,
-												fontSize: 12,
-											}}
+											style={[
+												styles.historyDate,
+												{ color: colors.mutedForeground },
+											]}
 										>
 											{formatDate(trip.startedAt)}
 										</Text>
 										<Text
-											style={{
-												fontFamily: "Inter_600SemiBold",
-												color: colors.foreground,
-											}}
+											style={[
+												styles.historyOutcome,
+												{ color: colors.foreground },
+											]}
 										>
 											{getOutcomeText(trip.outcome)}
 										</Text>
 										<Text
-											style={{
-												fontFamily: "Inter_400Regular",
-												color: colors.mutedForeground,
-												fontSize: 13,
-											}}
+											style={[
+												styles.historyRoute,
+												{ color: colors.mutedForeground },
+											]}
 											numberOfLines={1}
 										>
 											{trip.originName} → {trip.destinationName}
@@ -430,12 +396,7 @@ export default function RoutesScreen() {
 										{trip.estimatedSavings &&
 											Number(trip.estimatedSavings) > 0 && (
 												<Text
-													style={{
-														fontFamily: "Inter_400Regular",
-														color: colors.safe,
-														fontSize: 14,
-														marginTop: 2,
-													}}
+													style={[styles.historySavings, { color: colors.safe }]}
 												>
 													{t("routes.estimatedSavings", {
 														amount: `$${Number(trip.estimatedSavings).toLocaleString()}`,
@@ -443,20 +404,16 @@ export default function RoutesScreen() {
 												</Text>
 											)}
 									</View>
-								</View>
+								</Animated.View>
 							))}
 						</View>
 					) : (
-						<Text
-							style={{
-								fontFamily: "Inter_400Regular",
-								color: colors.mutedForeground,
-								textAlign: "center",
-								paddingVertical: 20,
-							}}
+						<Animated.Text
+							entering={FadeInDown.delay(500).springify()}
+							style={[styles.emptyText, { color: colors.mutedForeground }]}
 						>
 							{t("routes.noAlerts")}
-						</Text>
+						</Animated.Text>
 					)}
 				</ScrollView>
 
@@ -473,3 +430,144 @@ export default function RoutesScreen() {
 		</GestureHandlerRootView>
 	);
 }
+
+const styles = StyleSheet.create({
+	root: {
+		flex: 1,
+	},
+	container: {
+		flex: 1,
+	},
+	scrollView: {
+		flex: 1,
+	},
+	scrollContent: {
+		padding: 16,
+	},
+	title: {
+		fontFamily: "Inter_700Bold",
+		fontSize: 28,
+		marginBottom: 24,
+	},
+	loader: {
+		marginVertical: 40,
+	},
+	routesContainer: {
+		gap: 12,
+		marginBottom: 24,
+	},
+	scheduledBadge: {
+		paddingHorizontal: 12,
+		paddingVertical: 8,
+		borderTopLeftRadius: 12,
+		borderTopRightRadius: 12,
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 8,
+	},
+	scheduledText: {
+		fontFamily: "Inter_500Medium",
+		fontSize: 12,
+	},
+	routeCard: {
+		padding: 16,
+		borderWidth: 1,
+	},
+	routeHeader: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginBottom: 8,
+	},
+	routeName: {
+		marginLeft: 8,
+		fontFamily: "Inter_600SemiBold",
+		flex: 1,
+	},
+	favoriteButton: {
+		padding: 4,
+	},
+	routeDetails: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+	},
+	routeSubtitle: {
+		fontFamily: "Inter_400Regular",
+		fontSize: 13,
+		flex: 1,
+	},
+	routeActions: {
+		flexDirection: "row",
+		gap: 8,
+		marginTop: 12,
+	},
+	scheduleButton: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 6,
+		paddingHorizontal: 12,
+		paddingVertical: 8,
+		borderRadius: 20,
+	},
+	scheduleButtonText: {
+		fontFamily: "Inter_500Medium",
+		fontSize: 12,
+	},
+	addRouteButton: {
+		borderRadius: 12,
+		padding: 16,
+		borderWidth: 1,
+		borderStyle: "dashed",
+		alignItems: "center",
+		flexDirection: "row",
+		justifyContent: "center",
+		gap: 8,
+	},
+	addRouteText: {
+		fontFamily: "Inter_600SemiBold",
+	},
+	sectionTitle: {
+		fontFamily: "Inter_600SemiBold",
+		fontSize: 18,
+		marginBottom: 16,
+	},
+	historyContainer: {
+		gap: 12,
+	},
+	historyItem: {
+		flexDirection: "row",
+		alignItems: "flex-start",
+		gap: 12,
+	},
+	historyIcon: {
+		width: 32,
+		height: 32,
+		borderRadius: 16,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	historyContent: {
+		flex: 1,
+	},
+	historyDate: {
+		fontFamily: "Inter_400Regular",
+		fontSize: 12,
+	},
+	historyOutcome: {
+		fontFamily: "Inter_600SemiBold",
+	},
+	historyRoute: {
+		fontFamily: "Inter_400Regular",
+		fontSize: 13,
+	},
+	historySavings: {
+		fontFamily: "Inter_400Regular",
+		fontSize: 14,
+		marginTop: 2,
+	},
+	emptyText: {
+		fontFamily: "Inter_400Regular",
+		textAlign: "center",
+		paddingVertical: 20,
+	},
+});
