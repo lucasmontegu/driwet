@@ -1,13 +1,11 @@
-// apps/mobile/app/(app)/(tabs)/_layout.tsx
 import { Tabs, usePathname, useRouter } from "expo-router";
 import { StyleSheet, View } from "react-native";
-import { FloatingTabBar } from "@/components/floating-tab-bar";
+import { BottomTabBar } from "@/components/navigation/bottom-tab-bar";
 
 export default function TabLayout() {
 	const router = useRouter();
 	const pathname = usePathname();
 
-	// Get current active route from pathname
 	const getActiveRoute = () => {
 		if (pathname.includes("/alerts")) return "alerts";
 		if (pathname.includes("/routes")) return "routes";
@@ -34,7 +32,9 @@ export default function TabLayout() {
 			<Tabs
 				screenOptions={{
 					headerShown: false,
-					tabBarStyle: { display: "none" }, // Hide default tab bar
+					tabBarStyle: {
+						display: "none",
+					},
 				}}
 			>
 				<Tabs.Screen name="index" options={{ title: "Mapa" }} />
@@ -43,8 +43,7 @@ export default function TabLayout() {
 				<Tabs.Screen name="profile" options={{ title: "Perfil" }} />
 			</Tabs>
 
-			{/* Custom Floating Tab Bar */}
-			<FloatingTabBar activeRoute={activeRoute} onTabPress={handleTabPress} />
+			<BottomTabBar activeRoute={activeRoute} onTabPress={handleTabPress} />
 		</View>
 	);
 }
